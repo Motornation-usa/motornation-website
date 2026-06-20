@@ -384,7 +384,7 @@
         <div class="service-card-top">
           <div class="service-badge">Essential</div>
           <div class="service-name">Basic Synthetic</div>
-          <div class="service-price">$79 <span>/ service</span></div>
+          <div class="service-price">$89 <span>/ service</span></div>
         </div>
         <div class="service-card-body">
           <ul class="service-includes">
@@ -395,7 +395,7 @@
             <li>10-point safety inspection</li>
             <li>OBD-II diagnostic scan</li>
           </ul>
-          <a href="#book" class="service-book-btn" onclick="selectPackage('Basic Synthetic', '$79')">Book this package</a>
+          <a href="#book" class="service-book-btn" onclick="selectPackage('Basic Synthetic', '$89')">Book this package</a>
         </div>
       </div>
 
@@ -403,7 +403,7 @@
         <div class="service-card-top">
           <div class="service-badge">Most popular</div>
           <div class="service-name">Premium Synthetic</div>
-          <div class="service-price">$99 <span>/ service</span></div>
+          <div class="service-price">$109 <span>/ service</span></div>
         </div>
         <div class="service-card-body">
           <ul class="service-includes">
@@ -415,7 +415,7 @@
             <li>10-point safety inspection</li>
             <li>OBD-II diagnostic scan & report</li>
           </ul>
-          <a href="#book" class="service-book-btn" onclick="selectPackage('Premium Synthetic', '$99')">Book this package</a>
+          <a href="#book" class="service-book-btn" onclick="selectPackage('Premium Synthetic', '$109')">Book this package</a>
         </div>
       </div>
 
@@ -423,7 +423,7 @@
         <div class="service-card-top">
           <div class="service-badge">Best value</div>
           <div class="service-name">Elite + Filter Kit</div>
-          <div class="service-price">$129 <span>/ service</span></div>
+          <div class="service-price">$140 <span>/ service</span></div>
         </div>
         <div class="service-card-body">
           <ul class="service-includes">
@@ -436,7 +436,7 @@
             <li>10-point inspection + written report</li>
             <li>OBD-II scan with code explanation</li>
           </ul>
-          <a href="#book" class="service-book-btn" onclick="selectPackage('Elite + Filter Kit', '$129')">Book this package</a>
+          <a href="#book" class="service-book-btn" onclick="selectPackage('Elite + Filter Kit', '$140')">Book this package</a>
         </div>
       </div>
 
@@ -581,17 +581,17 @@
         <div class="form-step active" id="step-1">
           <p class="step-title">Step 1 — Choose your package</p>
           <div class="pkg-options">
-            <div class="pkg-option" onclick="pickPkg(this, 'Basic Synthetic', '$79')">
+            <div class="pkg-option" onclick="pickPkg(this, 'Basic Synthetic', '$89')">
               <div><div class="pkg-option-name">Basic Synthetic</div><div class="pkg-option-desc">Up to 5 qts · Filter · Inspection · OBD scan</div></div>
-              <div class="pkg-option-price">$79</div>
+              <div class="pkg-option-price">$89</div>
             </div>
-            <div class="pkg-option" onclick="pickPkg(this, 'Premium Synthetic', '$99')">
+            <div class="pkg-option" onclick="pickPkg(this, 'Premium Synthetic', '$109')">
               <div><div class="pkg-option-name">Premium Synthetic ⭐ Most popular</div><div class="pkg-option-desc">Up to 7 qts · Full fluids · TPMS reset</div></div>
-              <div class="pkg-option-price">$99</div>
+              <div class="pkg-option-price">$109</div>
             </div>
-            <div class="pkg-option" onclick="pickPkg(this, 'Elite + Filter Kit', '$129')">
+            <div class="pkg-option" onclick="pickPkg(this, 'Elite + Filter Kit', '$140')">
               <div><div class="pkg-option-name">Elite + Filter Kit</div><div class="pkg-option-desc">All premium + air filter + wiper blades</div></div>
-              <div class="pkg-option-price">$129</div>
+              <div class="pkg-option-price">$140</div>
             </div>
           </div>
           <button class="form-btn" style="margin-top:1.25rem;" onclick="goStep(2)">Continue →</button>
@@ -774,9 +774,9 @@
       </div>
       <div class="footer-col">
         <h4>Services</h4>
-        <a href="#services">Basic Synthetic — $79</a>
-        <a href="#services">Premium Synthetic — $99</a>
-        <a href="#services">Elite + Filter Kit — $129</a>
+        <a href="#services">Basic Synthetic — $89</a>
+        <a href="#services">Premium Synthetic — $109</a>
+        <a href="#services">Elite + Filter Kit — $140</a>
       </div>
       <div class="footer-col">
         <h4>Company</h4>
@@ -806,7 +806,7 @@
 </footer>
 
 <script>
-let selectedPkg = { name: 'Premium Synthetic', price: '$99' };
+let selectedPkg = { name: 'Premium Synthetic', price: '$109' };
 
 function selectPackage(name, price) {
   selectedPkg = { name, price };
