@@ -301,6 +301,7 @@
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('u04DcEFJlspxcIZm');</script>
 </head>
 <body>
 <form name="motornation-booking" data-netlify="true" hidden>
@@ -1004,13 +1005,12 @@ function selectSlot(slot, el, dateVal) {
 
 // ── EMAIL CONFIRMATION via EmailJS ────────────────────────────
 // Replace these with your real EmailJS IDs after signing up at emailjs.com
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_CUSTOMER = 'YOUR_CUSTOMER_TEMPLATE_ID';
-const EMAILJS_TEMPLATE_OWNER    = 'YOUR_OWNER_TEMPLATE_ID';
-const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+const EMAILJS_SERVICE_ID  = 'service_6pgdsld';
+const EMAILJS_TEMPLATE_CUSTOMER = 'template_kjzev4o';
+const EMAILJS_TEMPLATE_OWNER    = 'template_42xr6mb';
+const EMAILJS_PUBLIC_KEY  = 'u04DcEFJlspxcIZm';
 
 async function sendConfirmationEmails(data) {
-  if (EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID') return; // skip until configured
   try {
     // Email to customer
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CUSTOMER, {
