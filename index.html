@@ -301,7 +301,11 @@
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init('u04DcEFJlspxcIZm');</script>
+<script>
+  window.addEventListener('load', function() {
+    emailjs.init('u04DcEFJlspxcIZm');
+  });
+</script>
 </head>
 <body>
 <form name="motornation-booking" data-netlify="true" hidden>
@@ -993,6 +997,7 @@ function selectSlot(slot, el, dateVal) {
   document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
   el.classList.add('selected');
   selectedSlot = slot;
+  document.getElementById('f-date').value = dateVal;
   document.getElementById('f-time').value = slot;
   const dt = new Date(dateVal + 'T00:00:00');
   const dateStr = dt.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric', timeZone:'UTC'});
