@@ -956,18 +956,36 @@ async function loadSlots(dateVal) {
   document.getElementById('slot-loading').style.display = 'none';
   document.getElementById('slot-grid').style.display = 'block';
 
+  const now = new Date();
+  const todayStr = now.toLocaleDateString('en-CA', {timeZone: 'America/Denver'});
+  const currentHour = parseInt(new Intl.DateTimeFormat('en-US', {hour:'numeric', hour12:false, timeZone:'America/Denver'}).format(now));
+
+  const SLOT_HOURS = {'7:00 AM':7, '9:00 AM':9, '11:00 AM':11, '1:00 PM':13, '3:00 PM':15, '5:00 PM':17, '7:00 PM':19};
+
   const container = document.getElementById('slot-buttons');
   container.innerHTML = '';
+  let anyAvailable = false;
+
   ALL_SLOTS.forEach(slot => {
     const taken = takenSlots.includes(slot);
+    const isPast = dateVal === todayStr && SLOT_HOURS[slot] <= currentHour;
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'slot-btn' + (taken ? ' taken' : '');
-    b.textContent = taken ? slot + '\nBooked' : slot;
-    b.style.whiteSpace = 'pre-line';
-    if (!taken) b.onclick = () => selectSlot(slot, b, dateVal);
+    if (taken || isPast) {
+      b.className = 'slot-btn taken';
+      b.textContent = isPast ? slot + ' — Past' : slot + ' — Booked';
+    } else {
+      b.className = 'slot-btn';
+      b.textContent = slot;
+      b.onclick = () => selectSlot(slot, b, dateVal);
+      anyAvailable = true;
+    }
     container.appendChild(b);
   });
+
+  if (!anyAvailable) {
+    container.innerHTML = '<p style="font-size:13px;color:#888;grid-column:1/-1;padding:12px 0;">No available slots for this date. Please choose another day.</p>';
+  }
 }
 
 function selectSlot(slot, el, dateVal) {
