@@ -457,7 +457,7 @@ document.getElementById('slot-banner').style.display='none';
 document.getElementById('slot-loading').style.display='block';
 document.getElementById('slot-grid-area').style.display='none';
 
-fetch('/.netlify/functions/get-slots?date='+dateVal)
+fetch('/.netlify/functions/get-slots?date='+dateVal, {cache:'no-store'})
 .then(function(r){return r.ok?r.json():{taken:[]};})
 .catch(function(){return {taken:[]};})
 .then(function(data){
@@ -472,7 +472,7 @@ container.innerHTML='';
 var anyAvail=false;
 ALL_SLOTS.forEach(function(slot){
 var taken=takenSlots.includes(slot);
-var past=isToday&&(SLOT_HOURS[slot]<=curHour);
+var past=isToday&&(SLOT_HOURS[slot]<=(curHour+1));
 var btn=document.createElement('button');
 btn.type='button';
 if(taken||past){
