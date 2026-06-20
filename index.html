@@ -302,7 +302,7 @@
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  window.addEventListener('load', function() {
+  document.addEventListener('DOMContentLoaded', function() {
     emailjs.init('u04DcEFJlspxcIZm');
   });
 </script>
@@ -940,8 +940,13 @@ const ALL_SLOTS = ['7:00 AM','9:00 AM','11:00 AM','1:00 PM','3:00 PM','5:00 PM',
 let selectedSlot = null;
 
 async function loadSlots(dateVal) {
-  const todayDate = new Date().toLocaleDateString('en-CA', {timeZone: 'America/Denver'});
-  document.getElementById('f-date').min = todayDate;
+  const todayMT = new Date().toLocaleDateString('en-CA', {timeZone: 'America/Denver'});
+  const dateInput = document.getElementById('f-date');
+  dateInput.min = todayMT;
+  if (dateVal < todayMT) {
+    dateInput.value = todayMT;
+    dateVal = todayMT;
+  }
   if (!dateVal) return;
   selectedSlot = null;
   document.getElementById('slot-selected-banner').style.display = 'none';
@@ -1046,7 +1051,16 @@ async function sendConfirmationEmails(data) {
   } catch(e) { console.error('EmailJS error:', JSON.stringify(e)); }
 }
 
-
+// Set min date AND default value to today in Mountain Time on page load
+(function() {
+  const todayMT = new Date().toLocaleDateString('en-CA', {timeZone:'America/Denver'});
+  const dateInput = document.getElementById('f-date');
+  if (dateInput) {
+    dateInput.min = todayMT;
+    dateInput.value = todayMT;
+    setTimeout(() => loadSlots(todayMT), 100);
+  }
+})();
 </script>
 </body>
 </html>
