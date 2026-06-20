@@ -524,7 +524,12 @@ if(el)el.classList.add('active');
 for(var i=1;i<=4;i++){var p=document.getElementById('pip-'+i);if(p)p.classList.toggle('done',i<=n);}
 if(n===2)initDatePicker();
 if(n===4)buildSummary();
-document.getElementById('book').scrollIntoView({behavior:'smooth',block:'start'});
+if(window.innerWidth < 768) {
+  const formEl = document.querySelector('.booking-form');
+  if(formEl) formEl.scrollIntoView({behavior:'smooth', block:'start'});
+} else {
+  document.getElementById('book').scrollIntoView({behavior:'smooth', block:'start'});
+}
 }
 
 function buildSummary(){
@@ -562,7 +567,12 @@ fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlenco
 function showSuccess(){
 document.querySelectorAll('.form-step').forEach(function(s){s.classList.remove('active');});
 document.getElementById('step-success').classList.add('active');
-document.getElementById('book').scrollIntoView({behavior:'smooth',block:'start'});
+if(window.innerWidth < 768) {
+  const formEl = document.querySelector('.booking-form');
+  if(formEl) formEl.scrollIntoView({behavior:'smooth', block:'start'});
+} else {
+  document.getElementById('book').scrollIntoView({behavior:'smooth', block:'start'});
+}
 }
 
 function sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes){
