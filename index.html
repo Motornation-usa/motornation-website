@@ -940,6 +940,8 @@ const ALL_SLOTS = ['7:00 AM','9:00 AM','11:00 AM','1:00 PM','3:00 PM','5:00 PM',
 let selectedSlot = null;
 
 async function loadSlots(dateVal) {
+  const todayDate = new Date().toLocaleDateString('en-CA', {timeZone: 'America/Denver'});
+  document.getElementById('f-date').min = todayDate;
   if (!dateVal) return;
   selectedSlot = null;
   document.getElementById('slot-selected-banner').style.display = 'none';
@@ -1041,7 +1043,7 @@ async function sendConfirmationEmails(data) {
       vehicle: data.year + ' ' + data.vehicle,
       notes: data.notes
     }, EMAILJS_PUBLIC_KEY);
-  } catch(e) { console.log('Email error:', e); }
+  } catch(e) { console.error('EmailJS error:', JSON.stringify(e)); }
 }
 
 
