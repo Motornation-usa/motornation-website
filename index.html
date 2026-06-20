@@ -237,6 +237,12 @@
   .review-name { font-size: 13px; font-weight: 700; color: var(--black); }
   .review-loc { font-size: 11px; color: var(--text-muted); }
 
+  /* SLOT PICKER */
+  .slot-btn { padding: 12px 8px; border-radius: var(--radius); border: 1.5px solid #e0e0e0; background: var(--white); font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.15s; color: var(--black); }
+  .slot-btn:hover:not(.taken) { border-color: var(--orange); background: rgba(255,199,68,0.06); }
+  .slot-btn.selected { border-color: var(--red-mid); background: rgba(243,56,42,0.08); color: var(--red-mid); }
+  .slot-btn.taken { background: #f5f5f5; color: #ccc; border-color: #eee; cursor: not-allowed; font-size: 11px; }
+
   /* FAQ */
   .faq-bg { background: var(--black); }
   .faq-bg .section-title { color: var(--white); }
@@ -271,25 +277,10 @@
   .footer-col a:hover { color: var(--white); }
   .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
   .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
+  .live-badge { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #FFC744, #F3382A); color: #fff; font-size: 11px; font-weight: 800; padding: 8px 14px; border-radius: 20px; z-index: 999; letter-spacing: 0.05em; box-shadow: 0 4px 12px rgba(243,56,42,0.4); }
   .social-links { display: flex; gap: 12px; }
   .social-link { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 13px; color: rgba(255,255,255,0.5); transition: border-color 0.2s, color 0.2s; }
   .social-link:hover { border-color: var(--orange); color: var(--orange); }
-
-  /* FLOATING BADGE */
-  .floating-badge {
-    position: fixed; bottom: 24px; right: 24px; z-index: 999;
-    background: linear-gradient(135deg, #FFC744, #F3382A);
-    color: var(--white); font-size: 13px; font-weight: 800;
-    padding: 12px 18px; border-radius: 50px;
-    box-shadow: 0 6px 24px rgba(243,56,42,0.45);
-    text-decoration: none; letter-spacing: 0.2px;
-    animation: badge-pulse 2.4s ease-in-out infinite;
-    cursor: default;
-  }
-  @keyframes badge-pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 6px 24px rgba(243,56,42,0.45); }
-    50% { transform: scale(1.04); box-shadow: 0 10px 32px rgba(243,56,42,0.65); }
-  }
 
   /* MOBILE NAV TOGGLE */
   .nav-hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--white); font-size: 22px; }
@@ -309,11 +300,25 @@
     .nav-hamburger { display: block; }
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
+<form name="motornation-booking" data-netlify="true" hidden>
+  <input type="text" name="first-name">
+  <input type="text" name="last-name">
+  <input type="text" name="phone">
+  <input type="email" name="email">
+  <input type="text" name="date" id="f-date">
+  <input type="text" name="time" id="f-time">
+  <input type="text" name="location-type">
+  <input type="text" name="address">
+  <input type="text" name="vehicle-year">
+  <input type="text" name="vehicle">
+  <input type="text" name="package">
+  <input type="text" name="notes">
+</form>
 
-<!-- FLOATING BADGE -->
-<div class="floating-badge">📅 Now booking — 7 days a week!!!</div>
+<div class="live-badge">⚡ Now booking — 7 days a week</div>
 
 <!-- NAV -->
 <nav>
@@ -384,7 +389,7 @@
         <div class="service-card-top">
           <div class="service-badge">Essential</div>
           <div class="service-name">Basic Synthetic</div>
-          <div class="service-price">$89 <span>/ service</span></div>
+          <div class="service-price">$79 <span>/ service</span></div>
         </div>
         <div class="service-card-body">
           <ul class="service-includes">
@@ -395,7 +400,7 @@
             <li>10-point safety inspection</li>
             <li>OBD-II diagnostic scan</li>
           </ul>
-          <a href="#book" class="service-book-btn" onclick="selectPackage('Basic Synthetic', '$89')">Book this package</a>
+          <a href="#book" class="service-book-btn" onclick="selectPackage('Basic Synthetic', '$79')">Book this package</a>
         </div>
       </div>
 
@@ -403,7 +408,7 @@
         <div class="service-card-top">
           <div class="service-badge">Most popular</div>
           <div class="service-name">Premium Synthetic</div>
-          <div class="service-price">$109 <span>/ service</span></div>
+          <div class="service-price">$99 <span>/ service</span></div>
         </div>
         <div class="service-card-body">
           <ul class="service-includes">
@@ -415,7 +420,7 @@
             <li>10-point safety inspection</li>
             <li>OBD-II diagnostic scan & report</li>
           </ul>
-          <a href="#book" class="service-book-btn" onclick="selectPackage('Premium Synthetic', '$109')">Book this package</a>
+          <a href="#book" class="service-book-btn" onclick="selectPackage('Premium Synthetic', '$99')">Book this package</a>
         </div>
       </div>
 
@@ -423,7 +428,7 @@
         <div class="service-card-top">
           <div class="service-badge">Best value</div>
           <div class="service-name">Elite + Filter Kit</div>
-          <div class="service-price">$139 <span>/ service</span></div>
+          <div class="service-price">$129 <span>/ service</span></div>
         </div>
         <div class="service-card-body">
           <ul class="service-includes">
@@ -436,7 +441,7 @@
             <li>10-point inspection + written report</li>
             <li>OBD-II scan with code explanation</li>
           </ul>
-          <a href="#book" class="service-book-btn" onclick="selectPackage('Elite + Filter Kit', '$139')">Book this package</a>
+          <a href="#book" class="service-book-btn" onclick="selectPackage('Elite + Filter Kit', '$129')">Book this package</a>
         </div>
       </div>
 
@@ -481,29 +486,26 @@
     <p class="section-eyebrow">Process</p>
     <h2 class="section-title">How it works</h2>
     <p class="section-sub" style="color:rgba(255,255,255,0.5);">Four steps. Zero trips to a shop.</p>
-    <div style="display:grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; gap: 0; margin-top: 3rem; align-items: start;">
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 3rem; align-items: start;">
       <div class="step">
         <div class="step-num">1</div>
         <h4>Book online</h4>
-        <p>Choose your package, pick a date & time, and drop your address. Takes 2 minutes.</p>
+        <p>Pick your package and a real available time slot. Done in 2 minutes.</p>
       </div>
-      <div class="step-connector">→</div>
       <div class="step">
         <div class="step-num">2</div>
         <h4>We confirm</h4>
-        <p>You'll get a booking confirmation by text or email within minutes of booking.</p>
+        <p>Your slot is instantly locked in. A confirmation lands in your email right away.</p>
       </div>
-      <div class="step-connector">→</div>
       <div class="step">
         <div class="step-num">3</div>
         <h4>We come to you</h4>
-        <p>Our technician arrives at your location with all supplies. No prep needed from you.</p>
+        <p>Our technician arrives at your location with all supplies. No prep needed.</p>
       </div>
-      <div class="step-connector">→</div>
       <div class="step">
         <div class="step-num">4</div>
         <h4>Done in 30 min</h4>
-        <p>Service completed, report shared, and you're back to your day. No waiting room.</p>
+        <p>Service complete, report shared, and you're back to your day. No waiting room.</p>
       </div>
     </div>
   </div>
@@ -529,7 +531,7 @@
           <li>📍 Arvada</li>
           <li>📍 Commerce City</li>
         </ul>
-        <p style="font-size:13px; color:var(--text-muted); margin-top:1rem;">Don't see your city? <a href="#book" style="color:var(--red-mid); font-weight:600;">Contact us</a> — we may still be able to help.</p>
+        <p style="font-size:13px; color:var(--text-muted); margin-top:1rem;">Don't see your city? <a href="mailto:hello@motornationusa.com" style="color:var(--red-mid); font-weight:600;">Contact us</a> — we may still be able to help.</p>
       </div>
       <div class="area-map">
         <div class="area-radius"></div>
@@ -581,33 +583,47 @@
         <div class="form-step active" id="step-1">
           <p class="step-title">Step 1 — Choose your package</p>
           <div class="pkg-options">
-            <div class="pkg-option" onclick="pickPkg(this, 'Basic Synthetic', '$89')">
+            <div class="pkg-option" onclick="pickPkg(this, 'Basic Synthetic', '$79')">
               <div><div class="pkg-option-name">Basic Synthetic</div><div class="pkg-option-desc">Up to 5 qts · Filter · Inspection · OBD scan</div></div>
-              <div class="pkg-option-price">$89</div>
+              <div class="pkg-option-price">$79</div>
             </div>
-            <div class="pkg-option" onclick="pickPkg(this, 'Premium Synthetic', '$109')">
+            <div class="pkg-option" onclick="pickPkg(this, 'Premium Synthetic', '$99')">
               <div><div class="pkg-option-name">Premium Synthetic ⭐ Most popular</div><div class="pkg-option-desc">Up to 7 qts · Full fluids · TPMS reset</div></div>
-              <div class="pkg-option-price">$109</div>
+              <div class="pkg-option-price">$99</div>
             </div>
-            <div class="pkg-option" onclick="pickPkg(this, 'Elite + Filter Kit', '$139')">
+            <div class="pkg-option" onclick="pickPkg(this, 'Elite + Filter Kit', '$129')">
               <div><div class="pkg-option-name">Elite + Filter Kit</div><div class="pkg-option-desc">All premium + air filter + wiper blades</div></div>
-              <div class="pkg-option-price">$139</div>
+              <div class="pkg-option-price">$129</div>
             </div>
           </div>
           <button class="form-btn" style="margin-top:1.25rem;" onclick="goStep(2)">Continue →</button>
         </div>
 
-        <!-- STEP 2: Calendly -->
+        <!-- STEP 2: Custom Slot Picker -->
         <div class="form-step" id="step-2">
           <p class="step-title">Step 2 — Pick your date & time</p>
-          <div id="calendly-slot-selected" style="display:none; background:#f0fdf4; border:1.5px solid #1D9E75; border-radius:8px; padding:12px 16px; margin-bottom:14px;">
-            <div style="font-size:12px; color:#0F6E56; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:2px;">Time slot selected ✓</div>
-            <div style="font-size:15px; font-weight:700; color:#085041;" id="calendly-slot-text"></div>
+
+          <!-- Date picker -->
+          <div class="form-group">
+            <label class="form-label">Select a date</label>
+            <input type="date" class="form-input" id="f-date" onchange="loadSlots(this.value)">
           </div>
-          <div style="min-height:620px; border-radius:8px; overflow:hidden; border:1.5px solid #e0e0e0;">
-            <div class="calendly-inline-widget" data-url="https://calendly.com/a-khattab-motornationusa/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=F3382A" style="min-width:100%;height:620px;"></div>
+
+          <!-- Slot grid -->
+          <div id="slot-loading" style="display:none; text-align:center; padding:20px; font-size:13px; color:var(--text-muted);">Checking availability...</div>
+          <div id="slot-grid" style="display:none; margin-bottom:14px;">
+            <label class="form-label" style="margin-bottom:8px; display:block;">Available time slots</label>
+            <div id="slot-buttons" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;"></div>
           </div>
-          <div class="form-group" style="margin-top:14px;">
+
+          <!-- Selected slot confirmation -->
+          <div id="slot-selected-banner" style="display:none; background:#f0fdf4; border:1.5px solid #1D9E75; border-radius:8px; padding:12px 16px; margin-bottom:14px;">
+            <div style="font-size:11px; color:#0F6E56; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:2px;">✓ Time slot selected</div>
+            <div style="font-size:15px; font-weight:700; color:#085041;" id="slot-selected-text"></div>
+          </div>
+
+          <!-- Address -->
+          <div class="form-group">
             <label class="form-label">Service address</label>
             <input type="text" class="form-input" id="f-address" placeholder="Street address, Aurora/Denver, CO">
           </div>
@@ -620,7 +636,7 @@
               <option>Other</option>
             </select>
           </div>
-          <button class="form-btn" id="step2-continue" onclick="goStep(3)" style="opacity:0.5;pointer-events:none;">Select a time slot above to continue →</button>
+          <button class="form-btn" id="step2-continue" onclick="goStep(3)" style="opacity:0.5; pointer-events:none;">Select a date & time to continue →</button>
           <button class="form-btn-back" onclick="goStep(1)">← Back</button>
         </div>
 
@@ -679,7 +695,7 @@
             <div class="success-icon">🎉</div>
             <h3>You're booked!</h3>
             <p>Your appointment is confirmed. We'll see you at your location — get ready to skip the shop for good!</p>
-            <p style="margin-top:1rem; font-size:13px; color:var(--text-muted);">Check your email for a summary. Questions? DM <a href="https://instagram.com/motornationusa" style="color:var(--red-mid);">@motornationusa</a></p>
+            <p style="margin-top:1rem; font-size:13px; color:var(--text-muted);">Questions? Call or text <a href="tel:7203178949" style="color:var(--red-mid);">(720) 317-8949</a> or DM <a href="https://instagram.com/motornationusa" style="color:var(--red-mid);">@motornationusa</a></p>
           </div>
         </div>
 
@@ -765,16 +781,16 @@
       </div>
       <div class="footer-col">
         <h4>Services</h4>
-        <a href="#services">Basic Synthetic — $89</a>
-        <a href="#services">Premium Synthetic — $109</a>
-        <a href="#services">Elite + Filter Kit — $139</a>
+        <a href="#services">Basic Synthetic — $79</a>
+        <a href="#services">Premium Synthetic — $99</a>
+        <a href="#services">Elite + Filter Kit — $129</a>
       </div>
       <div class="footer-col">
         <h4>Company</h4>
         <a href="#how-it-works">How it works</a>
         <a href="#area">Service area</a>
         <a href="#faq">FAQ</a>
-        <a href="#faq">Privacy policy</a>
+        <a href="https://www.motornationusa.com/privacy-policy" target="_blank">Privacy policy</a>
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
@@ -782,7 +798,7 @@
         <a href="tel:7203178949">(720) 317-8949</a>
         <a href="tel:7203182028">(720) 318-2028</a>
         <a href="https://instagram.com/motornationusa" target="_blank">@motornationusa</a>
-        <a href="https://www.facebook.com/motornationusa" target="_blank">Facebook</a>
+        <a href="https://facebook.com" target="_blank">Facebook</a>
         <a href="#book">Book an appointment</a>
       </div>
     </div>
@@ -790,14 +806,14 @@
       <p>© 2026 MotorNation LLC / MotorNation USA. All rights reserved. Aurora, CO.</p>
       <div class="social-links">
         <a class="social-link" href="https://instagram.com/motornationusa" target="_blank" title="Instagram">IG</a>
-        <a class="social-link" href="https://www.facebook.com/motornationusa" target="_blank" title="Facebook">FB</a>
+        <a class="social-link" href="https://facebook.com" target="_blank" title="Facebook">FB</a>
       </div>
     </div>
   </div>
 </footer>
 
 <script>
-let selectedPkg = { name: 'Premium Synthetic', price: '$109' };
+let selectedPkg = { name: 'Premium Synthetic', price: '$99' };
 
 function selectPackage(name, price) {
   selectedPkg = { name, price };
@@ -837,51 +853,56 @@ function buildSummary() {
   `;
 }
 
-async function submitBooking() {
+function submitBooking() {
   const btn = document.querySelector('#step-4 .form-btn');
   btn.textContent = 'Sending...';
   btn.disabled = true;
 
-  const fname = document.getElementById('f-fname').value;
-  const lname = document.getElementById('f-lname').value;
-  const phone = document.getElementById('f-phone').value;
-  const email = document.getElementById('f-email').value;
-  const date  = document.getElementById('f-date').value;
-  const time  = document.getElementById('f-time').value;
+  const fname   = document.getElementById('f-fname').value;
+  const lname   = document.getElementById('f-lname').value;
+  const phone   = document.getElementById('f-phone').value;
+  const email   = document.getElementById('f-email').value;
+  const date    = document.getElementById('f-date').value;
+  const time    = document.getElementById('f-time').value;
   const loctype = document.getElementById('f-loctype').value;
   const address = document.getElementById('f-address').value;
   const year    = document.getElementById('f-year').value;
   const vehicle = document.getElementById('f-vehicle').value;
   const notes   = document.getElementById('f-notes').value;
 
-  const formData = new FormData();
-  formData.append('q3_fullName[first]', fname);
-  formData.append('q3_fullName[last]', lname);
-  formData.append('q4_phoneNumber[full]', phone);
-  formData.append('q5_email', email);
-  formData.append('q6_serviceAddress', address + (loctype ? ' (' + loctype + ')' : ''));
-  formData.append('q7_preferredDate[month]', date ? date.split('-')[1] : '');
-  formData.append('q7_preferredDate[day]',   date ? date.split('-')[2] : '');
-  formData.append('q7_preferredDate[year]',  date ? date.split('-')[0] : '');
-  formData.append('q8_preferredTime', time);
-  formData.append('q9_servicePackage', selectedPkg.name + ' ' + selectedPkg.price);
-  formData.append('q10_vehicleYear', year);
-  formData.append('q11_vehicleMake', vehicle);
-  formData.append('q12_notesOr', notes);
+  const body = new URLSearchParams({
+    'form-name': 'motornation-booking',
+    'first-name': fname, 'last-name': lname,
+    'phone': phone, 'email': email,
+    'date': date, 'time': time,
+    'location-type': loctype, 'address': address,
+    'vehicle-year': year, 'vehicle': vehicle,
+    'package': selectedPkg.name + ' ' + selectedPkg.price,
+    'notes': notes
+  });
 
-  try {
-    await fetch('https://submit.jotform.com/submit/261687316525059/', {
-      method: 'POST',
-      mode: 'no-cors',
-      body: formData
-    });
-  } catch(e) {}
-
-  btn.textContent = 'Confirm & book appointment';
-  btn.disabled = false;
-  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-  document.getElementById('step-success').classList.add('active');
-  document.getElementById('book').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString()
+  })
+  .then(async () => {
+    // Send confirmation emails
+    await sendConfirmationEmails({ fname, lname, phone, email, date, time, loctype, address, year, vehicle, notes, pkg: selectedPkg.name + ' ' + selectedPkg.price });
+    btn.textContent = 'Confirm & book appointment';
+    btn.disabled = false;
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-success').classList.add('active');
+    document.getElementById('book').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  })
+  .catch(async () => {
+    await sendConfirmationEmails({ fname, lname, phone, email, date, time, loctype, address, year, vehicle, notes, pkg: selectedPkg.name + ' ' + selectedPkg.price });
+    btn.textContent = 'Confirm & book appointment';
+    btn.disabled = false;
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-success').classList.add('active');
+    document.getElementById('book').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 }
 
 function toggleFaq(el) {
@@ -905,33 +926,95 @@ document.querySelectorAll('.service-book-btn').forEach(btn => {
   });
 });
 
-// Set min date to today
-const today = new Date().toISOString().split('T')[0];
-const fDate = document.getElementById('f-date');
-if (fDate) fDate.setAttribute('min', today);
-</script>
-<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script>
-window.addEventListener('message', function(e) {
-  if (e.origin !== 'https://calendly.com') return;
-  if (e.data.event && e.data.event === 'calendly.event_scheduled') {
-    const payload = e.data.payload;
-    const startTime = payload && payload.event && payload.event.start_time;
-    if (startTime) {
-      const dt = new Date(startTime);
-      const dateStr = dt.toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric', timeZone:'America/Denver'});
-      const timeStr = dt.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', timeZone:'America/Denver'});
-      document.getElementById('f-date') && (document.getElementById('f-date').value = dt.toISOString().split('T')[0]);
-      document.getElementById('f-time') && (document.getElementById('f-time').value = timeStr);
-      document.getElementById('calendly-slot-text').textContent = dateStr + ' at ' + timeStr + ' (Mountain Time)';
-      document.getElementById('calendly-slot-selected').style.display = 'block';
-      const btn = document.getElementById('step2-continue');
-      btn.style.opacity = '1';
-      btn.style.pointerEvents = 'auto';
-      btn.textContent = 'Continue →';
-    }
-  }
-});
-</script>
-</body>
-</html>
+// ── SLOT PICKER ──────────────────────────────────────────────
+const ALL_SLOTS = ['7:00 AM','9:00 AM','11:00 AM','1:00 PM','3:00 PM','5:00 PM','7:00 PM'];
+let selectedSlot = null;
+
+async function loadSlots(dateVal) {
+  if (!dateVal) return;
+  selectedSlot = null;
+  document.getElementById('slot-selected-banner').style.display = 'none';
+  const btn = document.getElementById('step2-continue');
+  btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
+  btn.textContent = 'Select a date & time to continue →';
+  document.getElementById('f-time').value = '';
+
+  document.getElementById('slot-loading').style.display = 'block';
+  document.getElementById('slot-grid').style.display = 'none';
+
+  // Fetch existing Netlify submissions to find taken slots
+  let takenSlots = [];
+  try {
+    const r = await fetch('/.netlify/functions/get-slots?date=' + dateVal);
+    if (r.ok) { const d = await r.json(); takenSlots = d.taken || []; }
+  } catch(e) {}
+
+  document.getElementById('slot-loading').style.display = 'none';
+  document.getElementById('slot-grid').style.display = 'block';
+
+  const container = document.getElementById('slot-buttons');
+  container.innerHTML = '';
+  ALL_SLOTS.forEach(slot => {
+    const taken = takenSlots.includes(slot);
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'slot-btn' + (taken ? ' taken' : '');
+    b.textContent = taken ? slot + '\nBooked' : slot;
+    b.style.whiteSpace = 'pre-line';
+    if (!taken) b.onclick = () => selectSlot(slot, b, dateVal);
+    container.appendChild(b);
+  });
+}
+
+function selectSlot(slot, el, dateVal) {
+  document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSlot = slot;
+  document.getElementById('f-time').value = slot;
+  const dt = new Date(dateVal + 'T00:00:00');
+  const dateStr = dt.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric', timeZone:'UTC'});
+  document.getElementById('slot-selected-text').textContent = dateStr + ' at ' + slot + ' (Mountain Time)';
+  document.getElementById('slot-selected-banner').style.display = 'block';
+  const btn = document.getElementById('step2-continue');
+  btn.style.opacity = '1'; btn.style.pointerEvents = 'auto';
+  btn.textContent = 'Continue →';
+}
+
+// ── EMAIL CONFIRMATION via EmailJS ────────────────────────────
+// Replace these with your real EmailJS IDs after signing up at emailjs.com
+const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+const EMAILJS_TEMPLATE_CUSTOMER = 'YOUR_CUSTOMER_TEMPLATE_ID';
+const EMAILJS_TEMPLATE_OWNER    = 'YOUR_OWNER_TEMPLATE_ID';
+const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+
+async function sendConfirmationEmails(data) {
+  if (EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID') return; // skip until configured
+  try {
+    // Email to customer
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CUSTOMER, {
+      to_email: data.email,
+      to_name: data.fname,
+      date: data.date,
+      time: data.time,
+      address: data.address,
+      package: data.pkg,
+      vehicle: data.year + ' ' + data.vehicle,
+      phone: '(720) 317-8949'
+    }, EMAILJS_PUBLIC_KEY);
+    // Email to owner
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_OWNER, {
+      to_email: 'a.khattab@motornationusa.com',
+      customer_name: data.fname + ' ' + data.lname,
+      customer_email: data.email,
+      customer_phone: data.phone,
+      date: data.date,
+      time: data.time,
+      address: data.address,
+      package: data.pkg,
+      vehicle: data.year + ' ' + data.vehicle,
+      notes: data.notes
+    }, EMAILJS_PUBLIC_KEY);
+  } catch(e) { console.log('Email error:', e); }
+}
+
+
