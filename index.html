@@ -5,309 +5,240 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MotorNation USA | Mobile Oil Change — Denver & Aurora, CO</title>
 <meta name="description" content="MotorNation offers mobile oil changes and vehicle maintenance at your home or work. Serving Denver, Aurora, and the entire Metro area.">
-<style>
-  :root {
-    --orange: #FFC744;
-    --red-mid: #F3382A;
-    --red-dark: #B02019;
-    --black: #111111;
-    --off-black: #1a1a1a;
-    --white: #FFFFFF;
-    --gray: #f5f5f5;
-    --text-muted: #888;
-    --radius: 8px;
-    --radius-lg: 14px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--white); color: var(--black); line-height: 1.6; }
-
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(17,17,17,0.97); backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 2.5rem; height: 68px;
-    border-bottom: 1px solid rgba(255,199,68,0.15);
-  }
-  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .nav-logo-mark {
-    width: 38px; height: 38px; border-radius: 50%;
-    background: linear-gradient(135deg, #FFC744, #F3382A);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 15px; color: #fff; letter-spacing: -0.5px;
-  }
-  .nav-logo-text { font-size: 17px; font-weight: 700; color: var(--white); letter-spacing: -0.3px; }
-  .nav-logo-text span { color: var(--orange); }
-  .nav-links { display: flex; align-items: center; gap: 2rem; }
-  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--white); }
-  .nav-cta {
-    background: linear-gradient(90deg, #FFC744, #F3382A);
-    color: var(--white); border: none; padding: 9px 22px;
-    border-radius: 6px; font-size: 14px; font-weight: 700;
-    cursor: pointer; text-decoration: none; letter-spacing: 0.3px;
-    transition: opacity 0.2s;
-  }
-  .nav-cta:hover { opacity: 0.88; }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh; padding: 120px 2.5rem 80px;
-    background: radial-gradient(ellipse at top left, #FFC744 0%, #FF6B1A 22%, #F3382A 48%, #B02019 72%, #111111 100%);
-    display: flex; align-items: center;
-  }
-  .hero-inner { max-width: 1100px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-  .hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 1rem; }
-  .hero h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 900; color: var(--white); line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 1.25rem; }
-  .hero h1 em { font-style: normal; color: var(--orange); }
-  .hero-sub { font-size: 17px; color: rgba(255,255,255,0.8); margin-bottom: 2rem; max-width: 440px; line-height: 1.65; }
-  .hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-  .btn-primary {
-    background: var(--white); color: var(--red-dark);
-    padding: 14px 30px; border-radius: var(--radius); font-weight: 800;
-    font-size: 15px; text-decoration: none; border: none; cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-    display: inline-block; letter-spacing: 0.2px;
-  }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-  .btn-ghost { color: var(--white); border: 1.5px solid rgba(255,255,255,0.45); padding: 13px 26px; border-radius: var(--radius); font-size: 14px; font-weight: 600; text-decoration: none; transition: border-color 0.2s, background 0.2s; display: inline-block; }
-  .btn-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.08); }
-  .hero-tagline { margin-top: 2.5rem; font-size: 13px; color: rgba(255,255,255,0.45); font-style: italic; }
-  .hero-card {
-    background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12);
-    border-radius: var(--radius-lg); padding: 2rem; backdrop-filter: blur(10px);
-  }
-  .hero-card h3 { color: var(--orange); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.25rem; }
-  .hero-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .hero-stat { text-align: center; }
-  .hero-stat .num { font-size: 2rem; font-weight: 900; color: var(--white); line-height: 1; }
-  .hero-stat .lbl { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 3px; }
-  .hero-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 1.25rem 0; }
-  .hero-badge { display: flex; align-items: center; gap: 10px; }
-  .hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; box-shadow: 0 0 6px #4ade80; }
-  .hero-badge p { font-size: 13px; color: rgba(255,255,255,0.7); }
-
-  /* TRUST BAR */
-  .trust-bar { background: var(--off-black); padding: 1.5rem 2.5rem; }
-  .trust-bar-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
-  .trust-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 500; }
-  .trust-icon { color: var(--orange); font-size: 16px; }
-
-  /* SECTIONS */
-  section { padding: 90px 2.5rem; }
-  .section-inner { max-width: 1100px; margin: 0 auto; }
-  .section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red-mid); margin-bottom: 0.75rem; }
-  .section-title { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 1rem; color: var(--black); }
-  .section-sub { font-size: 16px; color: var(--text-muted); max-width: 540px; line-height: 1.7; }
-
-  /* SERVICES */
-  .services-bg { background: var(--gray); }
-  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 3rem; }
-  .service-card {
-    background: var(--white); border-radius: var(--radius-lg);
-    border: 1px solid #e8e8e8; overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .service-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.08); }
-  .service-card-top {
-    background: linear-gradient(135deg, var(--black), #2a2a2a);
-    padding: 1.5rem; position: relative; overflow: hidden;
-  }
-  .service-card-top::after {
-    content: ''; position: absolute; top: -20px; right: -20px;
-    width: 80px; height: 80px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(243,56,42,0.35), transparent 70%);
-  }
-  .service-badge { display: inline-block; background: rgba(255,199,68,0.15); border: 1px solid rgba(255,199,68,0.3); color: var(--orange); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 0.75rem; }
-  .service-name { font-size: 1.3rem; font-weight: 900; color: var(--white); letter-spacing: -0.5px; }
-  .service-price { font-size: 2rem; font-weight: 900; color: var(--orange); margin-top: 0.5rem; line-height: 1; }
-  .service-price span { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 400; }
-  .service-card-body { padding: 1.5rem; }
-  .service-includes { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
-  .service-includes li { font-size: 13px; color: #444; display: flex; align-items: flex-start; gap: 8px; }
-  .service-includes li::before { content: '✓'; color: #1D9E75; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-  .service-book-btn {
-    display: block; width: 100%; text-align: center;
-    background: linear-gradient(90deg, #F3382A, #B02019);
-    color: var(--white); padding: 12px; border-radius: var(--radius);
-    font-weight: 700; font-size: 14px; text-decoration: none; border: none; cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .service-book-btn:hover { opacity: 0.88; }
-  .service-card.featured { border: 2px solid var(--orange); }
-  .service-card.featured .service-card-top { background: linear-gradient(135deg, #B02019, #F3382A); }
-
-  /* INCLUDED */
-  .included-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 2.5rem; }
-  .included-item { display: flex; align-items: flex-start; gap: 14px; padding: 1.25rem; background: var(--white); border: 1px solid #e8e8e8; border-radius: var(--radius); }
-  .included-icon { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #FFC744, #F3382A); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .included-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--black); margin-bottom: 2px; }
-  .included-text p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-
-  /* HOW IT WORKS */
-  .how-bg { background: var(--black); }
-  .how-bg .section-title { color: var(--white); }
-  .how-bg .section-sub { color: rgba(255,255,255,0.55); }
-  .how-bg .section-eyebrow { color: var(--orange); }
-  .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 3rem; }
-  .step { text-align: center; }
-  .step-num { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #FFC744, #F3382A); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: var(--white); }
-  .step h4 { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
-  .step p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
-  .step-connector { display: flex; align-items: center; justify-content: center; padding-top: 28px; color: rgba(255,255,255,0.2); font-size: 20px; }
-
-  /* AREA */
-  .area-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 2.5rem; }
-  .area-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 1rem; }
-  .area-list li { font-size: 14px; color: #444; padding: 8px 12px; background: var(--gray); border-radius: 6px; font-weight: 500; }
-  .area-map { background: linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius: var(--radius-lg); height: 320px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; border: 1px solid #333; }
-  .area-map-label { text-align: center; }
-  .area-map-label h3 { font-size: 1.5rem; font-weight: 900; color: var(--orange); }
-  .area-map-label p { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
-  .area-radius { width: 180px; height: 180px; border-radius: 50%; border: 2px dashed rgba(255,199,68,0.35); position: absolute; }
-  .area-radius-2 { width: 120px; height: 120px; border-radius: 50%; border: 2px solid rgba(243,56,42,0.4); position: absolute; }
-  .area-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 12px rgba(255,199,68,0.6); position: absolute; z-index: 2; }
-
-  /* BOOKING SECTION */
-  .booking-bg { background: var(--gray); }
-  .booking-wrap { display: grid; grid-template-columns: 1fr 1.3fr; gap: 3rem; align-items: start; margin-top: 3rem; }
-  .booking-info h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
-  .booking-info p { font-size: 14px; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.7; }
-  .booking-trust { display: flex; flex-direction: column; gap: 10px; margin-top: 1.5rem; }
-  .booking-trust-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #444; }
-  .booking-trust-dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--red-mid)); flex-shrink: 0; }
-
-  /* BOOKING FORM */
-  .booking-form {
-    background: var(--white); border-radius: var(--radius-lg);
-    border: 1px solid #e8e8e8; padding: 2rem;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-  }
-  .booking-form h3 { font-size: 1.1rem; font-weight: 800; color: var(--black); margin-bottom: 1.5rem; border-bottom: 2px solid var(--orange); padding-bottom: 10px; display: inline-block; }
-  .form-step { display: none; }
-  .form-step.active { display: block; }
-  .form-progress { display: flex; gap: 6px; margin-bottom: 1.5rem; }
-  .progress-pip { flex: 1; height: 4px; background: #e8e8e8; border-radius: 2px; transition: background 0.3s; }
-  .progress-pip.done { background: linear-gradient(90deg, var(--orange), var(--red-mid)); }
-  .form-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 6px; display: block; }
-  .form-group { margin-bottom: 1.1rem; }
-  .form-input, .form-select {
-    width: 100%; padding: 11px 14px; border: 1.5px solid #e0e0e0;
-    border-radius: var(--radius); font-size: 14px; outline: none;
-    transition: border-color 0.2s; background: var(--white); color: var(--black);
-    font-family: inherit;
-  }
-  .form-input:focus, .form-select:focus { border-color: var(--red-mid); }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .pkg-options { display: flex; flex-direction: column; gap: 8px; }
-  .pkg-option { border: 1.5px solid #e0e0e0; border-radius: var(--radius); padding: 12px 14px; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: flex; justify-content: space-between; align-items: center; }
-  .pkg-option:hover { border-color: #ccc; background: #fafafa; }
-  .pkg-option.selected { border-color: var(--orange); background: rgba(255,199,68,0.06); }
-  .pkg-option-name { font-size: 14px; font-weight: 700; color: var(--black); }
-  .pkg-option-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .pkg-option-price { font-size: 16px; font-weight: 900; color: var(--red-mid); }
-  .form-btn {
-    width: 100%; padding: 13px; border-radius: var(--radius);
-    background: linear-gradient(90deg, #F3382A, #B02019);
-    color: var(--white); font-weight: 800; font-size: 15px;
-    border: none; cursor: pointer; margin-top: 0.5rem;
-    transition: opacity 0.2s; letter-spacing: 0.2px;
-  }
-  .form-btn:hover { opacity: 0.9; }
-  .form-btn-back { width: 100%; padding: 10px; border-radius: var(--radius); background: transparent; border: 1.5px solid #e0e0e0; color: var(--text-muted); font-size: 14px; cursor: pointer; margin-top: 8px; font-family: inherit; transition: background 0.2s; }
-  .form-btn-back:hover { background: var(--gray); }
-  .step-title { font-size: 15px; font-weight: 800; color: var(--black); margin-bottom: 1.25rem; }
-  .confirm-summary { background: var(--gray); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
-  .confirm-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #e8e8e8; }
-  .confirm-row:last-child { border-bottom: none; font-weight: 700; color: var(--black); }
-  .confirm-row span:first-child { color: var(--text-muted); }
-  .success-box { text-align: center; padding: 1.5rem 0; }
-  .success-icon { font-size: 3rem; margin-bottom: 1rem; }
-  .success-box h3 { font-size: 1.3rem; font-weight: 900; color: var(--black); margin-bottom: 0.5rem; }
-  .success-box p { font-size: 14px; color: var(--text-muted); }
-
-  /* TESTIMONIALS */
-  .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 3rem; }
-  .review-card { background: var(--white); border: 1px solid #e8e8e8; border-radius: var(--radius-lg); padding: 1.5rem; }
-  .stars { color: var(--orange); font-size: 14px; margin-bottom: 0.75rem; }
-  .review-text { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 1rem; }
-  .review-author { display: flex; align-items: center; gap: 10px; }
-  .review-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--red-mid)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--white); flex-shrink: 0; }
-  .review-name { font-size: 13px; font-weight: 700; color: var(--black); }
-  .review-loc { font-size: 11px; color: var(--text-muted); }
-
-  /* SLOT PICKER */
-  .slot-btn { padding: 12px 8px; border-radius: var(--radius); border: 1.5px solid #e0e0e0; background: var(--white); font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.15s; color: var(--black); }
-  .slot-btn:hover:not(.taken) { border-color: var(--orange); background: rgba(255,199,68,0.06); }
-  .slot-btn.selected { border-color: var(--red-mid); background: rgba(243,56,42,0.08); color: var(--red-mid); }
-  .slot-btn.taken { background: #f5f5f5; color: #ccc; border-color: #eee; cursor: not-allowed; font-size: 11px; }
-
-  /* FAQ */
-  .faq-bg { background: var(--black); }
-  .faq-bg .section-title { color: var(--white); }
-  .faq-bg .section-eyebrow { color: var(--orange); }
-  .faq-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 2px; }
-  .faq-item { border-radius: var(--radius); overflow: hidden; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); }
-  .faq-q { padding: 1.1rem 1.25rem; font-size: 14px; font-weight: 700; color: var(--white); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
-  .faq-q:hover { background: rgba(255,255,255,0.03); }
-  .faq-chevron { color: var(--orange); font-size: 18px; transition: transform 0.25s; }
-  .faq-item.open .faq-chevron { transform: rotate(180deg); }
-  .faq-a { padding: 0 1.25rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
-  .faq-item.open .faq-a { max-height: 200px; padding: 0 1.25rem 1.1rem; }
-  .faq-a p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; }
-
-  /* CTA BANNER */
-  .cta-banner {
-    background: linear-gradient(90deg, #FFC744 0%, #F3382A 50%, #B02019 100%);
-    padding: 60px 2.5rem; text-align: center;
-  }
-  .cta-banner h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 900; color: var(--white); letter-spacing: -0.5px; margin-bottom: 0.75rem; }
-  .cta-banner p { font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 1.75rem; }
-  .cta-banner .btn-primary { font-size: 16px; padding: 15px 36px; }
-
-  /* FOOTER */
-  footer { background: var(--off-black); padding: 3rem 2.5rem 1.5rem; }
-  .footer-inner { max-width: 1100px; margin: 0 auto; }
-  .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; }
-  .footer-logo-mark { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #FFC744, #F3382A); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #fff; margin-bottom: 1rem; }
-  .footer-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 200px; }
-  .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 1rem; }
-  .footer-col a, .footer-col p { display: block; font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; margin-bottom: 8px; line-height: 1.5; }
-  .footer-col a:hover { color: var(--white); }
-  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-  .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
-  .live-badge { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #FFC744, #F3382A); color: #fff; font-size: 11px; font-weight: 800; padding: 8px 14px; border-radius: 20px; z-index: 999; letter-spacing: 0.05em; box-shadow: 0 4px 12px rgba(243,56,42,0.4); }
-  .social-links { display: flex; gap: 12px; }
-  .social-link { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 13px; color: rgba(255,255,255,0.5); transition: border-color 0.2s, color 0.2s; }
-  .social-link:hover { border-color: var(--orange); color: var(--orange); }
-
-  /* MOBILE NAV TOGGLE */
-  .nav-hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--white); font-size: 22px; }
-
-  @media (max-width: 900px) {
-    .hero-inner { grid-template-columns: 1fr; }
-    .hero-card { display: none; }
-    .services-grid { grid-template-columns: 1fr; }
-    .steps-grid { grid-template-columns: 1fr 1fr; }
-    .step-connector { display: none; }
-    .area-grid { grid-template-columns: 1fr; }
-    .booking-wrap { grid-template-columns: 1fr; }
-    .reviews-grid { grid-template-columns: 1fr; }
-    .footer-top { grid-template-columns: 1fr 1fr; }
-    .included-grid { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-    .nav-hamburger { display: block; }
-  }
-</style>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  window.onload = function() {
     emailjs.init('u04DcEFJlspxcIZm');
-  });
+  };
 </script>
+<style>
+:root {
+  --orange: #FFC744;
+  --red: #F3382A;
+  --red-dark: #B02019;
+  --black: #111;
+  --off-black: #1a1a1a;
+  --white: #fff;
+  --gray: #f5f5f5;
+  --muted: #888;
+  --radius: 8px;
+  --radius-lg: 14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--white); color: var(--black); line-height: 1.6; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(17,17,17,0.97); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; height: 68px; border-bottom: 1px solid rgba(255,199,68,0.15); }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-mark { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#FFC744,#F3382A); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; color: #fff; }
+.nav-logo-text { font-size: 17px; font-weight: 700; color: #fff; }
+.nav-logo-text span { color: var(--orange); }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
+.nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: #fff; }
+.nav-cta { background: linear-gradient(90deg,#FFC744,#F3382A); color: #fff; border: none; padding: 9px 22px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+.nav-cta:hover { opacity: 0.88; }
+.nav-hamburger { display: none; background: none; border: none; cursor: pointer; color: #fff; font-size: 22px; }
+
+/* HERO */
+.hero { min-height: 100vh; padding: 120px 2.5rem 80px; background: radial-gradient(ellipse at top left,#FFC744 0%,#FF6B1A 22%,#F3382A 48%,#B02019 72%,#111 100%); display: flex; align-items: center; }
+.hero-inner { max-width: 1100px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 1rem; }
+.hero h1 { font-size: clamp(2.4rem,5vw,3.8rem); font-weight: 900; color: #fff; line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 1.25rem; }
+.hero h1 em { font-style: normal; color: var(--orange); }
+.hero-sub { font-size: 17px; color: rgba(255,255,255,0.8); margin-bottom: 2rem; max-width: 440px; line-height: 1.65; }
+.hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.btn-primary { background: #fff; color: var(--red-dark); padding: 14px 30px; border-radius: var(--radius); font-weight: 800; font-size: 15px; text-decoration: none; border: none; cursor: pointer; transition: transform 0.15s,box-shadow 0.15s; display: inline-block; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.btn-ghost { color: #fff; border: 1.5px solid rgba(255,255,255,0.45); padding: 13px 26px; border-radius: var(--radius); font-size: 14px; font-weight: 600; text-decoration: none; display: inline-block; }
+.hero-tagline { margin-top: 2.5rem; font-size: 13px; color: rgba(255,255,255,0.45); font-style: italic; }
+.hero-card { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-lg); padding: 2rem; backdrop-filter: blur(10px); }
+.hero-card h3 { color: var(--orange); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.25rem; }
+.hero-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.hero-stat { text-align: center; }
+.hero-stat .num { font-size: 2rem; font-weight: 900; color: #fff; line-height: 1; }
+.hero-stat .lbl { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+.hero-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 1.25rem 0; }
+.hero-badge { display: flex; align-items: center; gap: 10px; }
+.hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; box-shadow: 0 0 6px #4ade80; }
+.hero-badge p { font-size: 13px; color: rgba(255,255,255,0.7); }
+
+/* TRUST BAR */
+.trust-bar { background: var(--off-black); padding: 1.5rem 2.5rem; }
+.trust-bar-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+.trust-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 500; }
+.trust-icon { color: var(--orange); }
+
+/* SECTIONS */
+section { padding: 90px 2.5rem; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; }
+.section-title { font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 1rem; }
+.section-sub { font-size: 16px; color: var(--muted); max-width: 540px; line-height: 1.7; }
+
+/* SERVICES */
+.services-bg { background: var(--gray); }
+.services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 3rem; }
+.service-card { background: #fff; border-radius: var(--radius-lg); border: 1px solid #e8e8e8; overflow: hidden; transition: transform 0.2s,box-shadow 0.2s; }
+.service-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.08); }
+.service-card-top { background: linear-gradient(135deg,#111,#2a2a2a); padding: 1.5rem; }
+.service-badge { display: inline-block; background: rgba(255,199,68,0.15); border: 1px solid rgba(255,199,68,0.3); color: var(--orange); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 0.75rem; }
+.service-name { font-size: 1.3rem; font-weight: 900; color: #fff; }
+.service-price { font-size: 2rem; font-weight: 900; color: var(--orange); margin-top: 0.5rem; line-height: 1; }
+.service-price span { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 400; }
+.service-card-body { padding: 1.5rem; }
+.service-includes { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
+.service-includes li { font-size: 13px; color: #444; display: flex; align-items: flex-start; gap: 8px; }
+.service-includes li::before { content: '✓'; color: #1D9E75; font-weight: 700; flex-shrink: 0; }
+.service-book-btn { display: block; width: 100%; text-align: center; background: linear-gradient(90deg,#F3382A,#B02019); color: #fff; padding: 12px; border-radius: var(--radius); font-weight: 700; font-size: 14px; text-decoration: none; border: none; cursor: pointer; transition: opacity 0.2s; }
+.service-book-btn:hover { opacity: 0.88; }
+.service-card.featured { border: 2px solid var(--orange); }
+.service-card.featured .service-card-top { background: linear-gradient(135deg,#B02019,#F3382A); }
+.included-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 2.5rem; }
+.included-item { display: flex; align-items: flex-start; gap: 14px; padding: 1.25rem; background: #fff; border: 1px solid #e8e8e8; border-radius: var(--radius); }
+.included-icon { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg,#FFC744,#F3382A); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.included-text strong { display: block; font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.included-text p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* HOW IT WORKS */
+.how-bg { background: var(--black); }
+.how-bg .section-title { color: #fff; }
+.how-bg .section-sub { color: rgba(255,255,255,0.55); }
+.how-bg .section-eyebrow { color: var(--orange); }
+.steps-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; margin-top: 3rem; }
+.step { text-align: center; }
+.step-num { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg,#FFC744,#F3382A); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #fff; }
+.step h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.step p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+/* AREA */
+.area-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 2.5rem; }
+.area-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 1rem; }
+.area-list li { font-size: 14px; color: #444; padding: 8px 12px; background: var(--gray); border-radius: 6px; font-weight: 500; }
+.area-map { background: linear-gradient(135deg,#1a1a1a,#2a2a2a); border-radius: var(--radius-lg); height: 320px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; border: 1px solid #333; }
+.area-map-label { text-align: center; position: relative; z-index: 3; }
+.area-map-label h3 { font-size: 1.5rem; font-weight: 900; color: var(--orange); }
+.area-map-label p { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+.area-radius { width: 180px; height: 180px; border-radius: 50%; border: 2px dashed rgba(255,199,68,0.35); position: absolute; }
+.area-radius-2 { width: 120px; height: 120px; border-radius: 50%; border: 2px solid rgba(243,56,42,0.4); position: absolute; }
+.area-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 12px rgba(255,199,68,0.6); position: absolute; z-index: 2; }
+
+/* BOOKING */
+.booking-bg { background: var(--gray); }
+.booking-wrap { display: grid; grid-template-columns: 1fr 1.3fr; gap: 3rem; align-items: start; margin-top: 3rem; }
+.booking-info h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+.booking-info p { font-size: 14px; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.7; }
+.booking-trust { display: flex; flex-direction: column; gap: 10px; margin-top: 1.5rem; }
+.booking-trust-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #444; }
+.booking-trust-dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg,var(--orange),var(--red)); flex-shrink: 0; }
+.booking-form { background: #fff; border-radius: var(--radius-lg); border: 1px solid #e8e8e8; padding: 2rem; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+.booking-form h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 1.5rem; border-bottom: 2px solid var(--orange); padding-bottom: 10px; display: inline-block; }
+.form-step { display: none; }
+.form-step.active { display: block; }
+.form-progress { display: flex; gap: 6px; margin-bottom: 1.5rem; }
+.progress-pip { flex: 1; height: 4px; background: #e8e8e8; border-radius: 2px; transition: background 0.3s; }
+.progress-pip.done { background: linear-gradient(90deg,var(--orange),var(--red)); }
+.form-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 6px; display: block; }
+.form-group { margin-bottom: 1.1rem; }
+.form-input, .form-select { width: 100%; padding: 11px 14px; border: 1.5px solid #e0e0e0; border-radius: var(--radius); font-size: 14px; outline: none; transition: border-color 0.2s; background: #fff; color: var(--black); font-family: inherit; }
+.form-input:focus, .form-select:focus { border-color: var(--red); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pkg-options { display: flex; flex-direction: column; gap: 8px; }
+.pkg-option { border: 1.5px solid #e0e0e0; border-radius: var(--radius); padding: 12px 14px; cursor: pointer; transition: border-color 0.2s,background 0.2s; display: flex; justify-content: space-between; align-items: center; }
+.pkg-option:hover { border-color: #ccc; background: #fafafa; }
+.pkg-option.selected { border-color: var(--orange); background: rgba(255,199,68,0.06); }
+.pkg-option-name { font-size: 14px; font-weight: 700; }
+.pkg-option-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.pkg-option-price { font-size: 16px; font-weight: 900; color: var(--red); }
+.form-btn { width: 100%; padding: 13px; border-radius: var(--radius); background: linear-gradient(90deg,#F3382A,#B02019); color: #fff; font-weight: 800; font-size: 15px; border: none; cursor: pointer; margin-top: 0.5rem; transition: opacity 0.2s; font-family: inherit; }
+.form-btn:hover:not(:disabled) { opacity: 0.9; }
+.form-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.form-btn-back { width: 100%; padding: 10px; border-radius: var(--radius); background: transparent; border: 1.5px solid #e0e0e0; color: var(--muted); font-size: 14px; cursor: pointer; margin-top: 8px; font-family: inherit; }
+.step-title { font-size: 15px; font-weight: 800; margin-bottom: 1.25rem; }
+.confirm-summary { background: var(--gray); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+.confirm-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #e8e8e8; }
+.confirm-row:last-child { border-bottom: none; font-weight: 700; }
+.confirm-row span:first-child { color: var(--muted); }
+.success-box { text-align: center; padding: 1.5rem 0; }
+.success-icon { font-size: 3rem; margin-bottom: 1rem; }
+.success-box h3 { font-size: 1.3rem; font-weight: 900; margin-bottom: 0.5rem; }
+.success-box p { font-size: 14px; color: var(--muted); }
+
+/* SLOT PICKER */
+.slot-grid-wrap { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 12px 0; }
+.slot-btn { padding: 12px 6px; border-radius: var(--radius); border: 1.5px solid #e0e0e0; background: #fff; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.15s; color: var(--black); width: 100%; font-family: inherit; }
+.slot-btn:hover:not(.taken) { border-color: var(--orange); background: rgba(255,199,68,0.06); }
+.slot-btn.selected { border-color: var(--red); background: rgba(243,56,42,0.08); color: var(--red); }
+.slot-btn.taken { background: #f5f5f5; color: #ccc; border-color: #eee; cursor: not-allowed; font-size: 11px; font-weight: 500; }
+.slot-selected-banner { display: none; background: #f0fdf4; border: 1.5px solid #1D9E75; border-radius: var(--radius); padding: 12px 16px; margin-bottom: 14px; }
+.slot-selected-banner .label { font-size: 11px; color: #0F6E56; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+.slot-selected-banner .value { font-size: 14px; font-weight: 700; color: #085041; }
+.slot-loading { display: none; text-align: center; padding: 20px; font-size: 13px; color: var(--muted); }
+
+/* REVIEWS */
+.reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 3rem; }
+.review-card { background: #fff; border: 1px solid #e8e8e8; border-radius: var(--radius-lg); padding: 1.5rem; }
+.stars { color: var(--orange); font-size: 14px; margin-bottom: 0.75rem; }
+.review-text { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 1rem; }
+.review-author { display: flex; align-items: center; gap: 10px; }
+.review-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,var(--orange),var(--red)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.review-name { font-size: 13px; font-weight: 700; }
+.review-loc { font-size: 11px; color: var(--muted); }
+
+/* FAQ */
+.faq-bg { background: var(--black); }
+.faq-bg .section-title { color: #fff; }
+.faq-bg .section-eyebrow { color: var(--orange); }
+.faq-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 2px; }
+.faq-item { border-radius: var(--radius); overflow: hidden; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); }
+.faq-q { padding: 1.1rem 1.25rem; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+.faq-chevron { color: var(--orange); font-size: 18px; transition: transform 0.25s; }
+.faq-item.open .faq-chevron { transform: rotate(180deg); }
+.faq-a { padding: 0 1.25rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease,padding 0.3s ease; }
+.faq-item.open .faq-a { max-height: 200px; padding: 0 1.25rem 1.1rem; }
+.faq-a p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+/* CTA */
+.cta-banner { background: linear-gradient(90deg,#FFC744 0%,#F3382A 50%,#B02019 100%); padding: 60px 2.5rem; text-align: center; }
+.cta-banner h2 { font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 900; color: #fff; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+.cta-banner p { font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 1.75rem; }
+
+/* FOOTER */
+footer { background: var(--off-black); padding: 3rem 2.5rem 1.5rem; }
+.footer-inner { max-width: 1100px; margin: 0 auto; }
+.footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; }
+.footer-logo-mark { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg,#FFC744,#F3382A); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #fff; margin-bottom: 1rem; }
+.footer-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 200px; }
+.footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 1rem; }
+.footer-col a, .footer-col p { display: block; font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; margin-bottom: 8px; line-height: 1.5; }
+.footer-col a:hover { color: #fff; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
+.social-links { display: flex; gap: 12px; }
+.social-link { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 13px; color: rgba(255,255,255,0.5); transition: border-color 0.2s,color 0.2s; }
+.social-link:hover { border-color: var(--orange); color: var(--orange); }
+.live-badge { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg,#FFC744,#F3382A); color: #fff; font-size: 11px; font-weight: 800; padding: 8px 14px; border-radius: 20px; z-index: 999; letter-spacing: 0.05em; box-shadow: 0 4px 12px rgba(243,56,42,0.4); }
+
+@media(max-width:900px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-card { display: none; }
+  .services-grid { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr 1fr; }
+  .area-grid { grid-template-columns: 1fr; }
+  .booking-wrap { grid-template-columns: 1fr; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .included-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: block; }
+  .slot-grid-wrap { grid-template-columns: repeat(2,1fr); }
+}
+</style>
 </head>
 <body>
+
+<!-- Hidden Netlify form detector -->
 <form name="motornation-booking" data-netlify="true" hidden>
   <input type="text" name="first-name">
   <input type="text" name="last-name">
@@ -338,7 +269,7 @@
     <a href="#faq">FAQ</a>
     <a href="#book" class="nav-cta">Book now</a>
   </div>
-  <button class="nav-hamburger" aria-label="Menu" onclick="document.getElementById('nav-links').style.display = document.getElementById('nav-links').style.display === 'flex' ? 'none' : 'flex'">☰</button>
+  <button class="nav-hamburger" onclick="document.getElementById('nav-links').style.display=document.getElementById('nav-links').style.display==='flex'?'none':'flex'">☰</button>
 </nav>
 
 <!-- HERO -->
@@ -358,8 +289,8 @@
       <h3>Why MotorNation?</h3>
       <div class="hero-stat-grid">
         <div class="hero-stat"><div class="num">30<span style="font-size:1rem">min</span></div><div class="lbl">Avg service time</div></div>
-        <div class="hero-stat"><div class="num">$0</div><div class="lbl">Travel or call-out fee</div></div>
-        <div class="hero-stat"><div class="num">100%</div><div class="lbl">Mobile — we come to you</div></div>
+        <div class="hero-stat"><div class="num">$0</div><div class="lbl">Travel fee</div></div>
+        <div class="hero-stat"><div class="num">100%</div><div class="lbl">Mobile service</div></div>
         <div class="hero-stat"><div class="num">5★</div><div class="lbl">Customer rating</div></div>
       </div>
       <hr class="hero-divider">
@@ -389,7 +320,6 @@
     <h2 class="section-title">Simple, transparent pricing</h2>
     <p class="section-sub">Every package includes full-synthetic oil, new filter, fluid top-offs, OBD-II scan, and 10-point inspection. No surprises.</p>
     <div class="services-grid">
-
       <div class="service-card">
         <div class="service-card-top">
           <div class="service-badge">Essential</div>
@@ -405,10 +335,9 @@
             <li>10-point safety inspection</li>
             <li>OBD-II diagnostic scan</li>
           </ul>
-          <a href="#book" class="service-book-btn" onclick="selectPackage('Basic Synthetic', '$89')">Book this package</a>
+          <a href="#book" class="service-book-btn" onclick="selectPackage('Basic Synthetic','$89')">Book this package</a>
         </div>
       </div>
-
       <div class="service-card featured">
         <div class="service-card-top">
           <div class="service-badge">Most popular</div>
@@ -425,10 +354,9 @@
             <li>10-point safety inspection</li>
             <li>OBD-II diagnostic scan & report</li>
           </ul>
-          <a href="#book" class="service-book-btn" onclick="selectPackage('Premium Synthetic', '$109')">Book this package</a>
+          <a href="#book" class="service-book-btn" onclick="selectPackage('Premium Synthetic','$109')">Book this package</a>
         </div>
       </div>
-
       <div class="service-card">
         <div class="service-card-top">
           <div class="service-badge">Best value</div>
@@ -446,40 +374,19 @@
             <li>10-point inspection + written report</li>
             <li>OBD-II scan with code explanation</li>
           </ul>
-          <a href="#book" class="service-book-btn" onclick="selectPackage('Elite + Filter Kit', '$139')">Book this package</a>
+          <a href="#book" class="service-book-btn" onclick="selectPackage('Elite + Filter Kit','$139')">Book this package</a>
         </div>
       </div>
-
     </div>
-
-    <!-- ALL SERVICES INCLUDE -->
-    <div style="margin-top: 3.5rem;">
+    <div style="margin-top:3.5rem;">
       <p class="section-eyebrow">Every appointment includes</p>
       <div class="included-grid">
-        <div class="included-item">
-          <div class="included-icon">🛢️</div>
-          <div class="included-text"><strong>Full-synthetic oil & filter</strong><p>Premium oil matched to your vehicle spec, with a new OEM-quality filter every time.</p></div>
-        </div>
-        <div class="included-item">
-          <div class="included-icon">💧</div>
-          <div class="included-text"><strong>Fluid top-offs</strong><p>Washer, coolant, brake fluid, and more topped off as accessible during the service.</p></div>
-        </div>
-        <div class="included-item">
-          <div class="included-icon">🔍</div>
-          <div class="included-text"><strong>OBD-II diagnostic scan</strong><p>We plug in and read any check-engine or warning codes, and explain what they mean.</p></div>
-        </div>
-        <div class="included-item">
-          <div class="included-icon">🛡️</div>
-          <div class="included-text"><strong>10-point safety inspection</strong><p>Quick visual check of belts, hoses, tires, brakes, lights, battery, and more.</p></div>
-        </div>
-        <div class="included-item">
-          <div class="included-icon">🔧</div>
-          <div class="included-text"><strong>Tire & TPMS check</strong><p>Pressure adjusted to spec, TPMS warning light reset if needed at no extra charge.</p></div>
-        </div>
-        <div class="included-item">
-          <div class="included-icon">📍</div>
-          <div class="included-text"><strong>Mobile service — we come to you</strong><p>Home, office, parking lot — anywhere within our Denver Metro service area.</p></div>
-        </div>
+        <div class="included-item"><div class="included-icon">🛢️</div><div class="included-text"><strong>Full-synthetic oil & filter</strong><p>Premium oil matched to your vehicle spec, with a new OEM-quality filter every time.</p></div></div>
+        <div class="included-item"><div class="included-icon">💧</div><div class="included-text"><strong>Fluid top-offs</strong><p>Washer, coolant, brake fluid, and more topped off as accessible during the service.</p></div></div>
+        <div class="included-item"><div class="included-icon">🔍</div><div class="included-text"><strong>OBD-II diagnostic scan</strong><p>We plug in and read any check-engine or warning codes, and explain what they mean.</p></div></div>
+        <div class="included-item"><div class="included-icon">🛡️</div><div class="included-text"><strong>10-point safety inspection</strong><p>Quick visual check of belts, hoses, tires, brakes, lights, battery, and more.</p></div></div>
+        <div class="included-item"><div class="included-icon">🔧</div><div class="included-text"><strong>Tire & TPMS check</strong><p>Pressure adjusted to spec, TPMS warning light reset if needed at no extra charge.</p></div></div>
+        <div class="included-item"><div class="included-icon">📍</div><div class="included-text"><strong>Mobile service — we come to you</strong><p>Home, office, parking lot — anywhere within our Denver Metro service area.</p></div></div>
       </div>
     </div>
   </div>
@@ -491,67 +398,39 @@
     <p class="section-eyebrow">Process</p>
     <h2 class="section-title">How it works</h2>
     <p class="section-sub" style="color:rgba(255,255,255,0.5);">Four steps. Zero trips to a shop.</p>
-      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 3rem; align-items: start;">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h4>Book online</h4>
-        <p>Pick your package and a real available time slot. Done in 2 minutes.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h4>We confirm</h4>
-        <p>Your slot is instantly locked in. A confirmation lands in your email right away.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h4>We come to you</h4>
-        <p>Our technician arrives at your location with all supplies. No prep needed.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <h4>Done in 30 min</h4>
-        <p>Service complete, report shared, and you're back to your day. No waiting room.</p>
-      </div>
+    <div class="steps-grid">
+      <div class="step"><div class="step-num">1</div><h4>Book online</h4><p>Pick your package and a real available time slot. Done in 2 minutes.</p></div>
+      <div class="step"><div class="step-num">2</div><h4>We confirm</h4><p>Your slot is instantly locked in. A confirmation email lands in your inbox right away.</p></div>
+      <div class="step"><div class="step-num">3</div><h4>We come to you</h4><p>Our technician arrives at your location with all supplies. No prep needed.</p></div>
+      <div class="step"><div class="step-num">4</div><h4>Done in 30 min</h4><p>Service complete, report shared, and you're back to your day. No waiting room.</p></div>
     </div>
   </div>
 </section>
 
-<!-- SERVICE AREA -->
+<!-- AREA -->
 <section id="area">
   <div class="section-inner">
     <p class="section-eyebrow">Coverage</p>
     <h2 class="section-title">We serve Denver Metro & beyond</h2>
     <div class="area-grid">
       <div>
-        <p style="font-size:15px; color: var(--text-muted); margin-bottom: 1.25rem; line-height:1.7;">MotorNation currently serves Aurora, Denver, and surrounding communities across the Metro area. Not sure if we cover your area? Text us.</p>
+        <p style="font-size:15px;color:var(--muted);margin-bottom:1.25rem;line-height:1.7;">MotorNation currently serves Aurora, Denver, and surrounding communities across the Metro area. Not sure if we cover your area? Text us.</p>
         <ul class="area-list">
-          <li>📍 Aurora</li>
-          <li>📍 Denver</li>
-          <li>📍 Centennial</li>
-          <li>📍 Englewood</li>
-          <li>📍 Lakewood</li>
-          <li>📍 Littleton</li>
-          <li>📍 Thornton</li>
-          <li>📍 Westminster</li>
-          <li>📍 Arvada</li>
-          <li>📍 Commerce City</li>
+          <li>📍 Aurora</li><li>📍 Denver</li><li>📍 Centennial</li><li>📍 Englewood</li>
+          <li>📍 Lakewood</li><li>📍 Littleton</li><li>📍 Thornton</li><li>📍 Westminster</li>
+          <li>📍 Arvada</li><li>📍 Commerce City</li>
         </ul>
-        <p style="font-size:13px; color:var(--text-muted); margin-top:1rem;">Don't see your city? <a href="#book" style="color:var(--red-mid); font-weight:600;">Contact us</a> — we may still be able to help.</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:1rem;">Don't see your city? <a href="#book" style="color:var(--red);font-weight:600;">Contact us</a> — we may still be able to help.</p>
       </div>
       <div class="area-map">
-        <div class="area-radius"></div>
-        <div class="area-radius-2"></div>
-        <div class="area-dot"></div>
-        <div class="area-map-label" style="position:relative;z-index:3;">
-          <h3>Denver Metro</h3>
-          <p>~25 mile service radius</p>
-        </div>
+        <div class="area-radius"></div><div class="area-radius-2"></div><div class="area-dot"></div>
+        <div class="area-map-label"><h3>Denver Metro</h3><p>~25 mile service radius</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- BOOKING FORM -->
+<!-- BOOKING -->
 <section class="booking-bg" id="book">
   <div class="section-inner">
     <p class="section-eyebrow">Appointments</p>
@@ -562,16 +441,18 @@
         <h3>What to expect</h3>
         <p>Pick your package, choose a real available time slot, and drop your address. Your appointment is instantly confirmed — no waiting for a callback. We'll see you at your location!</p>
         <div class="booking-trust">
-          <div class="booking-trust-item"><div class="booking-trust-dot"></div>Confirmation within 1–2 hours</div>
+          <div class="booking-trust-item"><div class="booking-trust-dot"></div>Instant booking confirmation</div>
           <div class="booking-trust-item"><div class="booking-trust-dot"></div>All supplies brought by us</div>
           <div class="booking-trust-item"><div class="booking-trust-dot"></div>No hidden fees or surcharges</div>
           <div class="booking-trust-item"><div class="booking-trust-dot"></div>30-minute average service time</div>
           <div class="booking-trust-item"><div class="booking-trust-dot"></div>Payment on completion — cash, card, or Venmo</div>
         </div>
-        <div style="margin-top:2rem; padding: 1.25rem; background: linear-gradient(135deg, #111, #1a1a1a); border-radius: var(--radius-lg); border: 1px solid rgba(255,199,68,0.2);">
-          <p style="font-size:12px; color:rgba(255,255,255,0.4); font-weight:700; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;">Questions?</p>
-          <p style="font-size:14px; color:rgba(255,255,255,0.7); line-height:1.6;">Text or call us:<br><a href="tel:7203178949" style="color:var(--orange); font-size:17px; font-weight:800; text-decoration:none;">(720) 317-8949</a><br><a href="tel:7203182028" style="color:rgba(255,199,68,0.7); font-size:14px; text-decoration:none;">(720) 318-2028</a></p>
-          <p style="font-size:13px; color:rgba(255,255,255,0.4); margin-top:6px;">Or find us on Instagram: <a href="https://instagram.com/motornationusa" target="_blank" style="color:var(--orange);">@motornationusa</a></p>
+        <div style="margin-top:2rem;padding:1.25rem;background:linear-gradient(135deg,#111,#1a1a1a);border-radius:var(--radius-lg);border:1px solid rgba(255,199,68,0.2);">
+          <p style="font-size:12px;color:rgba(255,255,255,0.4);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Questions?</p>
+          <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.6;">Text or call us:<br>
+          <a href="tel:7203178949" style="color:var(--orange);font-size:17px;font-weight:800;text-decoration:none;">(720) 317-8949</a><br>
+          <a href="tel:7203182028" style="color:rgba(255,199,68,0.7);font-size:14px;text-decoration:none;">(720) 318-2028</a></p>
+          <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:6px;">Or find us on Instagram: <a href="https://instagram.com/motornationusa" target="_blank" style="color:var(--orange);">@motornationusa</a></p>
         </div>
       </div>
 
@@ -584,51 +465,43 @@
           <div class="progress-pip" id="pip-4"></div>
         </div>
 
-        <!-- STEP 1: Package -->
+        <!-- STEP 1 -->
         <div class="form-step active" id="step-1">
           <p class="step-title">Step 1 — Choose your package</p>
           <div class="pkg-options">
-            <div class="pkg-option" onclick="pickPkg(this, 'Basic Synthetic', '$89')">
+            <div class="pkg-option" onclick="pickPkg(this,'Basic Synthetic','$89')">
               <div><div class="pkg-option-name">Basic Synthetic</div><div class="pkg-option-desc">Up to 5 qts · Filter · Inspection · OBD scan</div></div>
               <div class="pkg-option-price">$89</div>
             </div>
-            <div class="pkg-option" onclick="pickPkg(this, 'Premium Synthetic', '$109')">
+            <div class="pkg-option" onclick="pickPkg(this,'Premium Synthetic','$109')">
               <div><div class="pkg-option-name">Premium Synthetic ⭐ Most popular</div><div class="pkg-option-desc">Up to 7 qts · Full fluids · TPMS reset</div></div>
               <div class="pkg-option-price">$109</div>
             </div>
-            <div class="pkg-option" onclick="pickPkg(this, 'Elite + Filter Kit', '$139')">
+            <div class="pkg-option" onclick="pickPkg(this,'Elite + Filter Kit','$139')">
               <div><div class="pkg-option-name">Elite + Filter Kit</div><div class="pkg-option-desc">All premium + air filter + wiper blades</div></div>
               <div class="pkg-option-price">$139</div>
             </div>
           </div>
-          <button class="form-btn" id="step1-continue" style="margin-top:1.25rem; opacity:0.5; pointer-events:none;" onclick="goStep(2)">Select a package to continue →</button>
+          <button class="form-btn" id="step1-btn" disabled onclick="goStep(2)">Select a package to continue →</button>
         </div>
 
-        <!-- STEP 2: Custom Slot Picker -->
+        <!-- STEP 2 -->
         <div class="form-step" id="step-2">
           <p class="step-title">Step 2 — Pick your date & time</p>
-
-          <!-- Date picker -->
           <div class="form-group">
             <label class="form-label">Select a date</label>
-            <input type="date" class="form-input" id="f-date" onchange="loadSlots(this.value)">
+            <input type="date" class="form-input" id="booking-date" onchange="loadSlots(this.value)">
           </div>
-
-          <!-- Slot grid -->
-          <div id="slot-loading" style="display:none; text-align:center; padding:20px; font-size:13px; color:var(--text-muted);">Checking availability...</div>
-          <div id="slot-grid" style="display:none; margin-bottom:14px;">
-            <label class="form-label" style="margin-bottom:8px; display:block;">Available time slots</label>
-            <div id="slot-buttons" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;"></div>
+          <div class="slot-loading" id="slot-loading">Checking availability...</div>
+          <div id="slot-grid-area" style="display:none;">
+            <label class="form-label" style="margin-bottom:8px;display:block;">Available time slots</label>
+            <div class="slot-grid-wrap" id="slot-buttons"></div>
           </div>
-
-          <!-- Selected slot confirmation -->
-          <div id="slot-selected-banner" style="display:none; background:#f0fdf4; border:1.5px solid #1D9E75; border-radius:8px; padding:12px 16px; margin-bottom:14px;">
-            <div style="font-size:11px; color:#0F6E56; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:2px;">✓ Time slot selected</div>
-            <div style="font-size:15px; font-weight:700; color:#085041;" id="slot-selected-text"></div>
+          <div class="slot-selected-banner" id="slot-banner">
+            <div class="label">✓ Time slot selected</div>
+            <div class="value" id="slot-banner-text"></div>
           </div>
-
-          <!-- Address -->
-          <div class="form-group">
+          <div class="form-group" style="margin-top:14px;">
             <label class="form-label">Service address</label>
             <input type="text" class="form-input" id="f-address" placeholder="Street address, Aurora/Denver, CO">
           </div>
@@ -641,56 +514,35 @@
               <option>Other</option>
             </select>
           </div>
-          <button class="form-btn" id="step2-continue" onclick="goStep(3)" style="opacity:0.5; pointer-events:none;">Select a date & time to continue →</button>
+          <button class="form-btn" id="step2-btn" disabled onclick="goStep(3)">Select a time slot to continue →</button>
           <button class="form-btn-back" onclick="goStep(1)">← Back</button>
         </div>
 
-        <!-- STEP 3: Your info & vehicle -->
+        <!-- STEP 3 -->
         <div class="form-step" id="step-3">
           <p class="step-title">Step 3 — Your info & vehicle</p>
           <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">First name</label>
-              <input type="text" class="form-input" id="f-fname" placeholder="Ahmed">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Last name</label>
-              <input type="text" class="form-input" id="f-lname" placeholder="Khattab">
-            </div>
+            <div class="form-group"><label class="form-label">First name</label><input type="text" class="form-input" id="f-fname" placeholder="Ahmed"></div>
+            <div class="form-group"><label class="form-label">Last name</label><input type="text" class="form-input" id="f-lname" placeholder="Khattab"></div>
           </div>
           <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Phone</label>
-              <input type="tel" class="form-input" id="f-phone" placeholder="(720) 555-0100">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-input" id="f-email" placeholder="you@email.com">
-            </div>
+            <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="f-phone" placeholder="(720) 555-0100"></div>
+            <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="f-email" placeholder="you@email.com"></div>
           </div>
           <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Vehicle year</label>
-              <input type="text" class="form-input" id="f-year" placeholder="2019">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Make & model</label>
-              <input type="text" class="form-input" id="f-vehicle" placeholder="Toyota Camry">
-            </div>
+            <div class="form-group"><label class="form-label">Vehicle year</label><input type="text" class="form-input" id="f-year" placeholder="2019"></div>
+            <div class="form-group"><label class="form-label">Make & model</label><input type="text" class="form-input" id="f-vehicle" placeholder="Toyota Camry"></div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Notes (optional)</label>
-            <input type="text" class="form-input" id="f-notes" placeholder="Gate code, parking instructions, etc.">
-          </div>
+          <div class="form-group"><label class="form-label">Notes (optional)</label><input type="text" class="form-input" id="f-notes" placeholder="Gate code, parking instructions, etc."></div>
           <button class="form-btn" onclick="goStep(4)">Review booking →</button>
           <button class="form-btn-back" onclick="goStep(2)">← Back</button>
         </div>
 
-        <!-- STEP 4: Confirm -->
+        <!-- STEP 4 -->
         <div class="form-step" id="step-4">
           <p class="step-title">Step 4 — Confirm your booking</p>
           <div class="confirm-summary" id="confirm-summary"></div>
-          <button class="form-btn" onclick="submitBooking()">Confirm & book appointment</button>
+          <button class="form-btn" id="submit-btn" onclick="submitBooking()">Confirm & book appointment</button>
           <button class="form-btn-back" onclick="goStep(3)">← Edit details</button>
         </div>
 
@@ -699,11 +551,10 @@
           <div class="success-box">
             <div class="success-icon">🎉</div>
             <h3>You're booked!</h3>
-            <p>Your appointment is confirmed. We'll see you at your location — get ready to skip the shop for good!</p>
-            <p style="margin-top:1rem; font-size:13px; color:var(--text-muted);">Questions? Call or text <a href="tel:7203178949" style="color:var(--red-mid);">(720) 317-8949</a> or DM <a href="https://instagram.com/motornationusa" style="color:var(--red-mid);">@motornationusa</a></p>
+            <p>Your appointment is confirmed. Check your email for details. We'll see you at your location — get ready to skip the shop for good!</p>
+            <p style="margin-top:1rem;font-size:13px;color:var(--muted);">Questions? Call or text <a href="tel:7203178949" style="color:var(--red);">(720) 317-8949</a> or DM <a href="https://instagram.com/motornationusa" style="color:var(--red);">@motornationusa</a></p>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -715,21 +566,9 @@
     <p class="section-eyebrow">Reviews</p>
     <h2 class="section-title">What customers say</h2>
     <div class="reviews-grid">
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p class="review-text">"Absolutely love this service. Ahmed came right to my office parking lot on my lunch break — done in 25 minutes. I'll never go to a shop again."</p>
-        <div class="review-author"><div class="review-avatar">JM</div><div><div class="review-name">Jessica M.</div><div class="review-loc">Aurora, CO</div></div></div>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p class="review-text">"The convenience factor alone is worth it. He showed up on time, was super professional, and explained everything the diagnostic found. Great experience."</p>
-        <div class="review-author"><div class="review-avatar">DT</div><div><div class="review-name">David T.</div><div class="review-loc">Denver, CO</div></div></div>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p class="review-text">"I booked for my wife's car while she was at work — she didn't have to do a thing. Service was fast, clean, and professional. 10/10 would recommend."</p>
-        <div class="review-author"><div class="review-avatar">MR</div><div><div class="review-name">Marcus R.</div><div class="review-loc">Centennial, CO</div></div></div>
-      </div>
+      <div class="review-card"><div class="stars">★★★★★</div><p class="review-text">"Absolutely love this service. Ahmed came right to my office parking lot on my lunch break — done in 25 minutes. I'll never go to a shop again."</p><div class="review-author"><div class="review-avatar">JM</div><div><div class="review-name">Jessica M.</div><div class="review-loc">Aurora, CO</div></div></div></div>
+      <div class="review-card"><div class="stars">★★★★★</div><p class="review-text">"The convenience factor alone is worth it. He showed up on time, was super professional, and explained everything the diagnostic found. Great experience."</p><div class="review-author"><div class="review-avatar">DT</div><div><div class="review-name">David T.</div><div class="review-loc">Denver, CO</div></div></div></div>
+      <div class="review-card"><div class="stars">★★★★★</div><p class="review-text">"I booked for my wife's car while she was at work — she didn't have to do a thing. Service was fast, clean, and professional. 10/10 would recommend."</p><div class="review-author"><div class="review-avatar">MR</div><div><div class="review-name">Marcus R.</div><div class="review-loc">Centennial, CO</div></div></div></div>
     </div>
   </div>
 </section>
@@ -740,35 +579,17 @@
     <p class="section-eyebrow">FAQ</p>
     <h2 class="section-title">Common questions</h2>
     <div class="faq-list">
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Do I need to do anything to prepare? <span class="faq-chevron">▾</span></div>
-        <div class="faq-a"><p>Nope! Just make sure your vehicle is parked and accessible at the address you provide. We bring everything — oil, filter, tools, and supplies. You don't need to be right next to the car the whole time.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">How do I pay? <span class="faq-chevron">▾</span></div>
-        <div class="faq-a"><p>We accept cash, all major credit/debit cards, Venmo, and Zelle. Payment is collected on the day of service after the work is complete — no upfront payment required at booking.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">What if my vehicle needs more than 5 quarts of oil? <span class="faq-chevron">▾</span></div>
-        <div class="faq-a"><p>The Basic package covers up to 5 quarts. If your vehicle takes more (trucks, SUVs, V8s), we recommend the Premium or Elite packages which cover up to 7 quarts. If you're unsure, just mention your vehicle make/model when booking and we'll confirm the right package.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">What areas do you service? <span class="faq-chevron">▾</span></div>
-        <div class="faq-a"><p>We currently serve Aurora, Denver, Centennial, Englewood, Lakewood, Littleton, Thornton, Westminster, Arvada, and Commerce City. If you're outside these areas, contact us — we may still be able to accommodate you.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">How soon can I get an appointment? <span class="faq-chevron">▾</span></div>
-        <div class="faq-a"><p>We typically have availability within 1–3 days. Same-day appointments may be available depending on the schedule. Book early in the week for the best time slot selection.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">What if I need to cancel or reschedule? <span class="faq-chevron">▾</span></div>
-        <div class="faq-a"><p>No problem — just text or DM us at least a few hours before your appointment and we'll get you rescheduled at no charge. We understand things come up.</p></div>
-      </div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need to do anything to prepare? <span class="faq-chevron">▾</span></div><div class="faq-a"><p>Nope! Just make sure your vehicle is parked and accessible at the address you provide. We bring everything — oil, filter, tools, and supplies.</p></div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I pay? <span class="faq-chevron">▾</span></div><div class="faq-a"><p>We accept cash, all major credit/debit cards, Venmo, and Zelle. Payment is collected on the day of service after the work is complete.</p></div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if my vehicle needs more than 5 quarts of oil? <span class="faq-chevron">▾</span></div><div class="faq-a"><p>The Basic package covers up to 5 quarts. If your vehicle takes more, we recommend the Premium or Elite packages which cover up to 7 quarts.</p></div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What areas do you service? <span class="faq-chevron">▾</span></div><div class="faq-a"><p>We serve Aurora, Denver, Centennial, Englewood, Lakewood, Littleton, Thornton, Westminster, Arvada, and Commerce City. Contact us if you're outside these areas.</p></div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How soon can I get an appointment? <span class="faq-chevron">▾</span></div><div class="faq-a"><p>We typically have availability within 1–3 days. Same-day appointments may be available depending on the schedule.</p></div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if I need to cancel or reschedule? <span class="faq-chevron">▾</span></div><div class="faq-a"><p>No problem — just text or call us at least a few hours before your appointment and we'll get you rescheduled at no charge.</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- CTA BANNER -->
+<!-- CTA -->
 <div class="cta-banner">
   <h2>Ready to skip the shop forever?</h2>
   <p>Book in 2 minutes. We come to you. Done in 30.</p>
@@ -781,7 +602,7 @@
     <div class="footer-top">
       <div>
         <div class="footer-logo-mark">MN</div>
-        <p style="font-size:15px; font-weight:800; color:var(--white); margin-bottom:8px;">MotorNation USA</p>
+        <p style="font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;">MotorNation USA</p>
         <p class="footer-desc">"Keeping your life in motion" — mobile oil changes and maintenance in the Denver Metro area.</p>
       </div>
       <div class="footer-col">
@@ -795,7 +616,6 @@
         <a href="#how-it-works">How it works</a>
         <a href="#area">Service area</a>
         <a href="#faq">FAQ</a>
-        <a href="#faq">Privacy policy</a>
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
@@ -803,264 +623,280 @@
         <a href="tel:7203178949">(720) 317-8949</a>
         <a href="tel:7203182028">(720) 318-2028</a>
         <a href="https://instagram.com/motornationusa" target="_blank">@motornationusa</a>
-        <a href="https://www.facebook.com/motornationusa" target="_blank">Facebook</a>
         <a href="#book">Book an appointment</a>
       </div>
     </div>
     <div class="footer-bottom">
       <p>© 2026 MotorNation LLC / MotorNation USA. All rights reserved. Aurora, CO.</p>
       <div class="social-links">
-        <a class="social-link" href="https://instagram.com/motornationusa" target="_blank" title="Instagram">IG</a>
-        <a class="social-link" href="https://www.facebook.com/motornationusa" target="_blank" title="Facebook">FB</a>
+        <a class="social-link" href="https://instagram.com/motornationusa" target="_blank">IG</a>
+        <a class="social-link" href="https://www.facebook.com/motornationusa" target="_blank">FB</a>
       </div>
     </div>
   </div>
 </footer>
 
 <script>
+// ── STATE ─────────────────────────────────────────────────────
 let selectedPkg = { name: '', price: '' };
+let selectedDate = '';
+let selectedTime = '';
 
-function selectPackage(name, price) {
-  selectedPkg = { name, price };
+const ALL_SLOTS = ['7:00 AM','9:00 AM','11:00 AM','1:00 PM','3:00 PM','5:00 PM','7:00 PM'];
+const SLOT_HOURS = {'7:00 AM':7,'9:00 AM':9,'11:00 AM':11,'1:00 PM':13,'3:00 PM':15,'5:00 PM':17,'7:00 PM':19};
+
+// EmailJS config
+const EJS_SVC  = 'service_6pgdsld';
+const EJS_CUST = 'template_kjzev4o';
+const EJS_OWN  = 'template_42xr6mb';
+const EJS_KEY  = 'u04DcEFJlspxcIZm';
+
+// ── INIT DATE PICKER ──────────────────────────────────────────
+function getTodayMT() {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Denver' });
 }
 
-function pickPkg(el, name, price) {
-  document.querySelectorAll('.pkg-option').forEach(o => o.classList.remove('selected'));
+function initDatePicker() {
+  const today = getTodayMT();
+  const input = document.getElementById('booking-date');
+  input.min = today;
+  input.value = today;
+  loadSlots(today);
+}
+
+// ── SLOT PICKER ───────────────────────────────────────────────
+async function loadSlots(dateVal) {
+  if (!dateVal) return;
+
+  const today = getTodayMT();
+  const input = document.getElementById('booking-date');
+  input.min = today;
+
+  // If past date somehow entered, reset to today
+  if (dateVal < today) {
+    input.value = today;
+    dateVal = today;
+  }
+
+  selectedDate = dateVal;
+  selectedTime = '';
+
+  // Reset step 2 button
+  const btn2 = document.getElementById('step2-btn');
+  btn2.disabled = true;
+  btn2.textContent = 'Select a time slot to continue →';
+
+  // Hide banner
+  document.getElementById('slot-banner').style.display = 'none';
+
+  // Show loading
+  document.getElementById('slot-loading').style.display = 'block';
+  document.getElementById('slot-grid-area').style.display = 'none';
+
+  // Check booked slots
+  let takenSlots = [];
+  try {
+    const res = await fetch('/.netlify/functions/get-slots?date=' + dateVal);
+    if (res.ok) {
+      const data = await res.json();
+      takenSlots = data.taken || [];
+    }
+  } catch(e) { /* function may not be deployed yet */ }
+
+  document.getElementById('slot-loading').style.display = 'none';
+  document.getElementById('slot-grid-area').style.display = 'block';
+
+  const now = new Date();
+  const currentHour = parseInt(
+    new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: 'America/Denver' }).format(now)
+  );
+  const isToday = (dateVal === today);
+
+  const container = document.getElementById('slot-buttons');
+  container.innerHTML = '';
+  let anyAvailable = false;
+
+  ALL_SLOTS.forEach(function(slot) {
+    const isTaken = takenSlots.includes(slot);
+    const isPast  = isToday && (SLOT_HOURS[slot] <= currentHour);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+
+    if (isTaken || isPast) {
+      btn.className = 'slot-btn taken';
+      btn.textContent = isPast ? slot + ' — Past' : slot + ' — Booked';
+    } else {
+      btn.className = 'slot-btn';
+      btn.textContent = slot;
+      btn.addEventListener('click', function() { pickSlot(slot, btn, dateVal); });
+      anyAvailable = true;
+    }
+    container.appendChild(btn);
+  });
+
+  if (!anyAvailable) {
+    container.innerHTML = '<p style="font-size:13px;color:#888;grid-column:1/-1;padding:12px 0;">No available slots for this date — please choose another day.</p>';
+  }
+}
+
+function pickSlot(slot, el, dateVal) {
+  document.querySelectorAll('.slot-btn').forEach(function(b) { b.classList.remove('selected'); });
   el.classList.add('selected');
-  selectedPkg = { name, price };
-  const btn = document.getElementById('step1-continue');
-  btn.style.opacity = '1';
-  btn.style.pointerEvents = 'auto';
+  selectedTime = slot;
+  selectedDate = dateVal;
+
+  // Update hidden fields
+  document.getElementById('f-date').value = dateVal;
+  document.getElementById('f-time').value = slot;
+
+  // Show banner
+  var dt = new Date(dateVal + 'T12:00:00');
+  var dateStr = dt.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  document.getElementById('slot-banner-text').textContent = dateStr + ' at ' + slot + ' (Mountain Time)';
+  document.getElementById('slot-banner').style.display = 'block';
+
+  // Enable continue
+  var btn2 = document.getElementById('step2-btn');
+  btn2.disabled = false;
+  btn2.textContent = 'Continue →';
+}
+
+// ── PACKAGE SELECTION ─────────────────────────────────────────
+function pickPkg(el, name, price) {
+  document.querySelectorAll('.pkg-option').forEach(function(o) { o.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedPkg = { name: name, price: price };
+  var btn = document.getElementById('step1-btn');
+  btn.disabled = false;
   btn.textContent = 'Continue →';
 }
 
+function selectPackage(name, price) {
+  selectedPkg = { name: name, price: price };
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────
 function goStep(n) {
-  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-  const el = document.getElementById('step-' + n);
+  document.querySelectorAll('.form-step').forEach(function(s) { s.classList.remove('active'); });
+  var el = document.getElementById('step-' + n);
   if (el) el.classList.add('active');
-  for (let i = 1; i <= 4; i++) {
-    const pip = document.getElementById('pip-' + i);
+  for (var i = 1; i <= 4; i++) {
+    var pip = document.getElementById('pip-' + i);
     if (pip) pip.classList.toggle('done', i <= n);
   }
+  if (n === 2) initDatePicker();
   if (n === 4) buildSummary();
   document.getElementById('book').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function buildSummary() {
-  const date = document.getElementById('f-date').value || '—';
-  const time = document.getElementById('f-time').value || '—';
-  const addr = document.getElementById('f-address').value || '—';
-  const fname = document.getElementById('f-fname').value || '—';
-  const vehicle = document.getElementById('f-year').value + ' ' + document.getElementById('f-vehicle').value;
-  document.getElementById('confirm-summary').innerHTML = `
-    <div class="confirm-row"><span>Package</span><span>${selectedPkg.name}</span></div>
-    <div class="confirm-row"><span>Date & time</span><span>${date} at ${time}</span></div>
-    <div class="confirm-row"><span>Address</span><span>${addr}</span></div>
-    <div class="confirm-row"><span>Name</span><span>${fname}</span></div>
-    <div class="confirm-row"><span>Vehicle</span><span>${vehicle}</span></div>
-    <div class="confirm-row"><span>Total</span><span>${selectedPkg.price}</span></div>
-  `;
+  var date = selectedDate || '—';
+  var time = selectedTime || '—';
+  var addr = document.getElementById('f-address').value || '—';
+  var fname = document.getElementById('f-fname').value || '—';
+  var vehicle = (document.getElementById('f-year').value || '') + ' ' + (document.getElementById('f-vehicle').value || '');
+  document.getElementById('confirm-summary').innerHTML =
+    '<div class="confirm-row"><span>Package</span><span>' + selectedPkg.name + '</span></div>' +
+    '<div class="confirm-row"><span>Date & time</span><span>' + date + ' at ' + time + '</span></div>' +
+    '<div class="confirm-row"><span>Address</span><span>' + addr + '</span></div>' +
+    '<div class="confirm-row"><span>Name</span><span>' + fname + '</span></div>' +
+    '<div class="confirm-row"><span>Vehicle</span><span>' + vehicle + '</span></div>' +
+    '<div class="confirm-row"><span>Total</span><span>' + selectedPkg.price + '</span></div>';
 }
 
+// ── SUBMIT ────────────────────────────────────────────────────
 function submitBooking() {
-  const btn = document.querySelector('#step-4 .form-btn');
-  btn.textContent = 'Sending...';
+  var btn = document.getElementById('submit-btn');
+  btn.textContent = 'Booking...';
   btn.disabled = true;
 
-  const fname   = document.getElementById('f-fname').value;
-  const lname   = document.getElementById('f-lname').value;
-  const phone   = document.getElementById('f-phone').value;
-  const email   = document.getElementById('f-email').value;
-  const date    = document.getElementById('f-date').value;
-  const time    = document.getElementById('f-time').value;
-  const loctype = document.getElementById('f-loctype').value;
-  const address = document.getElementById('f-address').value;
-  const year    = document.getElementById('f-year').value;
-  const vehicle = document.getElementById('f-vehicle').value;
-  const notes   = document.getElementById('f-notes').value;
+  var fname   = document.getElementById('f-fname').value;
+  var lname   = document.getElementById('f-lname').value;
+  var phone   = document.getElementById('f-phone').value;
+  var email   = document.getElementById('f-email').value;
+  var loctype = document.getElementById('f-loctype').value;
+  var address = document.getElementById('f-address').value;
+  var year    = document.getElementById('f-year').value;
+  var vehicle = document.getElementById('f-vehicle').value;
+  var notes   = document.getElementById('f-notes').value;
+  var pkg     = selectedPkg.name + ' ' + selectedPkg.price;
 
-  const body = new URLSearchParams({
-    'form-name': 'motornation-booking',
-    'first-name': fname, 'last-name': lname,
-    'phone': phone, 'email': email,
-    'date': date, 'time': time,
-    'location-type': loctype, 'address': address,
-    'vehicle-year': year, 'vehicle': vehicle,
-    'package': selectedPkg.name + ' ' + selectedPkg.price,
-    'notes': notes
+  // Submit to Netlify Forms
+  var body = new URLSearchParams({
+    'form-name':    'motornation-booking',
+    'first-name':   fname,
+    'last-name':    lname,
+    'phone':        phone,
+    'email':        email,
+    'date':         selectedDate,
+    'time':         selectedTime,
+    'location-type': loctype,
+    'address':      address,
+    'vehicle-year': year,
+    'vehicle':      vehicle,
+    'package':      pkg,
+    'notes':        notes
   });
 
   fetch('/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: body.toString()
-  })
-  .then(async () => {
-    // Send confirmation emails
-    await sendConfirmationEmails({ fname, lname, phone, email, date, time, loctype, address, year, vehicle, notes, pkg: selectedPkg.name + ' ' + selectedPkg.price });
-    btn.textContent = 'Confirm & book appointment';
-    btn.disabled = false;
-    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-    document.getElementById('step-success').classList.add('active');
-    document.getElementById('book').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  })
-  .catch(async () => {
-    await sendConfirmationEmails({ fname, lname, phone, email, date, time, loctype, address, year, vehicle, notes, pkg: selectedPkg.name + ' ' + selectedPkg.price });
-    btn.textContent = 'Confirm & book appointment';
-    btn.disabled = false;
-    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-    document.getElementById('step-success').classList.add('active');
-    document.getElementById('book').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }).then(function() {
+    sendEmails(fname, lname, phone, email, address, year, vehicle, pkg, notes);
+    showSuccess();
+  }).catch(function() {
+    sendEmails(fname, lname, phone, email, address, year, vehicle, pkg, notes);
+    showSuccess();
   });
 }
 
+function showSuccess() {
+  document.querySelectorAll('.form-step').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('step-success').classList.add('active');
+  document.getElementById('book').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── EMAILJS ───────────────────────────────────────────────────
+function sendEmails(fname, lname, phone, email, address, year, vehicle, pkg, notes) {
+  var dateDisplay = selectedDate;
+  var timeDisplay = selectedTime;
+  var vehicleStr  = year + ' ' + vehicle;
+
+  // Customer confirmation email
+  emailjs.send(EJS_SVC, EJS_CUST, {
+    to_email: email,
+    to_name:  fname,
+    date:     dateDisplay,
+    time:     timeDisplay,
+    address:  address,
+    package:  pkg,
+    vehicle:  vehicleStr,
+    phone:    '(720) 317-8949'
+  }, EJS_KEY).catch(function(e) { console.error('Customer email failed:', e); });
+
+  // Owner notification email
+  emailjs.send(EJS_SVC, EJS_OWN, {
+    to_email:       'a.khattab@motornationusa.com',
+    customer_name:  fname + ' ' + lname,
+    customer_email: email,
+    customer_phone: phone,
+    date:           dateDisplay,
+    time:           timeDisplay,
+    address:        address,
+    package:        pkg,
+    vehicle:        vehicleStr,
+    notes:          notes
+  }, EJS_KEY).catch(function(e) { console.error('Owner email failed:', e); });
+}
+
+// ── FAQ ───────────────────────────────────────────────────────
 function toggleFaq(el) {
-  const item = el.closest('.faq-item');
-  const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  var item = el.closest('.faq-item');
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
   if (!isOpen) item.classList.add('open');
 }
-
-// Pre-select package if coming from services section
-document.querySelectorAll('.service-book-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    setTimeout(() => {
-      const name = selectedPkg.name;
-      document.querySelectorAll('.pkg-option').forEach(o => {
-        if (o.querySelector('.pkg-option-name').textContent.includes(name.split(' ')[0])) {
-          o.classList.add('selected');
-        }
-      });
-    }, 100);
-  });
-});
-
-// ── SLOT PICKER ──────────────────────────────────────────────
-const ALL_SLOTS = ['7:00 AM','9:00 AM','11:00 AM','1:00 PM','3:00 PM','5:00 PM','7:00 PM'];
-let selectedSlot = null;
-
-async function loadSlots(dateVal) {
-  const todayMT = new Date().toLocaleDateString('en-CA', {timeZone: 'America/Denver'});
-  const dateInput = document.getElementById('f-date');
-  dateInput.min = todayMT;
-  if (dateVal < todayMT) {
-    dateInput.value = todayMT;
-    dateVal = todayMT;
-  }
-  if (!dateVal) return;
-  selectedSlot = null;
-  document.getElementById('slot-selected-banner').style.display = 'none';
-  const btn = document.getElementById('step2-continue');
-  btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
-  btn.textContent = 'Select a date & time to continue →';
-  document.getElementById('f-time').value = '';
-
-  document.getElementById('slot-loading').style.display = 'block';
-  document.getElementById('slot-grid').style.display = 'none';
-
-  // Fetch existing Netlify submissions to find taken slots
-  let takenSlots = [];
-  try {
-    const r = await fetch('/.netlify/functions/get-slots?date=' + dateVal);
-    if (r.ok) { const d = await r.json(); takenSlots = d.taken || []; }
-  } catch(e) {}
-
-  document.getElementById('slot-loading').style.display = 'none';
-  document.getElementById('slot-grid').style.display = 'block';
-
-  const now = new Date();
-  const todayStr = now.toLocaleDateString('en-CA', {timeZone: 'America/Denver'});
-  const currentHour = parseInt(new Intl.DateTimeFormat('en-US', {hour:'numeric', hour12:false, timeZone:'America/Denver'}).format(now));
-
-  const SLOT_HOURS = {'7:00 AM':7, '9:00 AM':9, '11:00 AM':11, '1:00 PM':13, '3:00 PM':15, '5:00 PM':17, '7:00 PM':19};
-
-  const container = document.getElementById('slot-buttons');
-  container.innerHTML = '';
-  let anyAvailable = false;
-
-  ALL_SLOTS.forEach(slot => {
-    const taken = takenSlots.includes(slot);
-    const isPast = dateVal === todayStr && SLOT_HOURS[slot] <= currentHour;
-    const b = document.createElement('button');
-    b.type = 'button';
-    if (taken || isPast) {
-      b.className = 'slot-btn taken';
-      b.textContent = isPast ? slot + ' — Past' : slot + ' — Booked';
-    } else {
-      b.className = 'slot-btn';
-      b.textContent = slot;
-      b.onclick = () => selectSlot(slot, b, dateVal);
-      anyAvailable = true;
-    }
-    container.appendChild(b);
-  });
-
-  if (!anyAvailable) {
-    container.innerHTML = '<p style="font-size:13px;color:#888;grid-column:1/-1;padding:12px 0;">No available slots for this date. Please choose another day.</p>';
-  }
-}
-
-function selectSlot(slot, el, dateVal) {
-  document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedSlot = slot;
-  document.getElementById('f-date').value = dateVal;
-  document.getElementById('f-time').value = slot;
-  const dt = new Date(dateVal + 'T00:00:00');
-  const dateStr = dt.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric', timeZone:'UTC'});
-  document.getElementById('slot-selected-text').textContent = dateStr + ' at ' + slot + ' (Mountain Time)';
-  document.getElementById('slot-selected-banner').style.display = 'block';
-  const btn = document.getElementById('step2-continue');
-  btn.style.opacity = '1'; btn.style.pointerEvents = 'auto';
-  btn.textContent = 'Continue →';
-}
-
-// ── EMAIL CONFIRMATION via EmailJS ────────────────────────────
-// Replace these with your real EmailJS IDs after signing up at emailjs.com
-const EMAILJS_SERVICE_ID  = 'service_6pgdsld';
-const EMAILJS_TEMPLATE_CUSTOMER = 'template_kjzev4o';
-const EMAILJS_TEMPLATE_OWNER    = 'template_42xr6mb';
-const EMAILJS_PUBLIC_KEY  = 'u04DcEFJlspxcIZm';
-
-async function sendConfirmationEmails(data) {
-  try {
-    // Email to customer
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CUSTOMER, {
-      to_email: data.email,
-      to_name: data.fname,
-      date: data.date,
-      time: data.time,
-      address: data.address,
-      package: data.pkg,
-      vehicle: data.year + ' ' + data.vehicle,
-      phone: '(720) 317-8949'
-    }, EMAILJS_PUBLIC_KEY);
-    // Email to owner
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_OWNER, {
-      to_email: 'a.khattab@motornationusa.com',
-      customer_name: data.fname + ' ' + data.lname,
-      customer_email: data.email,
-      customer_phone: data.phone,
-      date: data.date,
-      time: data.time,
-      address: data.address,
-      package: data.pkg,
-      vehicle: data.year + ' ' + data.vehicle,
-      notes: data.notes
-    }, EMAILJS_PUBLIC_KEY);
-  } catch(e) { console.error('EmailJS error:', JSON.stringify(e)); }
-}
-
-// Set min date AND default value to today in Mountain Time on page load
-(function() {
-  const todayMT = new Date().toLocaleDateString('en-CA', {timeZone:'America/Denver'});
-  const dateInput = document.getElementById('f-date');
-  if (dateInput) {
-    dateInput.min = todayMT;
-    dateInput.value = todayMT;
-    setTimeout(() => loadSlots(todayMT), 100);
-  }
-})();
 </script>
 </body>
 </html>
