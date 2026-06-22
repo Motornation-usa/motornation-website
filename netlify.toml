@@ -7,3 +7,8 @@
 
 [functions."process-scheduled-emails"]
   schedule = "*/30 * * * *"
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/dashboard.html"
+  status = 200
