@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MotorNation — Ops Dashboard</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#0f0f0f;color:#f0f0f0;min-height:100vh}
@@ -156,6 +157,7 @@
       <div class="tab" onclick="switchTab('calendar',this)">Calendar</div>
       <div class="tab" onclick="switchTab('compare',this)">This vs Last</div>
       <div class="tab" onclick="switchTab('payments',this)">Square Payments</div>
+      <div class="tab" onclick="switchTab('customers',this)">Customers</div>
     </div>
 
     <!-- TODAY TAB -->
@@ -183,6 +185,39 @@
       <div id="cal-day-detail"></div>
     </div>
 
+    <!-- CUSTOMERS TAB -->
+    <div class="tab-panel" id="tab-customers">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div class="sec-title">All Customers</div>
+          <div class="sec-ct" id="cust-ct" style="margin-top:4px"></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <input id="cust-search" placeholder="Search name, phone, email..." style="background:#1a1a1a;border:1px solid #333;color:#f0f0f0;padding:7px 12px;border-radius:7px;font-size:13px;outline:none;width:240px" oninput="filterCustomers()" />
+          <button class="btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
+        </div>
+      </div>
+      <div class="table-wrap" id="cust-table-wrap">
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr>
+              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Date</th>
+              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Name</th>
+              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Phone</th>
+              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Email</th>
+              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Address</th>
+              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Vehicle</th>
+              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Package</th>
+              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Review</th>
+            </tr>
+          </thead>
+          <tbody id="cust-tbody">
+            <tr><td colspan="8" style="padding:40px;text-align:center;color:#444;font-size:13px">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- COMPARE TAB -->
     <div class="tab-panel" id="tab-compare">
       <div class="stats" id="stats-compare" style="margin-bottom:20px"></div>
@@ -203,6 +238,10 @@ const NETLIFY_TOKEN="nfp_dYM4yEM37VMik1TQkxpauwLoS62UCbfea95b";
 const FORM_ID="6a3469e74658ba00087e093c";
 const SQUARE_LOCATION="LSKQ78G0R6HBJ";
 const GOAL=4000;
+const EMAILJS_PUBLIC_KEY="-u04DcEFJlspxcIZm";
+const EMAILJS_SERVICE_ID="service_6pgdsld";
+const EMAILJS_REVIEW_TEMPLATE="template_y2urzkh";
+const EMAILJS_NOSHOW_TEMPLATE="template_fpn129d";
 
 document.getElementById("pin").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
 function doLogin(){if(document.getElementById("pin").value===PIN){sessionStorage.setItem("mn","1");document.getElementById("login").style.display="none";document.getElementById("dash").style.display="block";loadAll();}else{document.getElementById("err").style.display="block";}}
@@ -226,7 +265,55 @@ function pkgLabel(pkg){if(!pkg)return "—";if(/elite/i.test(pkg))return "Elite"
 function pkgCls(pkg){if(/elite/i.test(pkg))return "pkg-e";if(/premium/i.test(pkg))return "pkg-p";return "pkg-b";}
 function toMins(t){const m=t.match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return 0;let h=+m[1],min=+m[2];if(m[3].toUpperCase()==="PM"&&h!==12)h+=12;if(m[3].toUpperCase()==="AM"&&h===12)h=0;return h*60+min;}
 function getS(id){return localStorage.getItem("s_"+id)||"upcoming";}
-function cycleStatus(id,el){const cur=getS(id);const next=cur==="upcoming"?"done":cur==="done"?"noshow":"upcoming";localStorage.setItem("s_"+id,next);el.className="st-btn"+(next==="done"?" st-done":next==="noshow"?" st-noshow":"");el.textContent=next==="done"?"Done ✓":next==="noshow"?"No-show":"Upcoming";}
+function cycleStatus(id,el,customerEmail,customerName){
+  const cur=getS(id);
+  const next=cur==="upcoming"?"done":cur==="done"?"noshow":"upcoming";
+  localStorage.setItem("s_"+id,next);
+  el.className="st-btn"+(next==="done"?" st-done":next==="noshow"?" st-noshow":"");
+  el.textContent=next==="done"?"Done ✓":next==="noshow"?"No-show":"Upcoming";
+  if(next==="done" && customerEmail && customerEmail!=="—"){
+    sendReviewEmail(customerEmail, customerName);
+  }
+  if(next==="noshow" && customerEmail && customerEmail!=="—"){
+    sendNoShowEmail(customerEmail, customerName);
+  }
+}
+function sendReviewEmail(email, name){
+  if(!email||email==="—")return;
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_REVIEW_TEMPLATE, {
+    to_email: email,
+    customer_name: name||"there",
+    review_link: "https://g.page/r/Ccl3dz_PFNqXEAI/review",
+    business_phone: "(720) 317-8949 | (720) 318-2028",
+  }).then(()=>{
+    showToast("Review email sent to "+email+" ✓");
+  }).catch(e=>{
+    console.error("EmailJS error:",e);
+    showToast("Could not send review email — check template ID");
+  });
+}
+function sendNoShowEmail(email, name){
+  if(!email||email==="—")return;
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_NOSHOW_TEMPLATE, {
+    to_email: email,
+    customer_name: name||"there",
+    booking_link: "https://motornationusa.com/#book",
+    business_phone: "(720) 317-8949 | (720) 318-2028",
+  }).then(()=>{
+    showToast("No-show email sent to "+email+" ✓");
+  }).catch(e=>{
+    console.error("EmailJS no-show error:",e);
+    showToast("Could not send no-show email — check template ID");
+  });
+}
+function showToast(msg){
+  let t=document.getElementById("toast");
+  if(!t){t=document.createElement("div");t.id="toast";t.style.cssText="position:fixed;bottom:24px;right:24px;background:#1a1a1a;border:1px solid #333;color:#f0f0f0;padding:12px 20px;border-radius:8px;font-size:13px;z-index:999;transition:opacity .5s";document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity="1";
+  setTimeout(()=>{t.style.opacity="0";},3500);
+}
 function deltaHtml(cur,prev){if(!prev)return `<span class="stat-delta delta-flat">—</span>`;const d=cur-prev;const pct=Math.round((d/prev)*100);const cls=d>0?"delta-up":d<0?"delta-down":"delta-flat";const sign=d>0?"+":"";return `<span class="stat-delta ${cls}">${sign}${pct}%</span>`;}
 
 // ── DATA ──────────────────────────────────────────────────
@@ -240,14 +327,31 @@ async function loadAll(){
   renderCalendar();
   renderCompare();
   renderSquare();
+  renderCustomers();
 }
 
 async function loadNetlify(){
+  // Use the get-slots proxy pattern — same origin call via our own function
   try{
-    const r=await fetch(`https://api.netlify.com/api/v1/forms/${FORM_ID}/submissions?per_page=500`,{headers:{Authorization:`Bearer ${NETLIFY_TOKEN}`}});
+    const r=await fetch(`/.netlify/functions/get-submissions`,{
+      method:"GET",
+      headers:{"Content-Type":"application/json"}
+    });
+    if(!r.ok) throw new Error("HTTP "+r.status);
     const d=await r.json();
     allSubs=Array.isArray(d)?d:[];
-  }catch(e){console.error("Netlify error",e);}
+  }catch(e){
+    console.error("Submissions load error:",e);
+    // Show error in UI instead of silent fail
+    document.getElementById("content").innerHTML=`<div style="text-align:center;padding:60px;color:#ff6b6b;font-size:14px">
+      <i class="ti ti-alert-circle" style="font-size:32px;display:block;margin-bottom:12px"></i>
+      Could not load bookings.<br><br>
+      <span style="color:#555;font-size:12px">Make sure <strong style="color:#aaa">get-submissions.js</strong> is in <strong style="color:#aaa">netlify/functions/</strong> and deployed.<br>
+      Check Netlify dashboard → Functions tab to confirm.</span><br><br>
+      <button onclick="loadAll()" style="background:#e84c0e;color:#fff;border:none;padding:8px 20px;border-radius:7px;cursor:pointer;font-size:13px">Retry</button>
+    </div>`;
+    allSubs=[];
+  }
 }
 
 async function loadSquare(){
@@ -297,7 +401,7 @@ function renderToday(){
   document.getElementById("appt-list").innerHTML=todaySubs.length===0
     ?'<div class="empty"><i class="ti ti-calendar-off"></i>No appointments today</div>'
     :todaySubs.map(s=>{const d=s.data||{};const name=((d["first-name"]||d.name||"")+" "+(d["last-name"]||"")).trim()||"—";const pkg=d.package||"";const addr=(d.address||d["street-address"]||"").trim();const ph=d.phone||"";const st=getS(s.id);
-    return `<div class="appt"><div class="appt-time">${d.time||"—"}</div><div><div class="appt-name">${name}</div><div class="appt-detail">${ph}${addr?" &middot; "+addr:""}</div></div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div><button class="st-btn${st==="done"?" st-done":st==="noshow"?" st-noshow":""}" onclick="cycleStatus('${s.id}',this)">${st==="done"?"Done ✓":st==="noshow"?"No-show":"Upcoming"}</button></div>`;}).join("");
+    return `<div class="appt"><div class="appt-time">${d.time||"—"}</div><div><div class="appt-name">${name}</div><div class="appt-detail">${ph}${addr?" &middot; "+addr:""}</div></div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div><button class="st-btn${st==="done"?" st-done":st==="noshow"?" st-noshow":""}" onclick="cycleStatus('${s.id}',this,'${d.email||''}','${name}')">${st==="done"?"Done ✓":st==="noshow"?"No-show":"Upcoming"}</button></div>`;}).join("");
 
   document.getElementById("stops-card").innerHTML=`<div class="sec-title" style="margin-bottom:10px">Today's stops</div>`+(addrs.length===0?'<div style="font-size:13px;color:#555;padding:8px 0">No addresses today</div>':addrs.map((a,i)=>`<div class="addr-row"><div class="addr-num">${i+1}</div><div><div class="addr-name">${a.time} · ${a.name}</div><div class="addr-sub">${a.addr}${a.phone?" · "+a.phone:""}</div></div></div>`).join("")+(addrs.length>0?`<button class="maps-btn" onclick="openMaps()"><i class="ti ti-map-pin"></i> Open route in Google Maps</button>`:""));
 
@@ -439,8 +543,198 @@ window._squarePayments = [
   {id:"THdj",created_at:"2026-06-03T19:54:27.512Z",amount_money:{amount:8719},tip_money:{amount:2180},card_details:{card:{card_brand:"VISA",last_4:"4629"}},note:"Square POS payment",processing_fee:[{amount_money:{amount:298}}]}
 ];
 
+// ── CUSTOMERS ─────────────────────────────────────────────
+let filteredSubs = [];
+function renderCustomers(){
+  // Dedupe by email — keep most recent booking per customer
+  const seen={};
+  const deduped=[];
+  [...allSubs].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).forEach(s=>{
+    const email=s.data?.email||"";
+    const key=email||s.id;
+    if(!seen[key]){seen[key]=true;deduped.push(s);}
+  });
+  filteredSubs=deduped.filter(s=>s.data?.email&&s.data?.["first-name"]);
+  document.getElementById("cust-ct").textContent=filteredSubs.length+" customers";
+  renderCustomerTable(filteredSubs);
+}
+
+function filterCustomers(){
+  const q=document.getElementById("cust-search").value.toLowerCase();
+  const results=filteredSubs.filter(s=>{
+    const d=s.data||{};
+    return [d["first-name"],d["last-name"],d.phone,d.email,d.address].join(" ").toLowerCase().includes(q);
+  });
+  renderCustomerTable(results);
+}
+
+function renderCustomerTable(subs){
+  const tbody=document.getElementById("cust-tbody");
+  if(!tbody)return;
+  if(subs.length===0){
+    tbody.innerHTML='<tr><td colspan="8" style="padding:40px;text-align:center;color:#444;font-size:13px">No customers found</td></tr>';
+    return;
+  }
+  tbody.innerHTML=subs.map(s=>{
+    const d=s.data||{};
+    const name=((d["first-name"]||"")+" "+(d["last-name"]||"")).trim()||"—";
+    const vehicle=(d["vehicle-year"]?" "+d["vehicle-year"]:"")+(d.vehicle?" "+d.vehicle:"");
+    const pkg=d.package||"—";
+    const pkgColor=/elite/i.test(pkg)?"#5cb85c":/premium/i.test(pkg)?"#f5a623":"#7eb8f7";
+    const sentKey="review_sent_"+s.id;
+    const reviewSent=localStorage.getItem(sentKey);
+    return `<tr style="border-bottom:1px solid #1a1a1a" onmouseover="this.style.background='#1a1a1a'" onmouseout="this.style.background=''">
+      <td style="padding:11px 16px;font-size:13px;color:#888;white-space:nowrap">${d.date||"—"}</td>
+      <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#f0f0f0">${name}</td>
+      <td style="padding:11px 16px;font-size:13px;color:#aaa"><a href="tel:${d.phone||""}" style="color:#aaa;text-decoration:none">${d.phone||"—"}</a></td>
+      <td style="padding:11px 16px;font-size:13px;color:#aaa;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.email||"—"}</td>
+      <td style="padding:11px 16px;font-size:13px;color:#888;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.address||"—"}</td>
+      <td style="padding:11px 16px;font-size:13px;color:#888">${vehicle.trim()||"—"}</td>
+      <td style="padding:11px 16px"><span style="font-size:11px;font-weight:700;color:${pkgColor};background:${pkgColor}22;padding:3px 8px;border-radius:10px">${pkg.replace(/\s*\$\d+/,"")}</span></td>
+      <td style="padding:11px 16px">
+        ${reviewSent
+          ?'<span style="font-size:11px;color:#5cb85c">Sent ✓</span>'
+          :`<button onclick="sendReviewFromList('${s.id}','${d.email||""}','${name.replace(/'/g,"\'")}',this)" style="font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;border:1px solid #333;background:#222;color:#aaa;font-weight:600">Send Review</button>`}
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function sendReviewFromList(id, email, name, btn){
+  if(!email||email==="—")return;
+  btn.textContent="Sending...";
+  btn.disabled=true;
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_REVIEW_TEMPLATE, {
+    to_email: email,
+    customer_name: name||"there",
+    review_link: "https://g.page/r/Ccl3dz_PFNqXEAI/review",
+    business_phone: "(720) 317-8949 | (720) 318-2028",
+  }).then(()=>{
+    localStorage.setItem("review_sent_"+id,"1");
+    btn.parentElement.innerHTML='<span style="font-size:11px;color:#5cb85c">Sent ✓</span>';
+    showToast("Review email sent to "+email);
+  }).catch(e=>{
+    btn.textContent="Send Review";
+    btn.disabled=false;
+    showToast("Error — check EmailJS template ID");
+    console.error(e);
+  });
+}
+
+function exportCSV(){
+  const headers=["Date","Time","Name","Phone","Email","Address","Vehicle","Package"];
+  const rows=filteredSubs.map(s=>{
+    const d=s.data||{};
+    const name=((d["first-name"]||"")+" "+(d["last-name"]||"")).trim();
+    const vehicle=((d["vehicle-year"]||"")+" "+(d.vehicle||"")).trim();
+    return [d.date,d.time,name,d.phone,d.email,d.address,vehicle,d.package].map(v=>`"${(v||"").replace(/"/g,'""')}"`).join(",");
+  });
+  const csv=[headers.join(","),...rows].join("\n");
+  const a=document.createElement("a");
+  a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);
+  a.download="motornation-customers-"+new Date().toLocaleDateString("en-CA")+".csv";
+  a.click();
+  showToast("CSV downloaded");
+}
+
 if(sessionStorage.getItem("mn")==="1")loadAll();
-setInterval(()=>{if(sessionStorage.getItem("mn")==="1")loadAll();},5*60*1000);
+setInterval(()=>{// ── CUSTOMERS ─────────────────────────────────────────────
+let filteredSubs = [];
+function renderCustomers(){
+  // Dedupe by email — keep most recent booking per customer
+  const seen={};
+  const deduped=[];
+  [...allSubs].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).forEach(s=>{
+    const email=s.data?.email||"";
+    const key=email||s.id;
+    if(!seen[key]){seen[key]=true;deduped.push(s);}
+  });
+  filteredSubs=deduped.filter(s=>s.data?.email&&s.data?.["first-name"]);
+  document.getElementById("cust-ct").textContent=filteredSubs.length+" customers";
+  renderCustomerTable(filteredSubs);
+}
+
+function filterCustomers(){
+  const q=document.getElementById("cust-search").value.toLowerCase();
+  const results=filteredSubs.filter(s=>{
+    const d=s.data||{};
+    return [d["first-name"],d["last-name"],d.phone,d.email,d.address].join(" ").toLowerCase().includes(q);
+  });
+  renderCustomerTable(results);
+}
+
+function renderCustomerTable(subs){
+  const tbody=document.getElementById("cust-tbody");
+  if(!tbody)return;
+  if(subs.length===0){
+    tbody.innerHTML='<tr><td colspan="8" style="padding:40px;text-align:center;color:#444;font-size:13px">No customers found</td></tr>';
+    return;
+  }
+  tbody.innerHTML=subs.map(s=>{
+    const d=s.data||{};
+    const name=((d["first-name"]||"")+" "+(d["last-name"]||"")).trim()||"—";
+    const vehicle=(d["vehicle-year"]?" "+d["vehicle-year"]:"")+(d.vehicle?" "+d.vehicle:"");
+    const pkg=d.package||"—";
+    const pkgColor=/elite/i.test(pkg)?"#5cb85c":/premium/i.test(pkg)?"#f5a623":"#7eb8f7";
+    const sentKey="review_sent_"+s.id;
+    const reviewSent=localStorage.getItem(sentKey);
+    return `<tr style="border-bottom:1px solid #1a1a1a" onmouseover="this.style.background='#1a1a1a'" onmouseout="this.style.background=''">
+      <td style="padding:11px 16px;font-size:13px;color:#888;white-space:nowrap">${d.date||"—"}</td>
+      <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#f0f0f0">${name}</td>
+      <td style="padding:11px 16px;font-size:13px;color:#aaa"><a href="tel:${d.phone||""}" style="color:#aaa;text-decoration:none">${d.phone||"—"}</a></td>
+      <td style="padding:11px 16px;font-size:13px;color:#aaa;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.email||"—"}</td>
+      <td style="padding:11px 16px;font-size:13px;color:#888;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.address||"—"}</td>
+      <td style="padding:11px 16px;font-size:13px;color:#888">${vehicle.trim()||"—"}</td>
+      <td style="padding:11px 16px"><span style="font-size:11px;font-weight:700;color:${pkgColor};background:${pkgColor}22;padding:3px 8px;border-radius:10px">${pkg.replace(/\s*\$\d+/,"")}</span></td>
+      <td style="padding:11px 16px">
+        ${reviewSent
+          ?'<span style="font-size:11px;color:#5cb85c">Sent ✓</span>'
+          :`<button onclick="sendReviewFromList('${s.id}','${d.email||""}','${name.replace(/'/g,"\'")}',this)" style="font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;border:1px solid #333;background:#222;color:#aaa;font-weight:600">Send Review</button>`}
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function sendReviewFromList(id, email, name, btn){
+  if(!email||email==="—")return;
+  btn.textContent="Sending...";
+  btn.disabled=true;
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_REVIEW_TEMPLATE, {
+    to_email: email,
+    customer_name: name||"there",
+    review_link: "https://g.page/r/Ccl3dz_PFNqXEAI/review",
+    business_phone: "(720) 317-8949 | (720) 318-2028",
+  }).then(()=>{
+    localStorage.setItem("review_sent_"+id,"1");
+    btn.parentElement.innerHTML='<span style="font-size:11px;color:#5cb85c">Sent ✓</span>';
+    showToast("Review email sent to "+email);
+  }).catch(e=>{
+    btn.textContent="Send Review";
+    btn.disabled=false;
+    showToast("Error — check EmailJS template ID");
+    console.error(e);
+  });
+}
+
+function exportCSV(){
+  const headers=["Date","Time","Name","Phone","Email","Address","Vehicle","Package"];
+  const rows=filteredSubs.map(s=>{
+    const d=s.data||{};
+    const name=((d["first-name"]||"")+" "+(d["last-name"]||"")).trim();
+    const vehicle=((d["vehicle-year"]||"")+" "+(d.vehicle||"")).trim();
+    return [d.date,d.time,name,d.phone,d.email,d.address,vehicle,d.package].map(v=>`"${(v||"").replace(/"/g,'""')}"`).join(",");
+  });
+  const csv=[headers.join(","),...rows].join("\n");
+  const a=document.createElement("a");
+  a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);
+  a.download="motornation-customers-"+new Date().toLocaleDateString("en-CA")+".csv";
+  a.click();
+  showToast("CSV downloaded");
+}
+
+if(sessionStorage.getItem("mn")==="1")loadAll();},5*60*1000);
 </script>
 </body>
 </html>
