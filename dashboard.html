@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MotorNation — Ops Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#0f0f0f;color:#f0f0f0;min-height:100vh}
+
+    /* LOGIN */
+    #login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px}
+    .logo{font-size:26px;font-weight:700;color:#fff}.logo span{color:#e84c0e}
+    .sub{font-size:13px;color:#555}
+    .pin-row{display:flex;gap:8px}
+    #pin{width:150px;text-align:center;letter-spacing:4px;font-size:18px;background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:10px 14px;color:#fff;outline:none}
+    #pin:focus{border-color:#e84c0e}
+    .btn-main{background:#e84c0e;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:15px;font-weight:600;cursor:pointer}
+    .btn-main:hover{background:#cf430d}
+    .err{font-size:12px;color:#ff6b6b;display:none}
+
+    /* DASH */
+    #dash{display:none;min-height:100vh}
+    header{background:#1a1a1a;border-bottom:1px solid #222;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+    .h-logo{font-size:18px;font-weight:700;color:#fff}.h-logo span{color:#e84c0e}
+    .h-right{display:flex;align-items:center;gap:12px}
+    .h-date{font-size:13px;color:#666}
+    .h-refresh{background:#222;border:1px solid #333;color:#aaa;padding:5px 12px;border-radius:7px;font-size:12px;cursor:pointer}
+    .h-refresh:hover{color:#fff;border-color:#555}
+    .h-out{background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:5px 8px}
+    .h-out:hover{color:#aaa}
+
+    main{padding:24px 28px;max-width:1300px;margin:0 auto}
+
+    /* STATS */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+    .stat{background:#1a1a1a;border-radius:10px;padding:18px 20px}
+    .stat-l{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+    .stat-v{font-size:30px;font-weight:700;line-height:1}
+    .stat-s{font-size:12px;color:#555;margin-top:5px}
+    .stat.hi .stat-v{color:#e84c0e}
+
+    /* GOAL */
+    .goal{background:#1a1a1a;border-radius:10px;padding:16px 20px;margin-bottom:20px}
+    .goal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .goal-lbl{font-size:13px;color:#888}
+    .goal-val{font-size:14px;font-weight:600}.goal-val span{color:#e84c0e}
+    .goal-track{height:7px;background:#222;border-radius:4px}
+    .goal-bar{height:7px;border-radius:4px;background:#e84c0e;transition:width .9s ease}
+
+    /* SECTION */
+    .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .sec-title{font-size:15px;font-weight:600}
+    .sec-ct{font-size:12px;color:#555}
+
+    /* APPOINTMENTS */
+    .appt-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+    .appt{background:#1a1a1a;border:1px solid #222;border-radius:10px;padding:15px 18px;display:grid;grid-template-columns:70px 1fr auto auto;align-items:center;gap:14px}
+    .appt-time{font-size:19px;font-weight:700;color:#e84c0e;white-space:nowrap}
+    .appt-name{font-size:14px;font-weight:600}
+    .appt-detail{font-size:12px;color:#666;margin-top:3px}
+    .pkg{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+    .pkg-b{background:#0d2a4a;color:#7eb8f7}
+    .pkg-p{background:#3a2500;color:#f5a623}
+    .pkg-e{background:#0f2e0f;color:#5cb85c}
+    .st-btn{font-size:11px;padding:5px 12px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#888;white-space:nowrap;font-weight:600}
+    .st-done{background:#0f2e0f;border-color:#1a4a1a;color:#5cb85c}
+    .st-noshow{background:#2e0f0f;border-color:#4a1a1a;color:#ff6b6b}
+
+    /* EMPTY */
+    .empty{background:#1a1a1a;border-radius:10px;text-align:center;padding:44px;color:#444;font-size:13px}
+    .empty i{font-size:32px;display:block;margin-bottom:10px;color:#333}
+
+    /* BOTTOM GRID */
+    .bot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+    .card{background:#1a1a1a;border-radius:10px;padding:18px 20px}
+    .addr-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #1e1e1e}
+    .addr-row:last-of-type{border:none}
+    .addr-num{width:20px;height:20px;border-radius:50%;background:#e84c0e;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .addr-name{font-size:13px;font-weight:600}
+    .addr-sub{font-size:12px;color:#666;margin-top:2px}
+    .maps-btn{width:100%;margin-top:12px;background:#222;border:1px solid #333;color:#aaa;padding:8px;border-radius:7px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+    .maps-btn:hover{color:#fff;border-color:#555}
+    .rev-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #1e1e1e}
+    .rev-row:last-child{border:none}
+    .rev-name{font-size:13px;color:#ccc}
+    .rev-ct{font-size:11px;color:#555;margin-top:2px}
+    .rev-amt{font-size:15px;font-weight:700;color:#e84c0e}
+
+    .loading{text-align:center;padding:60px;color:#444;font-size:13px}
+
+    @media(max-width:800px){
+      .stats{grid-template-columns:1fr 1fr}
+      .bot-grid{grid-template-columns:1fr}
+      .appt{grid-template-columns:60px 1fr auto;}.appt .st-btn{display:none}
+      main{padding:16px}
+    }
+  </style>
+</head>
+<body>
+
+<div id="login">
+  <div class="logo"><span>Motor</span>Nation</div>
+  <div class="sub">Operations Dashboard</div>
+  <div class="pin-row">
+    <input id="pin" type="password" placeholder="PIN" maxlength="12" />
+    <button class="btn-main" onclick="doLogin()">Enter</button>
+  </div>
+  <div class="err" id="err">Wrong PIN — try again</div>
+</div>
+
+<div id="dash">
+  <header>
+    <div class="h-logo"><span>Motor</span>Nation &nbsp;<span style="font-size:12px;color:#555;font-weight:400">Ops</span></div>
+    <div class="h-right">
+      <div class="h-date" id="h-date"></div>
+      <button class="h-refresh" onclick="load()"><i class="ti ti-refresh"></i> Refresh</button>
+      <button class="h-out" onclick="signOut()">Sign out</button>
+    </div>
+  </header>
+  <main>
+    <div id="content"><div class="loading"><i class="ti ti-loader-2" style="font-size:28px;animation:spin 1s linear infinite;display:block;margin:0 auto 12px"></i>Loading today's data...</div></div>
+  </main>
+</div>
+
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<script>
+const PIN = "MN2026";
+const TOKEN = "nfp_dYM4yEM37VMik1TQkxpauwLoS62UCbfea95b";
+const FORM_ID = "6a3469e74658ba00087e093c";
+const GOAL = 4000;
+
+document.getElementById("pin").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
+
+function doLogin() {
+  if(document.getElementById("pin").value === PIN) {
+    sessionStorage.setItem("mn","1");
+    document.getElementById("login").style.display="none";
+    document.getElementById("dash").style.display="block";
+    load();
+  } else {
+    document.getElementById("err").style.display="block";
+  }
+}
+function signOut() {
+  sessionStorage.removeItem("mn");
+  location.reload();
+}
+if(sessionStorage.getItem("mn")==="1") {
+  document.getElementById("login").style.display="none";
+  document.getElementById("dash").style.display="block";
+}
+
+function todayStr() { return new Date().toLocaleDateString("en-CA"); }
+function fmtToday() {
+  return new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+}
+function monthStart() {
+  const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-01`;
+}
+function price(pkg) {
+  if(!pkg) return 0;
+  const m=pkg.match(/\$(\d+)/); if(m) return +m[1];
+  if(/elite/i.test(pkg)) return 139;
+  if(/premium/i.test(pkg)) return 109;
+  if(/basic/i.test(pkg)) return 89;
+  return 0;
+}
+function pkgLabel(pkg) {
+  if(!pkg) return "—";
+  if(/elite/i.test(pkg)) return "Elite";
+  if(/premium/i.test(pkg)) return "Premium";
+  if(/basic/i.test(pkg)) return "Basic";
+  return pkg;
+}
+function pkgCls(pkg) {
+  if(/elite/i.test(pkg)) return "pkg-e";
+  if(/premium/i.test(pkg)) return "pkg-p";
+  return "pkg-b";
+}
+function toMins(t) {
+  const m=t.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if(!m) return 0;
+  let h=+m[1],min=+m[2];
+  if(m[3].toUpperCase()==="PM"&&h!==12) h+=12;
+  if(m[3].toUpperCase()==="AM"&&h===12) h=0;
+  return h*60+min;
+}
+function getS(id) { return localStorage.getItem("s_"+id)||"upcoming"; }
+function cycleStatus(id,el) {
+  const cur=getS(id);
+  const next=cur==="upcoming"?"done":cur==="done"?"noshow":"upcoming";
+  localStorage.setItem("s_"+id,next);
+  el.className="st-btn"+(next==="done"?" st-done":next==="noshow"?" st-noshow":"");
+  el.textContent=next==="done"?"Done ✓":next==="noshow"?"No-show":"Upcoming";
+}
+
+async function load() {
+  document.getElementById("h-date").textContent = fmtToday();
+  const el=document.getElementById("content");
+  el.innerHTML='<div class="loading"><i class="ti ti-loader-2" style="font-size:28px;animation:spin 1s linear infinite;display:block;margin:0 auto 12px"></i>Fetching bookings...</div>';
+
+  let subs=[];
+  try {
+    const r=await fetch(`https://api.netlify.com/api/v1/forms/${FORM_ID}/submissions?per_page=500`,
+      {headers:{Authorization:`Bearer ${TOKEN}`}});
+    subs=await r.json();
+    if(!Array.isArray(subs)) subs=[];
+  } catch(e) {
+    el.innerHTML='<div class="empty"><i class="ti ti-wifi-off"></i>Could not load data — check your connection</div>';
+    return;
+  }
+
+  const t=todayStr();
+  const todaySubs=subs.filter(s=>(s.data?.date||"")===t).sort((a,b)=>toMins(a.data?.time||"")-toMins(b.data?.time||""));
+  const monthSubs=subs.filter(s=>(s.data?.date||"")>=monthStart());
+
+  const todayRev=todaySubs.reduce((s,x)=>s+price(x.data?.package),0);
+  const monthRev=monthSubs.reduce((s,x)=>s+price(x.data?.package),0);
+  const pct=Math.min(100,Math.round((monthRev/GOAL)*100));
+
+  // pkg breakdown all time
+  const pkgBreak={};
+  subs.forEach(s=>{
+    const k=pkgLabel(s.data?.package);
+    if(!pkgBreak[k]) pkgBreak[k]={count:0,rev:0};
+    pkgBreak[k].count++;
+    pkgBreak[k].rev+=price(s.data?.package);
+  });
+
+  // today's addresses
+  const addrs=todaySubs.map(s=>({
+    addr:(s.data?.address||s.data?.["street-address"]||"").trim(),
+    name:((s.data?.["first-name"]||s.data?.name||"")+" "+(s.data?.["last-name"]||"")).trim(),
+    time:s.data?.time||"",
+    phone:s.data?.phone||""
+  })).filter(a=>a.addr);
+
+  window._addrs=addrs;
+
+  el.innerHTML=`
+    <div class="stats">
+      <div class="stat hi">
+        <div class="stat-l">Today's jobs</div>
+        <div class="stat-v">${todaySubs.length}</div>
+        <div class="stat-s">${todaySubs.length===0?"Nothing booked":todaySubs.length===1?"1 appointment":"appointments lined up"}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-l">Today's revenue</div>
+        <div class="stat-v">$${todayRev}</div>
+        <div class="stat-s">if all complete</div>
+      </div>
+      <div class="stat">
+        <div class="stat-l">Month revenue</div>
+        <div class="stat-v">$${monthRev}</div>
+        <div class="stat-s">${monthSubs.length} bookings this month</div>
+      </div>
+      <div class="stat">
+        <div class="stat-l">All-time bookings</div>
+        <div class="stat-v">${subs.length}</div>
+        <div class="stat-s">total customers</div>
+      </div>
+    </div>
+
+    <div class="goal">
+      <div class="goal-top">
+        <div class="goal-lbl">Monthly goal — $4,000</div>
+        <div class="goal-val">$${monthRev} earned &nbsp;<span>${pct}%</span></div>
+      </div>
+      <div class="goal-track"><div class="goal-bar" id="gbar" style="width:0%"></div></div>
+    </div>
+
+    <div class="sec-hd">
+      <div class="sec-title">Today's appointments</div>
+      <div class="sec-ct">${todaySubs.length} total &nbsp;·&nbsp; tap status to mark done</div>
+    </div>
+    <div class="appt-list">
+      ${todaySubs.length===0
+        ?'<div class="empty"><i class="ti ti-calendar-off"></i>No appointments today</div>'
+        :todaySubs.map(s=>{
+          const d=s.data||{};
+          const name=((d["first-name"]||d.name||"")+" "+(d["last-name"]||"")).trim()||"—";
+          const pkg=d.package||"";
+          const addr=(d.address||d["street-address"]||"").trim();
+          const ph=d.phone||"";
+          const st=getS(s.id);
+          return `<div class="appt">
+            <div class="appt-time">${d.time||"—"}</div>
+            <div>
+              <div class="appt-name">${name}</div>
+              <div class="appt-detail">${ph}${addr?" &nbsp;&middot;&nbsp; "+addr:""}</div>
+            </div>
+            <div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} &nbsp;&middot;&nbsp; $${price(pkg)}</div>
+            <button class="st-btn${st==="done"?" st-done":st==="noshow"?" st-noshow":""}" onclick="cycleStatus('${s.id}',this)">
+              ${st==="done"?"Done ✓":st==="noshow"?"No-show":"Upcoming"}
+            </button>
+          </div>`;
+        }).join("")}
+    </div>
+
+    <div class="bot-grid">
+      <div class="card">
+        <div class="sec-hd" style="margin-bottom:10px"><div class="sec-title">Today's stops</div></div>
+        ${addrs.length===0
+          ?'<div style="font-size:13px;color:#555;padding:8px 0">No addresses today</div>'
+          :addrs.map((a,i)=>`
+            <div class="addr-row">
+              <div class="addr-num">${i+1}</div>
+              <div>
+                <div class="addr-name">${a.time} &nbsp;&middot;&nbsp; ${a.name}</div>
+                <div class="addr-sub">${a.addr}${a.phone?" &nbsp;&middot;&nbsp; "+a.phone:""}</div>
+              </div>
+            </div>`).join("")}
+        ${addrs.length>0
+          ?`<button class="maps-btn" onclick="openMaps()"><i class="ti ti-map-pin"></i> Open route in Google Maps</button>`
+          :""}
+      </div>
+      <div class="card">
+        <div class="sec-hd" style="margin-bottom:10px"><div class="sec-title">Revenue by package</div></div>
+        ${Object.entries(pkgBreak).sort((a,b)=>b[1].rev-a[1].rev).map(([k,v])=>`
+          <div class="rev-row">
+            <div>
+              <div class="rev-name">${k}</div>
+              <div class="rev-ct">${v.count} booking${v.count!==1?"s":""}</div>
+            </div>
+            <div class="rev-amt">$${v.rev}</div>
+          </div>`).join("")
+          ||'<div style="font-size:13px;color:#555">No bookings yet</div>'}
+      </div>
+    </div>
+  `;
+
+  setTimeout(()=>{const b=document.getElementById("gbar");if(b)b.style.width=pct+"%";},120);
+}
+
+function openMaps() {
+  if(!window._addrs||!window._addrs.length) return;
+  const url="https://www.google.com/maps/dir/"+window._addrs.map(a=>encodeURIComponent(a.addr)).join("/");
+  window.open(url,"_blank");
+}
+
+if(sessionStorage.getItem("mn")==="1") load();
+setInterval(()=>{if(sessionStorage.getItem("mn")==="1") load();}, 5*60*1000);
+</script>
+</body>
+</html>
