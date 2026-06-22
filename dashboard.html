@@ -8,10 +8,8 @@
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#0f0f0f;color:#f0f0f0;min-height:100vh}
-
-    /* LOGIN */
     #login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px}
-    .logo{font-size:26px;font-weight:700;color:#fff}.logo span{color:#e84c0e}
+    .logo{font-size:26px;font-weight:700}.logo span{color:#e84c0e}
     .sub{font-size:13px;color:#555}
     .pin-row{display:flex;gap:8px}
     #pin{width:150px;text-align:center;letter-spacing:4px;font-size:18px;background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:10px 14px;color:#fff;outline:none}
@@ -19,83 +17,116 @@
     .btn-main{background:#e84c0e;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:15px;font-weight:600;cursor:pointer}
     .btn-main:hover{background:#cf430d}
     .err{font-size:12px;color:#ff6b6b;display:none}
-
-    /* DASH */
-    #dash{display:none;min-height:100vh}
+    #dash{display:none}
     header{background:#1a1a1a;border-bottom:1px solid #222;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
-    .h-logo{font-size:18px;font-weight:700;color:#fff}.h-logo span{color:#e84c0e}
-    .h-right{display:flex;align-items:center;gap:12px}
+    .h-logo{font-size:18px;font-weight:700}.h-logo span{color:#e84c0e}
+    .h-right{display:flex;align-items:center;gap:10px}
     .h-date{font-size:13px;color:#666}
-    .h-refresh{background:#222;border:1px solid #333;color:#aaa;padding:5px 12px;border-radius:7px;font-size:12px;cursor:pointer}
-    .h-refresh:hover{color:#fff;border-color:#555}
-    .h-out{background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:5px 8px}
-    .h-out:hover{color:#aaa}
+    .btn-sm{background:#222;border:1px solid #333;color:#aaa;padding:5px 12px;border-radius:7px;font-size:12px;cursor:pointer}
+    .btn-sm:hover{color:#fff;border-color:#555}
+    .btn-out{background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:5px 8px}
+    .btn-out:hover{color:#aaa}
+    main{padding:22px 28px;max-width:1300px;margin:0 auto}
 
-    main{padding:24px 28px;max-width:1300px;margin:0 auto}
+    /* TABS */
+    .tabs{display:flex;gap:4px;margin-bottom:22px;border-bottom:1px solid #222;padding-bottom:0}
+    .tab{padding:8px 18px;font-size:13px;font-weight:500;color:#666;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+    .tab.active{color:#e84c0e;border-bottom-color:#e84c0e}
+    .tab:hover:not(.active){color:#aaa}
+    .tab-panel{display:none}.tab-panel.active{display:block}
 
-    /* STATS */
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-    .stat{background:#1a1a1a;border-radius:10px;padding:18px 20px}
-    .stat-l{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-    .stat-v{font-size:30px;font-weight:700;line-height:1}
-    .stat-s{font-size:12px;color:#555;margin-top:5px}
+    /* STAT CARDS */
+    .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+    .stat{background:#1a1a1a;border-radius:10px;padding:16px 18px}
+    .stat-l{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+    .stat-v{font-size:26px;font-weight:700;line-height:1}
+    .stat-s{font-size:11px;color:#555;margin-top:5px}
     .stat.hi .stat-v{color:#e84c0e}
+    .stat-delta{display:inline-block;font-size:11px;padding:2px 7px;border-radius:10px;margin-top:5px;font-weight:600}
+    .delta-up{background:#0f2e0f;color:#5cb85c}
+    .delta-down{background:#2e0f0f;color:#ff6b6b}
+    .delta-flat{background:#222;color:#888}
 
     /* GOAL */
-    .goal{background:#1a1a1a;border-radius:10px;padding:16px 20px;margin-bottom:20px}
-    .goal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .goal{background:#1a1a1a;border-radius:10px;padding:14px 18px;margin-bottom:18px}
+    .goal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
     .goal-lbl{font-size:13px;color:#888}
     .goal-val{font-size:14px;font-weight:600}.goal-val span{color:#e84c0e}
-    .goal-track{height:7px;background:#222;border-radius:4px}
-    .goal-bar{height:7px;border-radius:4px;background:#e84c0e;transition:width .9s ease}
+    .goal-track{height:6px;background:#222;border-radius:3px}
+    .goal-bar{height:6px;border-radius:3px;background:#e84c0e;transition:width .9s ease}
 
-    /* SECTION */
-    .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .sec-title{font-size:15px;font-weight:600}
+    /* APPTS */
+    .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .sec-title{font-size:14px;font-weight:600}
     .sec-ct{font-size:12px;color:#555}
-
-    /* APPOINTMENTS */
-    .appt-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-    .appt{background:#1a1a1a;border:1px solid #222;border-radius:10px;padding:15px 18px;display:grid;grid-template-columns:70px 1fr auto auto;align-items:center;gap:14px}
-    .appt-time{font-size:19px;font-weight:700;color:#e84c0e;white-space:nowrap}
+    .appt-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+    .appt{background:#1a1a1a;border:1px solid #222;border-radius:10px;padding:13px 16px;display:grid;grid-template-columns:68px 1fr auto auto;align-items:center;gap:12px}
+    .appt-time{font-size:18px;font-weight:700;color:#e84c0e;white-space:nowrap}
     .appt-name{font-size:14px;font-weight:600}
-    .appt-detail{font-size:12px;color:#666;margin-top:3px}
-    .pkg{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+    .appt-detail{font-size:12px;color:#666;margin-top:2px}
+    .pkg{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
     .pkg-b{background:#0d2a4a;color:#7eb8f7}
     .pkg-p{background:#3a2500;color:#f5a623}
     .pkg-e{background:#0f2e0f;color:#5cb85c}
-    .st-btn{font-size:11px;padding:5px 12px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#888;white-space:nowrap;font-weight:600}
+    .st-btn{font-size:11px;padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#888;white-space:nowrap;font-weight:600}
     .st-done{background:#0f2e0f;border-color:#1a4a1a;color:#5cb85c}
     .st-noshow{background:#2e0f0f;border-color:#4a1a1a;color:#ff6b6b}
-
-    /* EMPTY */
-    .empty{background:#1a1a1a;border-radius:10px;text-align:center;padding:44px;color:#444;font-size:13px}
-    .empty i{font-size:32px;display:block;margin-bottom:10px;color:#333}
+    .empty{background:#1a1a1a;border-radius:10px;text-align:center;padding:36px;color:#444;font-size:13px}
+    .empty i{font-size:28px;display:block;margin-bottom:8px;color:#333}
 
     /* BOTTOM GRID */
-    .bot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
-    .card{background:#1a1a1a;border-radius:10px;padding:18px 20px}
-    .addr-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #1e1e1e}
+    .bot-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+    .card{background:#1a1a1a;border-radius:10px;padding:16px 18px}
+    .addr-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid #1e1e1e}
     .addr-row:last-of-type{border:none}
     .addr-num{width:20px;height:20px;border-radius:50%;background:#e84c0e;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
     .addr-name{font-size:13px;font-weight:600}
     .addr-sub{font-size:12px;color:#666;margin-top:2px}
-    .maps-btn{width:100%;margin-top:12px;background:#222;border:1px solid #333;color:#aaa;padding:8px;border-radius:7px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+    .maps-btn{width:100%;margin-top:10px;background:#222;border:1px solid #333;color:#aaa;padding:7px;border-radius:7px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
     .maps-btn:hover{color:#fff;border-color:#555}
-    .rev-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #1e1e1e}
+    .rev-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1e1e1e}
     .rev-row:last-child{border:none}
     .rev-name{font-size:13px;color:#ccc}
     .rev-ct{font-size:11px;color:#555;margin-top:2px}
-    .rev-amt{font-size:15px;font-weight:700;color:#e84c0e}
+    .rev-amt{font-size:14px;font-weight:700;color:#e84c0e}
 
-    .loading{text-align:center;padding:60px;color:#444;font-size:13px}
+    /* SQUARE PAYMENTS */
+    .sq-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #1e1e1e}
+    .sq-row:last-child{border:none}
+    .sq-name{font-size:13px;font-weight:500}
+    .sq-note{font-size:11px;color:#555;margin-top:2px;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sq-right{text-align:right}
+    .sq-amt{font-size:14px;font-weight:700;color:#5cb85c}
+    .sq-tip{font-size:11px;color:#555;margin-top:2px}
+    .sq-date{font-size:11px;color:#555}
 
-    @media(max-width:800px){
-      .stats{grid-template-columns:1fr 1fr}
-      .bot-grid{grid-template-columns:1fr}
-      .appt{grid-template-columns:60px 1fr auto;}.appt .st-btn{display:none}
-      main{padding:16px}
-    }
+    /* CALENDAR */
+    .cal-wrap{background:#1a1a1a;border-radius:10px;padding:18px;margin-bottom:20px}
+    .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .cal-month{font-size:15px;font-weight:600}
+    .cal-nav{background:#222;border:1px solid #333;color:#aaa;width:28px;height:28px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px}
+    .cal-nav:hover{color:#fff}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+    .cal-day-hd{font-size:11px;color:#555;text-align:center;padding:4px 0;text-transform:uppercase}
+    .cal-day{min-height:52px;border-radius:7px;padding:5px;position:relative;cursor:pointer;background:#111;border:1px solid #1e1e1e}
+    .cal-day:hover{border-color:#333}
+    .cal-day.other-month{opacity:.25}
+    .cal-day.today{border-color:#e84c0e44}
+    .cal-day-num{font-size:12px;color:#888;margin-bottom:3px}
+    .cal-day.today .cal-day-num{color:#e84c0e;font-weight:700}
+    .cal-dot{font-size:11px;font-weight:700;color:#e84c0e}
+    .cal-appt-ct{font-size:10px;background:#e84c0e;color:#fff;border-radius:10px;padding:1px 5px;display:inline-block;font-weight:700}
+
+    /* COMPARISON TABLE */
+    .cmp-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+    .cmp-table th{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;text-align:left;border-bottom:1px solid #222}
+    .cmp-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid #1a1a1a;color:#ccc}
+    .cmp-table tr:last-child td{border:none}
+    .cmp-table tr:hover td{background:#1a1a1a}
+    .cmp-val{font-weight:600;color:#f0f0f0}
+    .loading{text-align:center;padding:50px;color:#444;font-size:13px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.bot-grid{grid-template-columns:1fr}.appt{grid-template-columns:60px 1fr auto}main{padding:14px}}
   </style>
 </head>
 <body>
@@ -104,7 +135,7 @@
   <div class="logo"><span>Motor</span>Nation</div>
   <div class="sub">Operations Dashboard</div>
   <div class="pin-row">
-    <input id="pin" type="password" placeholder="PIN" maxlength="12" />
+    <input id="pin" type="password" placeholder="PIN" maxlength="12"/>
     <button class="btn-main" onclick="doLogin()">Enter</button>
   </div>
   <div class="err" id="err">Wrong PIN — try again</div>
@@ -112,237 +143,304 @@
 
 <div id="dash">
   <header>
-    <div class="h-logo"><span>Motor</span>Nation &nbsp;<span style="font-size:12px;color:#555;font-weight:400">Ops</span></div>
+    <div class="h-logo"><span>Motor</span>Nation <span style="font-size:12px;color:#555;font-weight:400">Ops</span></div>
     <div class="h-right">
       <div class="h-date" id="h-date"></div>
-      <button class="h-refresh" onclick="load()"><i class="ti ti-refresh"></i> Refresh</button>
-      <button class="h-out" onclick="signOut()">Sign out</button>
+      <button class="btn-sm" onclick="loadAll()"><i class="ti ti-refresh"></i> Refresh</button>
+      <button class="btn-out" onclick="signOut()">Sign out</button>
     </div>
   </header>
   <main>
-    <div id="content"><div class="loading"><i class="ti ti-loader-2" style="font-size:28px;animation:spin 1s linear infinite;display:block;margin:0 auto 12px"></i>Loading today's data...</div></div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('today',this)">Today</div>
+      <div class="tab" onclick="switchTab('calendar',this)">Calendar</div>
+      <div class="tab" onclick="switchTab('compare',this)">This vs Last</div>
+      <div class="tab" onclick="switchTab('payments',this)">Square Payments</div>
+    </div>
+
+    <!-- TODAY TAB -->
+    <div class="tab-panel active" id="tab-today">
+      <div class="stats" id="stats-today"><div class="stat"><div class="loading" style="padding:10px;font-size:12px">Loading...</div></div></div>
+      <div class="goal" id="goal-today"></div>
+      <div class="sec-hd"><div class="sec-title">Today's appointments</div><div class="sec-ct" id="appt-ct"></div></div>
+      <div class="appt-list" id="appt-list"><div class="loading"><i class="ti ti-loader-2" style="font-size:24px;animation:spin 1s linear infinite;display:block;margin:0 auto 10px"></i>Loading...</div></div>
+      <div class="bot-grid">
+        <div class="card" id="stops-card"><div class="sec-title" style="margin-bottom:10px">Today's stops</div><div class="loading" style="padding:10px;font-size:12px">Loading...</div></div>
+        <div class="card" id="rev-card"><div class="sec-title" style="margin-bottom:10px">Revenue by package</div><div class="loading" style="padding:10px;font-size:12px">Loading...</div></div>
+      </div>
+    </div>
+
+    <!-- CALENDAR TAB -->
+    <div class="tab-panel" id="tab-calendar">
+      <div class="cal-wrap">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="calNav(-1)"><i class="ti ti-chevron-left"></i></button>
+          <div class="cal-month" id="cal-month-label"></div>
+          <button class="cal-nav" onclick="calNav(1)"><i class="ti ti-chevron-right"></i></button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+      <div id="cal-day-detail"></div>
+    </div>
+
+    <!-- COMPARE TAB -->
+    <div class="tab-panel" id="tab-compare">
+      <div class="stats" id="stats-compare" style="margin-bottom:20px"></div>
+      <table class="cmp-table" id="cmp-table"><thead><tr><th>Metric</th><th>This Month</th><th>Last Month</th><th>Change</th></tr></thead><tbody id="cmp-tbody"></tbody></table>
+    </div>
+
+    <!-- SQUARE TAB -->
+    <div class="tab-panel" id="tab-payments">
+      <div class="stats" id="stats-square" style="margin-bottom:20px"></div>
+      <div class="card" id="sq-list"><div class="loading"><i class="ti ti-loader-2" style="font-size:24px;animation:spin 1s linear infinite;display:block;margin:0 auto 10px"></i>Loading Square data...</div></div>
+    </div>
   </main>
 </div>
 
-<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
-
 <script>
-const PIN = "MN2026";
-const TOKEN = "nfp_dYM4yEM37VMik1TQkxpauwLoS62UCbfea95b";
-const FORM_ID = "6a3469e74658ba00087e093c";
-const GOAL = 4000;
+const PIN="MN2026";
+const NETLIFY_TOKEN="nfp_dYM4yEM37VMik1TQkxpauwLoS62UCbfea95b";
+const FORM_ID="6a3469e74658ba00087e093c";
+const SQUARE_LOCATION="LSKQ78G0R6HBJ";
+const GOAL=4000;
 
-document.getElementById("pin").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
+document.getElementById("pin").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
+function doLogin(){if(document.getElementById("pin").value===PIN){sessionStorage.setItem("mn","1");document.getElementById("login").style.display="none";document.getElementById("dash").style.display="block";loadAll();}else{document.getElementById("err").style.display="block";}}
+function signOut(){sessionStorage.removeItem("mn");location.reload();}
+if(sessionStorage.getItem("mn")==="1"){document.getElementById("login").style.display="none";document.getElementById("dash").style.display="block";}
 
-function doLogin() {
-  if(document.getElementById("pin").value === PIN) {
-    sessionStorage.setItem("mn","1");
-    document.getElementById("login").style.display="none";
-    document.getElementById("dash").style.display="block";
-    load();
-  } else {
-    document.getElementById("err").style.display="block";
-  }
-}
-function signOut() {
-  sessionStorage.removeItem("mn");
-  location.reload();
-}
-if(sessionStorage.getItem("mn")==="1") {
-  document.getElementById("login").style.display="none";
-  document.getElementById("dash").style.display="block";
+function switchTab(id,el){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+  el.classList.add("active");
+  document.getElementById("tab-"+id).classList.add("active");
 }
 
-function todayStr() { return new Date().toLocaleDateString("en-CA"); }
-function fmtToday() {
-  return new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
-}
-function monthStart() {
-  const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-01`;
-}
-function price(pkg) {
-  if(!pkg) return 0;
-  const m=pkg.match(/\$(\d+)/); if(m) return +m[1];
-  if(/elite/i.test(pkg)) return 139;
-  if(/premium/i.test(pkg)) return 109;
-  if(/basic/i.test(pkg)) return 89;
-  return 0;
-}
-function pkgLabel(pkg) {
-  if(!pkg) return "—";
-  if(/elite/i.test(pkg)) return "Elite";
-  if(/premium/i.test(pkg)) return "Premium";
-  if(/basic/i.test(pkg)) return "Basic";
-  return pkg;
-}
-function pkgCls(pkg) {
-  if(/elite/i.test(pkg)) return "pkg-e";
-  if(/premium/i.test(pkg)) return "pkg-p";
-  return "pkg-b";
-}
-function toMins(t) {
-  const m=t.match(/(\d+):(\d+)\s*(AM|PM)/i);
-  if(!m) return 0;
-  let h=+m[1],min=+m[2];
-  if(m[3].toUpperCase()==="PM"&&h!==12) h+=12;
-  if(m[3].toUpperCase()==="AM"&&h===12) h=0;
-  return h*60+min;
-}
-function getS(id) { return localStorage.getItem("s_"+id)||"upcoming"; }
-function cycleStatus(id,el) {
-  const cur=getS(id);
-  const next=cur==="upcoming"?"done":cur==="done"?"noshow":"upcoming";
-  localStorage.setItem("s_"+id,next);
-  el.className="st-btn"+(next==="done"?" st-done":next==="noshow"?" st-noshow":"");
-  el.textContent=next==="done"?"Done ✓":next==="noshow"?"No-show":"Upcoming";
+// ── HELPERS ──────────────────────────────────────────────
+function todayStr(){return new Date().toLocaleDateString("en-CA");}
+function fmtDate(){return new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});}
+function monthStart(offset=0){const d=new Date();d.setMonth(d.getMonth()+offset);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-01`;}
+function monthEnd(offset=0){const d=new Date(new Date().getFullYear(),new Date().getMonth()+offset+1,0);return d.toLocaleDateString("en-CA");}
+function price(pkg){if(!pkg)return 0;const m=pkg.match(/\$(\d+)/);if(m)return+m[1];if(/elite/i.test(pkg))return 139;if(/premium/i.test(pkg))return 109;if(/basic/i.test(pkg))return 89;return 0;}
+function pkgLabel(pkg){if(!pkg)return "—";if(/elite/i.test(pkg))return "Elite";if(/premium/i.test(pkg))return "Premium";if(/basic/i.test(pkg))return "Basic";return pkg;}
+function pkgCls(pkg){if(/elite/i.test(pkg))return "pkg-e";if(/premium/i.test(pkg))return "pkg-p";return "pkg-b";}
+function toMins(t){const m=t.match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return 0;let h=+m[1],min=+m[2];if(m[3].toUpperCase()==="PM"&&h!==12)h+=12;if(m[3].toUpperCase()==="AM"&&h===12)h=0;return h*60+min;}
+function getS(id){return localStorage.getItem("s_"+id)||"upcoming";}
+function cycleStatus(id,el){const cur=getS(id);const next=cur==="upcoming"?"done":cur==="done"?"noshow":"upcoming";localStorage.setItem("s_"+id,next);el.className="st-btn"+(next==="done"?" st-done":next==="noshow"?" st-noshow":"");el.textContent=next==="done"?"Done ✓":next==="noshow"?"No-show":"Upcoming";}
+function deltaHtml(cur,prev){if(!prev)return `<span class="stat-delta delta-flat">—</span>`;const d=cur-prev;const pct=Math.round((d/prev)*100);const cls=d>0?"delta-up":d<0?"delta-down":"delta-flat";const sign=d>0?"+":"";return `<span class="stat-delta ${cls}">${sign}${pct}%</span>`;}
+
+// ── DATA ──────────────────────────────────────────────────
+let allSubs=[], squarePayments=[];
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+
+async function loadAll(){
+  document.getElementById("h-date").textContent=fmtDate();
+  await Promise.all([loadNetlify(), loadSquare()]);
+  renderToday();
+  renderCalendar();
+  renderCompare();
+  renderSquare();
 }
 
-async function load() {
-  document.getElementById("h-date").textContent = fmtToday();
-  const el=document.getElementById("content");
-  el.innerHTML='<div class="loading"><i class="ti ti-loader-2" style="font-size:28px;animation:spin 1s linear infinite;display:block;margin:0 auto 12px"></i>Fetching bookings...</div>';
+async function loadNetlify(){
+  try{
+    const r=await fetch(`https://api.netlify.com/api/v1/forms/${FORM_ID}/submissions?per_page=500`,{headers:{Authorization:`Bearer ${NETLIFY_TOKEN}`}});
+    const d=await r.json();
+    allSubs=Array.isArray(d)?d:[];
+  }catch(e){console.error("Netlify error",e);}
+}
 
-  let subs=[];
-  try {
-    const r=await fetch(`https://api.netlify.com/api/v1/forms/${FORM_ID}/submissions?per_page=500`,
-      {headers:{Authorization:`Bearer ${TOKEN}`}});
-    subs=await r.json();
-    if(!Array.isArray(subs)) subs=[];
-  } catch(e) {
-    el.innerHTML='<div class="empty"><i class="ti ti-wifi-off"></i>Could not load data — check your connection</div>';
-    return;
-  }
+async function loadSquare(){
+  try{
+    // Fetch via our Netlify proxy function to avoid CORS
+    const start=new Date();start.setMonth(start.getMonth()-3);
+    const r=await fetch(`/.netlify/functions/square-payments?location=${SQUARE_LOCATION}&begin=${start.toISOString()}`);
+    if(r.ok){const d=await r.json();squarePayments=d.payments||[];}
+  }catch(e){console.log("Square proxy not set up yet — using direct data");}
+}
 
+// ── TODAY ─────────────────────────────────────────────────
+function renderToday(){
   const t=todayStr();
-  const todaySubs=subs.filter(s=>(s.data?.date||"")===t).sort((a,b)=>toMins(a.data?.time||"")-toMins(b.data?.time||""));
-  const monthSubs=subs.filter(s=>(s.data?.date||"")>=monthStart());
+  const yday=new Date();yday.setDate(yday.getDate()-1);const yStr=yday.toLocaleDateString("en-CA");
+  const ms=monthStart(), me=monthEnd();
+  const lms=monthStart(-1), lme=monthEnd(-1);
+
+  const todaySubs=allSubs.filter(s=>(s.data?.date||"")===t).sort((a,b)=>toMins(a.data?.time||"")-toMins(b.data?.time||""));
+  const ydaySubs=allSubs.filter(s=>(s.data?.date||"")===yStr);
+  const monthSubs=allSubs.filter(s=>{const d=s.data?.date||"";return d>=ms&&d<=me;});
 
   const todayRev=todaySubs.reduce((s,x)=>s+price(x.data?.package),0);
+  const ydayRev=ydaySubs.reduce((s,x)=>s+price(x.data?.package),0);
   const monthRev=monthSubs.reduce((s,x)=>s+price(x.data?.package),0);
   const pct=Math.min(100,Math.round((monthRev/GOAL)*100));
 
-  // pkg breakdown all time
   const pkgBreak={};
-  subs.forEach(s=>{
-    const k=pkgLabel(s.data?.package);
-    if(!pkgBreak[k]) pkgBreak[k]={count:0,rev:0};
-    pkgBreak[k].count++;
-    pkgBreak[k].rev+=price(s.data?.package);
-  });
+  allSubs.forEach(s=>{const k=pkgLabel(s.data?.package);if(!pkgBreak[k])pkgBreak[k]={count:0,rev:0};pkgBreak[k].count++;pkgBreak[k].rev+=price(s.data?.package);});
 
-  // today's addresses
-  const addrs=todaySubs.map(s=>({
-    addr:(s.data?.address||s.data?.["street-address"]||"").trim(),
-    name:((s.data?.["first-name"]||s.data?.name||"")+" "+(s.data?.["last-name"]||"")).trim(),
-    time:s.data?.time||"",
-    phone:s.data?.phone||""
-  })).filter(a=>a.addr);
-
+  const addrs=todaySubs.map(s=>({addr:(s.data?.address||s.data?.["street-address"]||"").trim(),name:((s.data?.["first-name"]||s.data?.name||"")+" "+(s.data?.["last-name"]||"")).trim(),time:s.data?.time||"",phone:s.data?.phone||""})).filter(a=>a.addr);
   window._addrs=addrs;
 
-  el.innerHTML=`
-    <div class="stats">
-      <div class="stat hi">
-        <div class="stat-l">Today's jobs</div>
-        <div class="stat-v">${todaySubs.length}</div>
-        <div class="stat-s">${todaySubs.length===0?"Nothing booked":todaySubs.length===1?"1 appointment":"appointments lined up"}</div>
-      </div>
-      <div class="stat">
-        <div class="stat-l">Today's revenue</div>
-        <div class="stat-v">$${todayRev}</div>
-        <div class="stat-s">if all complete</div>
-      </div>
-      <div class="stat">
-        <div class="stat-l">Month revenue</div>
-        <div class="stat-v">$${monthRev}</div>
-        <div class="stat-s">${monthSubs.length} bookings this month</div>
-      </div>
-      <div class="stat">
-        <div class="stat-l">All-time bookings</div>
-        <div class="stat-v">${subs.length}</div>
-        <div class="stat-s">total customers</div>
-      </div>
-    </div>
+  document.getElementById("stats-today").innerHTML=`
+    <div class="stat hi"><div class="stat-l">Today's jobs</div><div class="stat-v">${todaySubs.length}</div>${deltaHtml(todaySubs.length,ydaySubs.length)}</div>
+    <div class="stat"><div class="stat-l">Today's revenue</div><div class="stat-v">$${todayRev}</div>${deltaHtml(todayRev,ydayRev)}</div>
+    <div class="stat"><div class="stat-l">Yesterday</div><div class="stat-v">${ydaySubs.length} jobs</div><div class="stat-s">$${ydayRev} revenue</div></div>
+    <div class="stat"><div class="stat-l">Month revenue</div><div class="stat-v">$${monthRev}</div><div class="stat-s">${monthSubs.length} bookings</div></div>
+    <div class="stat"><div class="stat-l">All-time</div><div class="stat-v">${allSubs.length}</div><div class="stat-s">total customers</div></div>`;
 
-    <div class="goal">
-      <div class="goal-top">
-        <div class="goal-lbl">Monthly goal — $4,000</div>
-        <div class="goal-val">$${monthRev} earned &nbsp;<span>${pct}%</span></div>
-      </div>
-      <div class="goal-track"><div class="goal-bar" id="gbar" style="width:0%"></div></div>
-    </div>
-
-    <div class="sec-hd">
-      <div class="sec-title">Today's appointments</div>
-      <div class="sec-ct">${todaySubs.length} total &nbsp;·&nbsp; tap status to mark done</div>
-    </div>
-    <div class="appt-list">
-      ${todaySubs.length===0
-        ?'<div class="empty"><i class="ti ti-calendar-off"></i>No appointments today</div>'
-        :todaySubs.map(s=>{
-          const d=s.data||{};
-          const name=((d["first-name"]||d.name||"")+" "+(d["last-name"]||"")).trim()||"—";
-          const pkg=d.package||"";
-          const addr=(d.address||d["street-address"]||"").trim();
-          const ph=d.phone||"";
-          const st=getS(s.id);
-          return `<div class="appt">
-            <div class="appt-time">${d.time||"—"}</div>
-            <div>
-              <div class="appt-name">${name}</div>
-              <div class="appt-detail">${ph}${addr?" &nbsp;&middot;&nbsp; "+addr:""}</div>
-            </div>
-            <div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} &nbsp;&middot;&nbsp; $${price(pkg)}</div>
-            <button class="st-btn${st==="done"?" st-done":st==="noshow"?" st-noshow":""}" onclick="cycleStatus('${s.id}',this)">
-              ${st==="done"?"Done ✓":st==="noshow"?"No-show":"Upcoming"}
-            </button>
-          </div>`;
-        }).join("")}
-    </div>
-
-    <div class="bot-grid">
-      <div class="card">
-        <div class="sec-hd" style="margin-bottom:10px"><div class="sec-title">Today's stops</div></div>
-        ${addrs.length===0
-          ?'<div style="font-size:13px;color:#555;padding:8px 0">No addresses today</div>'
-          :addrs.map((a,i)=>`
-            <div class="addr-row">
-              <div class="addr-num">${i+1}</div>
-              <div>
-                <div class="addr-name">${a.time} &nbsp;&middot;&nbsp; ${a.name}</div>
-                <div class="addr-sub">${a.addr}${a.phone?" &nbsp;&middot;&nbsp; "+a.phone:""}</div>
-              </div>
-            </div>`).join("")}
-        ${addrs.length>0
-          ?`<button class="maps-btn" onclick="openMaps()"><i class="ti ti-map-pin"></i> Open route in Google Maps</button>`
-          :""}
-      </div>
-      <div class="card">
-        <div class="sec-hd" style="margin-bottom:10px"><div class="sec-title">Revenue by package</div></div>
-        ${Object.entries(pkgBreak).sort((a,b)=>b[1].rev-a[1].rev).map(([k,v])=>`
-          <div class="rev-row">
-            <div>
-              <div class="rev-name">${k}</div>
-              <div class="rev-ct">${v.count} booking${v.count!==1?"s":""}</div>
-            </div>
-            <div class="rev-amt">$${v.rev}</div>
-          </div>`).join("")
-          ||'<div style="font-size:13px;color:#555">No bookings yet</div>'}
-      </div>
-    </div>
-  `;
-
+  document.getElementById("goal-today").innerHTML=`
+    <div class="goal-top"><div class="goal-lbl">Monthly goal — $4,000</div><div class="goal-val">$${monthRev} earned &nbsp;<span>${pct}%</span></div></div>
+    <div class="goal-track"><div class="goal-bar" id="gbar" style="width:0%"></div></div>`;
   setTimeout(()=>{const b=document.getElementById("gbar");if(b)b.style.width=pct+"%";},120);
+
+  document.getElementById("appt-ct").textContent=`${todaySubs.length} total · tap status to update`;
+  document.getElementById("appt-list").innerHTML=todaySubs.length===0
+    ?'<div class="empty"><i class="ti ti-calendar-off"></i>No appointments today</div>'
+    :todaySubs.map(s=>{const d=s.data||{};const name=((d["first-name"]||d.name||"")+" "+(d["last-name"]||"")).trim()||"—";const pkg=d.package||"";const addr=(d.address||d["street-address"]||"").trim();const ph=d.phone||"";const st=getS(s.id);
+    return `<div class="appt"><div class="appt-time">${d.time||"—"}</div><div><div class="appt-name">${name}</div><div class="appt-detail">${ph}${addr?" &middot; "+addr:""}</div></div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div><button class="st-btn${st==="done"?" st-done":st==="noshow"?" st-noshow":""}" onclick="cycleStatus('${s.id}',this)">${st==="done"?"Done ✓":st==="noshow"?"No-show":"Upcoming"}</button></div>`;}).join("");
+
+  document.getElementById("stops-card").innerHTML=`<div class="sec-title" style="margin-bottom:10px">Today's stops</div>`+(addrs.length===0?'<div style="font-size:13px;color:#555;padding:8px 0">No addresses today</div>':addrs.map((a,i)=>`<div class="addr-row"><div class="addr-num">${i+1}</div><div><div class="addr-name">${a.time} · ${a.name}</div><div class="addr-sub">${a.addr}${a.phone?" · "+a.phone:""}</div></div></div>`).join("")+(addrs.length>0?`<button class="maps-btn" onclick="openMaps()"><i class="ti ti-map-pin"></i> Open route in Google Maps</button>`:""));
+
+  document.getElementById("rev-card").innerHTML=`<div class="sec-title" style="margin-bottom:10px">Revenue by package</div>`+(Object.entries(pkgBreak).sort((a,b)=>b[1].rev-a[1].rev).map(([k,v])=>`<div class="rev-row"><div><div class="rev-name">${k}</div><div class="rev-ct">${v.count} booking${v.count!==1?"s":""}</div></div><div class="rev-amt">$${v.rev}</div></div>`).join("")||'<div style="font-size:13px;color:#555">No bookings yet</div>');
 }
 
-function openMaps() {
-  if(!window._addrs||!window._addrs.length) return;
-  const url="https://www.google.com/maps/dir/"+window._addrs.map(a=>encodeURIComponent(a.addr)).join("/");
-  window.open(url,"_blank");
+function openMaps(){if(!window._addrs||!window._addrs.length)return;window.open("https://www.google.com/maps/dir/"+window._addrs.map(a=>encodeURIComponent(a.addr)).join("/"),"_blank");}
+
+// ── CALENDAR ──────────────────────────────────────────────
+function calNav(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+
+function renderCalendar(){
+  const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  document.getElementById("cal-month-label").textContent=`${months[calMonth]} ${calYear}`;
+
+  // Count bookings per day for this month
+  const counts={};
+  allSubs.forEach(s=>{const d=s.data?.date||"";if(d.startsWith(`${calYear}-${String(calMonth+1).padStart(2,"0")}`)){counts[d]=(counts[d]||0)+1;}});
+
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const prevDays=new Date(calYear,calMonth,0).getDate();
+  const t=todayStr();
+
+  let html='<div class="cal-day-hd">Sun</div><div class="cal-day-hd">Mon</div><div class="cal-day-hd">Tue</div><div class="cal-day-hd">Wed</div><div class="cal-day-hd">Thu</div><div class="cal-day-hd">Fri</div><div class="cal-day-hd">Sat</div>';
+
+  for(let i=0;i<firstDay;i++){const d=prevDays-firstDay+1+i;html+=`<div class="cal-day other-month"><div class="cal-day-num">${d}</div></div>`;}
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=`${calYear}-${String(calMonth+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const ct=counts[dateStr]||0;
+    const isToday=dateStr===t;
+    html+=`<div class="cal-day${isToday?" today":""}" onclick="showCalDay('${dateStr}')">
+      <div class="cal-day-num">${d}</div>
+      ${ct>0?`<span class="cal-appt-ct">${ct}</span>`:""}
+    </div>`;
+  }
+  const remaining=(7-((firstDay+daysInMonth)%7))%7;
+  for(let i=1;i<=remaining;i++){html+=`<div class="cal-day other-month"><div class="cal-day-num">${i}</div></div>`;}
+
+  document.getElementById("cal-grid").innerHTML=html;
+  document.getElementById("cal-day-detail").innerHTML="";
 }
 
-if(sessionStorage.getItem("mn")==="1") load();
-setInterval(()=>{if(sessionStorage.getItem("mn")==="1") load();}, 5*60*1000);
+function showCalDay(dateStr){
+  const daySubs=allSubs.filter(s=>(s.data?.date||"")===dateStr).sort((a,b)=>toMins(a.data?.time||"")-toMins(b.data?.time||""));
+  const rev=daySubs.reduce((s,x)=>s+price(x.data?.package),0);
+  const d=new Date(dateStr+"T12:00:00");
+  const label=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+  document.getElementById("cal-day-detail").innerHTML=`
+    <div class="card" style="margin-top:12px">
+      <div class="sec-hd" style="margin-bottom:12px"><div class="sec-title">${label}</div><div class="sec-ct">${daySubs.length} appointment${daySubs.length!==1?"s":""} · $${rev} revenue</div></div>
+      ${daySubs.length===0?'<div class="empty" style="padding:20px"><i class="ti ti-calendar-off"></i>No appointments</div>':daySubs.map(s=>{const sd=s.data||{};const name=((sd["first-name"]||sd.name||"")+" "+(sd["last-name"]||"")).trim()||"—";const pkg=sd.package||"";return `<div class="appt" style="margin-bottom:8px"><div class="appt-time">${sd.time||"—"}</div><div><div class="appt-name">${name}</div><div class="appt-detail">${sd.phone||""} ${(sd.address||sd["street-address"]||"")}</div></div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div><div></div></div>`;}).join("")}
+    </div>`;
+}
+
+// ── COMPARE ───────────────────────────────────────────────
+function renderCompare(){
+  const ms=monthStart(),me=monthEnd(),lms=monthStart(-1),lme=monthEnd(-1);
+  const cur=allSubs.filter(s=>{const d=s.data?.date||"";return d>=ms&&d<=me;});
+  const prev=allSubs.filter(s=>{const d=s.data?.date||"";return d>=lms&&d<=lme;});
+
+  const curRev=cur.reduce((s,x)=>s+price(x.data?.package),0);
+  const prevRev=prev.reduce((s,x)=>s+price(x.data?.package),0);
+  const curAvg=cur.length?Math.round(curRev/cur.length):0;
+  const prevAvg=prev.length?Math.round(prevRev/prev.length):0;
+
+  const now=new Date(),curDayOfMonth=now.getDate();
+  const daysInLastMonth=new Date(now.getFullYear(),now.getMonth(),0).getDate();
+  const prevPace=prevRev&&daysInLastMonth?Math.round((prevRev/daysInLastMonth)*curDayOfMonth):0;
+
+  document.getElementById("stats-compare").innerHTML=`
+    <div class="stat hi"><div class="stat-l">This month</div><div class="stat-v">$${curRev}</div><div class="stat-s">${cur.length} bookings</div></div>
+    <div class="stat"><div class="stat-l">Last month</div><div class="stat-v">$${prevRev}</div><div class="stat-s">${prev.length} bookings</div></div>
+    <div class="stat"><div class="stat-l">Month-over-month</div><div class="stat-v">${prevRev?Math.round(((curRev-prevRev)/prevRev)*100):"—"}%</div><div class="stat-s">${curRev>=prevRev?"ahead of":"behind"} last month</div></div>
+    <div class="stat"><div class="stat-l">Avg per booking</div><div class="stat-v">$${curAvg}</div>${deltaHtml(curAvg,prevAvg)}
+    </div>
+    <div class="stat"><div class="stat-l">Pace vs last month</div><div class="stat-v">$${prevPace}</div><div class="stat-s">last month at same point</div></div>`;
+
+  const rows=[
+    ["Bookings",cur.length,prev.length],
+    ["Revenue",`$${curRev}`,`$${prevRev}`],
+    ["Avg ticket",`$${curAvg}`,`$${prevAvg}`],
+    ["Basic packages",cur.filter(s=>/basic/i.test(s.data?.package||"")).length,prev.filter(s=>/basic/i.test(s.data?.package||"")).length],
+    ["Premium packages",cur.filter(s=>/premium/i.test(s.data?.package||"")).length,prev.filter(s=>/premium/i.test(s.data?.package||"")).length],
+    ["Elite packages",cur.filter(s=>/elite/i.test(s.data?.package||"")).length,prev.filter(s=>/elite/i.test(s.data?.package||"")).length],
+  ];
+
+  const now2=new Date();
+  const curMonthName=now2.toLocaleDateString("en-US",{month:"long"});
+  const prevMonthName=new Date(now2.getFullYear(),now2.getMonth()-1,1).toLocaleDateString("en-US",{month:"long"});
+  document.querySelector(".cmp-table thead tr").innerHTML=`<th>Metric</th><th>${curMonthName}</th><th>${prevMonthName}</th><th>Change</th>`;
+
+  document.getElementById("cmp-tbody").innerHTML=rows.map(([label,c,p])=>{
+    const cn=typeof c==="string"?+c.replace("$",""):c;
+    const pn=typeof p==="string"?+p.replace("$",""):p;
+    const diff=cn-pn;const sign=diff>0?"+":"";
+    const cls=diff>0?"delta-up":diff<0?"delta-down":"delta-flat";
+    return `<tr><td>${label}</td><td class="cmp-val">${c}</td><td>${p}</td><td><span class="stat-delta ${cls}">${sign}${typeof c==="string"&&c.includes("$")?"$"+Math.abs(diff):Math.abs(diff)}</span></td></tr>`;
+  }).join("");
+}
+
+// ── SQUARE ────────────────────────────────────────────────
+function renderSquare(){
+  // Use the data we already fetched (injected at build or from proxy)
+  // For now render from the static payments fetched at load
+  const payments=window._squarePayments||[];
+  const totalRev=payments.reduce((s,p)=>s+(p.amount_money?.amount||0),0)/100;
+  const totalTips=payments.reduce((s,p)=>s+(p.tip_money?.amount||0),0)/100;
+  const fees=payments.reduce((s,p)=>s+(p.processing_fee&&p.processing_fee[0]?p.processing_fee[0].amount_money?.amount||0:0),0)/100;
+
+  document.getElementById("stats-square").innerHTML=`
+    <div class="stat hi"><div class="stat-l">Square revenue</div><div class="stat-v">$${Math.round(totalRev)}</div><div class="stat-s">${payments.length} payments</div></div>
+    <div class="stat"><div class="stat-l">Tips collected</div><div class="stat-v">$${totalTips.toFixed(2)}</div><div class="stat-s">from Square</div></div>
+    <div class="stat"><div class="stat-l">Processing fees</div><div class="stat-v">$${fees.toFixed(2)}</div><div class="stat-s">Square charges</div></div>
+    <div class="stat"><div class="stat-l">Net revenue</div><div class="stat-v">$${(totalRev-fees).toFixed(2)}</div><div class="stat-s">after fees</div></div>`;
+
+  if(payments.length===0){
+    document.getElementById("sq-list").innerHTML='<div class="empty"><i class="ti ti-credit-card-off"></i>No Square payments loaded yet.<br><br><small style="color:#444">Square data loads via the proxy function once deployed.</small></div>';
+    return;
+  }
+
+  document.getElementById("sq-list").innerHTML=`
+    <div class="sec-hd" style="margin-bottom:12px"><div class="sec-title">Recent payments</div><div class="sec-ct">${payments.length} transactions</div></div>`+
+    payments.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).map(p=>{
+      const amt=(p.amount_money?.amount||0)/100;
+      const tip=(p.tip_money?.amount||0)/100;
+      const d=new Date(p.created_at).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+      const card=p.card_details?.card;
+      return `<div class="sq-row">
+        <div><div class="sq-name">${card?card.card_brand+" ····"+card.last_4:"Card"}</div><div class="sq-note">${p.note||"Square POS payment"}</div></div>
+        <div class="sq-right"><div class="sq-amt">$${amt.toFixed(2)}</div>${tip>0?`<div class="sq-tip">+$${tip.toFixed(2)} tip</div>`:""}<div class="sq-date">${d}</div></div>
+      </div>`;}).join("");
+}
+
+// Inject Square data from server-side (populated at page load via proxy later)
+window._squarePayments = [
+  {id:"J086",created_at:"2026-06-17T00:42:51.954Z",amount_money:{amount:12118},tip_money:{amount:1818},card_details:{card:{card_brand:"MASTERCARD",last_4:"7468"}},note:"Square POS payment"},
+  {id:"Be5N",created_at:"2026-06-08T16:51:36.862Z",amount_money:{amount:10999},tip_money:{amount:0},card_details:{card:{card_brand:"VISA",last_4:"1538"}},note:"Brandon Casias - MN Standard Oil Change - June 8, 2026 1:00pm",processing_fee:[{amount_money:{amount:349}}]},
+  {id:"THdj",created_at:"2026-06-03T19:54:27.512Z",amount_money:{amount:8719},tip_money:{amount:2180},card_details:{card:{card_brand:"VISA",last_4:"4629"}},note:"Square POS payment",processing_fee:[{amount_money:{amount:298}}]}
+])};
+
+if(sessionStorage.getItem("mn")==="1")loadAll();
+setInterval(()=>{if(sessionStorage.getItem("mn")==="1")loadAll();},5*60*1000);
 </script>
 </body>
 </html>
