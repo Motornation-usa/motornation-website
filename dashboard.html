@@ -527,9 +527,7 @@ function renderCompare(){
 
 // ── SQUARE ────────────────────────────────────────────────
 function renderSquare(){
-  // Use the data we already fetched (injected at build or from proxy)
-  // For now render from the static payments fetched at load
-  const payments=window._squarePayments||[];
+  const payments=squarePayments.length?squarePayments:(window._squarePayments||[]);
   const totalRev=payments.reduce((s,p)=>s+(p.amount_money?.amount||0),0)/100;
   const totalTips=payments.reduce((s,p)=>s+(p.tip_money?.amount||0),0)/100;
   const fees=payments.reduce((s,p)=>s+(p.processing_fee&&p.processing_fee[0]?p.processing_fee[0].amount_money?.amount||0:0),0)/100;
