@@ -70,8 +70,6 @@
     .pkg-p{background:#3a2500;color:#f5a623}
     .pkg-e{background:#0f2e0f;color:#5cb85c}
     .st-btn{font-size:11px;padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#888;white-space:nowrap;font-weight:600}
-    .status-select{min-width:112px;font-size:11px;padding:5px 28px 5px 10px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#888;white-space:nowrap;font-weight:700;outline:none}
-    .status-select:focus{border-color:#e84c0e}
     .st-done{background:#0f2e0f;border-color:#1a4a1a;color:#5cb85c}
     .st-noshow{background:#2e0f0f;border-color:#4a1a1a;color:#ff6b6b}
     .empty{background:#1a1a1a;border-radius:10px;text-align:center;padding:36px;color:#444;font-size:13px}
@@ -210,12 +208,11 @@
               <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Address</th>
               <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Vehicle</th>
               <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Package</th>
-              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Status</th>
               <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Review</th>
             </tr>
           </thead>
           <tbody id="cust-tbody">
-            <tr><td colspan="9" style="padding:40px;text-align:center;color:#444;font-size:13px">Loading...</td></tr>
+            <tr><td colspan="8" style="padding:40px;text-align:center;color:#444;font-size:13px">Loading...</td></tr>
           </tbody>
         </table>
       </div>
@@ -267,41 +264,37 @@ function price(pkg){if(!pkg)return 0;const m=pkg.match(/\$(\d+)/);if(m)return+m[
 function pkgLabel(pkg){if(!pkg)return "—";if(/elite/i.test(pkg))return "Elite";if(/premium/i.test(pkg))return "Premium";if(/basic/i.test(pkg))return "Basic";return pkg;}
 function pkgCls(pkg){if(/elite/i.test(pkg))return "pkg-e";if(/premium/i.test(pkg))return "pkg-p";return "pkg-b";}
 function toMins(t){const m=t.match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return 0;let h=+m[1],min=+m[2];if(m[3].toUpperCase()==="PM"&&h!==12)h+=12;if(m[3].toUpperCase()==="AM"&&h===12)h=0;return h*60+min;}
-function getS(id){return localStorage.getItem("s_"+id)||"upcoming";}
-function escAttr(v){return String(v||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function statusClass(st){return st==="done"?" st-done":st==="noshow"?" st-noshow":"";}
-function statusDropdown(id,st,email,name){
-  return `<select class="status-select${statusClass(st)}" data-id="${escAttr(id)}" data-email="${escAttr(email)}" data-name="${escAttr(name)}" onchange="setStatusFromSelect(this)" title="Customer status">
-    <option value="upcoming"${st==="upcoming"?" selected":""}>Upcoming</option>
-    <option value="done"${st==="done"?" selected":""}>Done</option>
-    <option value="noshow"${st==="noshow"?" selected":""}>No-show</option>
-  </select>`;
+// ── STATUS — server-side so all devices stay in sync ─────
+let _statuses = {}; // cache loaded from server
+
+async function loadStatuses(){
+  try{
+    const r = await fetch("/.netlify/functions/get-statuses");
+    if(r.ok) _statuses = await r.json();
+  } catch(e){ console.warn("Status load error:", e); }
 }
-function setStatusFromSelect(el){
-  const id=el.dataset.id;
-  const next=el.value;
-  const prev=getS(id);
-  localStorage.setItem("s_"+id,next);
-  el.className="status-select"+statusClass(next);
-  if(next!==prev && next==="done" && el.dataset.email && el.dataset.email!=="—"){
-    sendReviewEmail(el.dataset.email, el.dataset.name);
-  }
-  if(next!==prev && next==="noshow" && el.dataset.email && el.dataset.email!=="—"){
-    sendNoShowEmail(el.dataset.email, el.dataset.name);
-  }
-}
-function cycleStatus(id,el,customerEmail,customerName){
-  const cur=getS(id);
-  const next=cur==="upcoming"?"done":cur==="done"?"noshow":"upcoming";
-  localStorage.setItem("s_"+id,next);
-  el.className="st-btn"+(next==="done"?" st-done":next==="noshow"?" st-noshow":"");
-  el.textContent=next==="done"?"Done ✓":next==="noshow"?"No-show":"Upcoming";
-  if(next==="done" && customerEmail && customerEmail!=="—"){
-    sendReviewEmail(customerEmail, customerName);
-  }
-  if(next==="noshow" && customerEmail && customerEmail!=="—"){
-    sendNoShowEmail(customerEmail, customerName);
-  }
+
+function getS(id){ return _statuses[id] || "upcoming"; }
+
+async function cycleStatus(id, el, customerEmail, customerName){
+  const cur = getS(id);
+  const next = cur==="upcoming"?"done":cur==="done"?"noshow":"upcoming";
+  // Update server first
+  try{
+    await fetch("/.netlify/functions/update-status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status: next })
+    });
+  } catch(e){ console.warn("Status save error:", e); }
+  // Update local cache + all matching buttons on page
+  _statuses[id] = next;
+  document.querySelectorAll(`[data-sid="${id}"]`).forEach(btn => {
+    btn.className = "st-btn"+(next==="done"?" st-done":next==="noshow"?" st-noshow":"");
+    btn.textContent = next==="done"?"Done ✓":next==="noshow"?"No-show":"Upcoming";
+  });
+  if(next==="done" && customerEmail && customerEmail!=="—") sendReviewEmail(customerEmail, customerName);
+  if(next==="noshow" && customerEmail && customerEmail!=="—") sendNoShowEmail(customerEmail, customerName);
 }
 function sendReviewEmail(email, name){
   if(!email||email==="—")return;
@@ -347,7 +340,7 @@ let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 
 async function loadAll(){
   document.getElementById("h-date").textContent=fmtDate();
-  await Promise.all([loadNetlify(), loadSquare()]);
+  await Promise.all([loadNetlify(), loadSquare(), loadStatuses()]);
   renderToday();
   renderCalendar();
   renderCompare();
@@ -381,11 +374,13 @@ async function loadNetlify(){
 
 async function loadSquare(){
   try{
-    // Fetch via our Netlify proxy function to avoid CORS
-    const start=new Date();start.setMonth(start.getMonth()-3);
-    const r=await fetch(`/.netlify/functions/square-payments?location=${SQUARE_LOCATION}&begin=${start.toISOString()}`);
-    if(r.ok){const d=await r.json();squarePayments=d.payments||[];}
-  }catch(e){console.log("Square proxy not set up yet — using direct data");}
+    const r=await fetch("/.netlify/functions/get-square-payments");
+    if(r.ok){ const d=await r.json(); squarePayments=d.payments||[]; }
+    else { squarePayments=window._squarePayments||[]; }
+  }catch(e){
+    console.warn("Square proxy error, using cached data:", e);
+    squarePayments=window._squarePayments||[];
+  }
 }
 
 // ── TODAY ─────────────────────────────────────────────────
@@ -422,12 +417,12 @@ function renderToday(){
     <div class="goal-track"><div class="goal-bar" id="gbar" style="width:0%"></div></div>`;
   setTimeout(()=>{const b=document.getElementById("gbar");if(b)b.style.width=pct+"%";},120);
 
-  document.getElementById("appt-ct").textContent=`${todaySubs.length} total · update status from dropdown`;
+  document.getElementById("appt-ct").textContent=`${todaySubs.length} total · tap status to update`;
   document.getElementById("appt-list").innerHTML=todaySubs.length===0
     ?'<div class="empty"><i class="ti ti-calendar-off"></i>No appointments today</div>'
     :todaySubs.map(s=>{const d=s.data||{};const name=((d["first-name"]||d.name||"")+" "+(d["last-name"]||"")).trim()||"—";const pkg=d.package||"";const addr=(d.address||d["street-address"]||"").trim();const ph=d.phone||"";const st=getS(s.id);
     const vehicle=((d["vehicle-year"]||"")+" "+(d.vehicle||"")).trim();
-    return `<div class="appt"><div class="appt-time">${d.time||"—"}</div><div><div class="appt-name">${name}</div><div class="appt-detail">${ph}${addr?" &middot; "+addr:""}</div>${vehicle?`<div style="font-size:11px;color:#e84c0e;margin-top:3px;font-weight:600">&#128663; ${vehicle}</div>`:""}</div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div>${statusDropdown(s.id,st,d.email||"",name)}</div>`;}).join("");
+    return `<div class="appt"><div class="appt-time">${d.time||"—"}</div><div><div class="appt-name">${name}</div><div class="appt-detail">${ph}${addr?" &middot; "+addr:""}</div>${vehicle?`<div style="font-size:11px;color:#e84c0e;margin-top:3px;font-weight:600">&#128663; ${vehicle}</div>`:""}</div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div><button class="st-btn${getS(s.id)==="done"?" st-done":getS(s.id)==="noshow"?" st-noshow":""}" data-sid="${s.id}" onclick="cycleStatus('${s.id}',this,'${d.email||''}','${name}')">${getS(s.id)==="done"?"Done ✓":getS(s.id)==="noshow"?"No-show":"Upcoming"}</button></div>`;}).join("");
 
   document.getElementById("stops-card").innerHTML=`<div class="sec-title" style="margin-bottom:10px">Today's stops</div>`+(addrs.length===0?'<div style="font-size:13px;color:#555;padding:8px 0">No addresses today</div>':addrs.map((a,i)=>`<div class="addr-row"><div class="addr-num">${i+1}</div><div><div class="addr-name">${a.time} · ${a.name}</div><div class="addr-sub">${a.addr}${a.phone?" · "+a.phone:""}</div></div></div>`).join("")+(addrs.length>0?`<button class="maps-btn" onclick="openMaps()"><i class="ti ti-map-pin"></i> Open route in Google Maps</button>`:""));
 
@@ -599,7 +594,7 @@ function renderCustomerTable(subs){
   const tbody=document.getElementById("cust-tbody");
   if(!tbody)return;
   if(subs.length===0){
-    tbody.innerHTML='<tr><td colspan="9" style="padding:40px;text-align:center;color:#444;font-size:13px">No customers found</td></tr>';
+    tbody.innerHTML='<tr><td colspan="8" style="padding:40px;text-align:center;color:#444;font-size:13px">No customers found</td></tr>';
     return;
   }
   tbody.innerHTML=subs.map(s=>{
@@ -610,7 +605,6 @@ function renderCustomerTable(subs){
     const pkgColor=/elite/i.test(pkg)?"#5cb85c":/premium/i.test(pkg)?"#f5a623":"#7eb8f7";
     const sentKey="review_sent_"+s.id;
     const reviewSent=localStorage.getItem(sentKey);
-    const st=getS(s.id);
     return `<tr style="border-bottom:1px solid #1a1a1a" onmouseover="this.style.background='#1a1a1a'" onmouseout="this.style.background=''">
       <td style="padding:11px 16px;font-size:13px;color:#888;white-space:nowrap">${d.date||"—"}</td>
       <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#f0f0f0">${name}</td>
@@ -619,7 +613,6 @@ function renderCustomerTable(subs){
       <td style="padding:11px 16px;font-size:13px;color:#888;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.address||"—"}</td>
       <td style="padding:11px 16px;font-size:13px;color:#e84c0e;font-weight:600">${vehicle.trim()||"—"}</td>
       <td style="padding:11px 16px"><span style="font-size:11px;font-weight:700;color:${pkgColor};background:${pkgColor}22;padding:3px 8px;border-radius:10px">${pkg.replace(/\s*\$\d+/,"")}</span></td>
-      <td style="padding:11px 16px">${statusDropdown(s.id,st,d.email||"",name)}</td>
       <td style="padding:11px 16px">
         ${reviewSent
           ?'<span style="font-size:11px;color:#5cb85c">Sent ✓</span>'
@@ -652,12 +645,12 @@ function sendReviewFromList(id, email, name, btn){
 }
 
 function exportCSV(){
-  const headers=["Date","Time","Name","Phone","Email","Address","Vehicle","Package","Status"];
+  const headers=["Date","Time","Name","Phone","Email","Address","Vehicle","Package"];
   const rows=filteredSubs.map(s=>{
     const d=s.data||{};
     const name=((d["first-name"]||"")+" "+(d["last-name"]||"")).trim();
     const vehicle=((d["vehicle-year"]||"")+" "+(d.vehicle||"")).trim();
-    return [d.date,d.time,name,d.phone,d.email,d.address,vehicle,d.package,getS(s.id)].map(v=>`"${(v||"").replace(/"/g,'""')}"`).join(",");
+    return [d.date,d.time,name,d.phone,d.email,d.address,vehicle,d.package].map(v=>`"${(v||"").replace(/"/g,'""')}"`).join(",");
   });
   const csv=[headers.join(","),...rows].join("\n");
   const a=document.createElement("a");
