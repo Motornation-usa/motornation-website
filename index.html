@@ -204,6 +204,11 @@ section{padding:90px 2.5rem}
 .form-input,.form-select{width:100%;padding:11px 14px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:14px;outline:none;transition:border-color 0.2s;background:#fff;color:#111;font-family:inherit}
 .form-input:focus,.form-select:focus{border-color:#F3382A}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sms-consent{display:flex;gap:10px;align-items:flex-start;background:#f5f5f5;border:1px solid #e8e8e8;border-radius:8px;padding:12px 14px;margin:4px 0 1.1rem}
+.sms-consent input{margin-top:4px;flex-shrink:0}
+.sms-consent label{font-size:12px;color:#555;line-height:1.55;cursor:pointer}
+.sms-consent a{color:#F3382A;font-weight:700;text-decoration:none}
+.sms-consent a:hover{text-decoration:underline}
 .pkg-options{display:flex;flex-direction:column;gap:8px}
 .pkg-option{border:1.5px solid #e0e0e0;border-radius:8px;padding:12px 14px;cursor:pointer;transition:border-color 0.2s,background 0.2s;display:flex;justify-content:space-between;align-items:center}
 .pkg-option:hover{border-color:#ccc;background:#fafafa}
@@ -291,6 +296,7 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <input type="text" name="vehicle">
 <input type="text" name="package">
 <input type="text" name="notes">
+<input type="text" name="sms-consent">
 </form>
 <nav>
 <a class="nav-logo" href="#home"><div class="nav-logo-mark">MN</div><span class="nav-logo-text">Motor<span>Nation</span></span></a>
@@ -453,13 +459,23 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <div class="form-row"><div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="f-phone" placeholder="(720) 555-1234"></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="f-email" placeholder="you@email.com"></div></div>
 <div class="form-row"><div class="form-group"><label class="form-label">Vehicle year</label><input type="text" class="form-input" id="f-year" placeholder="2020"></div><div class="form-group"><label class="form-label">Make &amp; model</label><input type="text" class="form-input" id="f-vehicle" placeholder="Honda Civic"></div></div>
 <div class="form-group"><label class="form-label">Notes (optional)</label><input type="text" class="form-input" id="f-notes" placeholder="Gate code, parking instructions, etc."></div>
-<button class="form-btn" onclick="goStep(4)">Review booking →</button>
+<div class="sms-consent">
+<input type="checkbox" id="f-sms-consent">
+<label for="f-sms-consent">I agree to receive appointment confirmations, reminders, service updates, and customer support text messages from MotorNation USA at the phone number provided. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase. See our <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> and <a href="/terms-and-conditions.html" target="_blank">Terms &amp; Conditions</a>.</label>
+</div>
+<button class="form-btn" onclick="continueToReview()">Review booking →</button>
 <button class="form-btn-back" onclick="goStep(2)">← Back</button>
 </div>
 <div class="form-step" id="step-4">
 <p class="step-title">Step 4 — Confirm your booking</p>
 <div class="confirm-summary" id="confirm-summary"></div>
-<button class="form-btn" id="submit-btn" onclick="submitBooking()">Confirm &amp; book appointment</button>
+<div class="form-group" style="margin-bottom:1rem">
+<label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:#555;line-height:1.5">
+<input type="checkbox" id="sms-consent" style="margin-top:2px;flex-shrink:0;accent-color:#F3382A" onchange="document.getElementById('submit-btn').disabled=!this.checked">
+<span>I agree to receive SMS appointment reminders and service updates from MotorNation. Message and data rates may apply. Reply STOP to opt out. See our <a href="/terms" style="color:#F3382A;text-decoration:underline">terms</a> and <a href="/privacy" style="color:#F3382A;text-decoration:underline">privacy policy</a>.</span>
+</label>
+</div>
+<button class="form-btn" id="submit-btn" onclick="submitBooking()" disabled>Confirm &amp; book appointment</button>
 <button class="form-btn-back" onclick="goStep(3)">← Edit details</button>
 </div>
 <div class="form-step" id="step-success">
@@ -627,13 +643,23 @@ function buildSummary(){
 var addr=document.getElementById('f-address').value||'—';
 var fname=document.getElementById('f-fname').value||'—';
 var veh=(document.getElementById('f-year').value||'')+' '+(document.getElementById('f-vehicle').value||'');
+var smsConsent=document.getElementById('f-sms-consent').checked?'Yes':'No';
 document.getElementById('confirm-summary').innerHTML=
 '<div class="confirm-row"><span>Package</span><span>'+selectedPkg.name+'</span></div>'+
 '<div class="confirm-row"><span>Date &amp; time</span><span>'+(selectedDate||'—')+' at '+(selectedTime||'—')+'</span></div>'+
 '<div class="confirm-row"><span>Address</span><span>'+addr+'</span></div>'+
 '<div class="confirm-row"><span>Name</span><span>'+fname+'</span></div>'+
 '<div class="confirm-row"><span>Vehicle</span><span>'+veh+'</span></div>'+
+'<div class="confirm-row"><span>SMS consent</span><span>'+smsConsent+'</span></div>'+
 '<div class="confirm-row"><span>Total</span><span>'+selectedPkg.price+'</span></div>';
+}
+
+function continueToReview(){
+if(!document.getElementById('f-sms-consent').checked){
+alert('Please check the SMS consent box to receive appointment text messages, or contact us directly to book without SMS alerts.');
+return;
+}
+goStep(4);
 }
 
 function submitBooking(){
@@ -648,11 +674,12 @@ var address=document.getElementById('f-address').value;
 var year=document.getElementById('f-year').value;
 var vehicle=document.getElementById('f-vehicle').value;
 var notes=document.getElementById('f-notes').value;
+var smsConsent=document.getElementById('f-sms-consent').checked?'Yes':'No';
 var pkg=selectedPkg.name+' '+selectedPkg.price;
-var body=new URLSearchParams({'form-name':'motornation-booking','first-name':fname,'last-name':lname,'phone':phone,'email':email,'date':selectedDate,'time':selectedTime,'location-type':loctype,'address':address,'vehicle-year':year,'vehicle':vehicle,'package':pkg,'notes':notes});
+var body=new URLSearchParams({'form-name':'motornation-booking','first-name':fname,'last-name':lname,'phone':phone,'email':email,'date':selectedDate,'time':selectedTime,'location-type':loctype,'address':address,'vehicle-year':year,'vehicle':vehicle,'package':pkg,'notes':notes,'sms-consent':smsConsent});
 fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
-.then(function(){sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes);showSuccess();})
-.catch(function(){sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes);showSuccess();});
+.then(function(){sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes,smsConsent);showSuccess();})
+.catch(function(){sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes,smsConsent);showSuccess();});
 }
 
 function showSuccess(){
@@ -666,13 +693,13 @@ if(window.innerWidth < 768) {
 }
 }
 
-function sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes){
+function sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes,smsConsent){
 console.log('MN: Sending emails to',email,'and owner');
 var veh=year+' '+vehicle;
 emailjs.send(EJS_SVC,EJS_CUST,{to_email:email,to_name:fname,date:selectedDate,time:selectedTime,address:address,package:pkg,vehicle:veh,phone:'(720) 317-8949'},EJS_KEY)
 .then(function(){console.log('MN: Customer email sent OK');})
 .catch(function(e){console.error('MN: Customer email FAILED',JSON.stringify(e));});
-emailjs.send(EJS_SVC,EJS_OWN,{to_email:'a.khattab@motornationusa.com',customer_name:fname+' '+lname,customer_email:email,customer_phone:phone,date:selectedDate,time:selectedTime,address:address,package:pkg,vehicle:veh,notes:notes},EJS_KEY)
+emailjs.send(EJS_SVC,EJS_OWN,{to_email:'a.khattab@motornationusa.com',customer_name:fname+' '+lname,customer_email:email,customer_phone:phone,date:selectedDate,time:selectedTime,address:address,package:pkg,vehicle:veh,notes:notes,sms_consent:smsConsent},EJS_KEY)
 .then(function(){console.log('MN: Owner email sent OK');})
 .catch(function(e){console.error('MN: Owner email FAILED',JSON.stringify(e));});
 }
