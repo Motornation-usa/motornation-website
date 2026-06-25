@@ -314,6 +314,13 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <input type="text" name="package">
 <input type="text" name="notes">
 <input type="text" name="sms-consent">
+<input type="text" name="utm-source">
+<input type="text" name="utm-medium">
+<input type="text" name="utm-campaign">
+<input type="text" name="utm-content">
+<input type="text" name="utm-term">
+<input type="text" name="landing-page">
+<input type="text" name="referrer">
 </form>
 <nav>
 <a class="nav-logo" href="#home"><div class="nav-logo-mark">MN</div><span class="nav-logo-text">Motor<span>Nation</span></span></a>
@@ -555,8 +562,57 @@ var EJS_SVC='service_6pgdsld';
 var EJS_CUST='template_kjzev4o';
 var EJS_OWN='template_42xr6mb';
 var EJS_KEY='-u04DcEFJlspxcIZm';
+var UTM_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
 
 function getTodayMT(){return new Date().toLocaleDateString('en-CA',{timeZone:'America/Denver'});}
+
+function persistAttribution(){
+var params=new URLSearchParams(window.location.search);
+var attribution={landing_page:window.location.href,referrer:document.referrer||''};
+var hasCampaignData=false;
+UTM_KEYS.forEach(function(key){
+var val=params.get(key);
+if(val){attribution[key]=val;hasCampaignData=true;}
+});
+if(hasCampaignData){
+sessionStorage.setItem('mn_attribution',JSON.stringify(attribution));
+}else if(!sessionStorage.getItem('mn_attribution')){
+sessionStorage.setItem('mn_attribution',JSON.stringify(attribution));
+}
+}
+
+function getAttribution(){
+try{return JSON.parse(sessionStorage.getItem('mn_attribution')||'{}');}
+catch(e){return {};}
+}
+
+function trackMnEvent(eventName,params){
+if(typeof fbq==='function'){fbq('track',eventName,params||{});}
+}
+
+function trackMnCustomEvent(eventName,params){
+if(typeof fbq==='function'){fbq('trackCustom',eventName,params||{});}
+}
+
+function trackBookingSectionView(){
+if(window.mnBookingViewTracked)return;
+window.mnBookingViewTracked=true;
+trackMnEvent('ViewContent',{content_name:'Booking Section',content_category:'Mobile Oil Change Booking'});
+trackMnCustomEvent('BookingPageView',{page_location:window.location.href});
+}
+
+function maybeTrackBookingSectionFromHash(){
+if(window.location.hash==='#book')trackBookingSectionView();
+}
+
+persistAttribution();
+window.addEventListener('hashchange',maybeTrackBookingSectionFromHash);
+document.addEventListener('DOMContentLoaded',function(){
+maybeTrackBookingSectionFromHash();
+document.querySelectorAll('a[href="#book"]').forEach(function(link){
+link.addEventListener('click',function(){trackBookingSectionView();});
+});
+});
 
 function initDatePicker(){
 var today=getTodayMT();
@@ -693,7 +749,8 @@ var vehicle=document.getElementById('f-vehicle').value;
 var notes=document.getElementById('f-notes').value;
 var smsConsent=document.getElementById('f-sms-consent').checked?'Yes':'No';
 var pkg=selectedPkg.name+' '+selectedPkg.price;
-var body=new URLSearchParams({'form-name':'motornation-booking','first-name':fname,'last-name':lname,'phone':phone,'email':email,'date':selectedDate,'time':selectedTime,'location-type':loctype,'address':address,'vehicle-year':year,'vehicle':vehicle,'package':pkg,'notes':notes,'sms-consent':smsConsent});
+var attribution=getAttribution();
+var body=new URLSearchParams({'form-name':'motornation-booking','first-name':fname,'last-name':lname,'phone':phone,'email':email,'date':selectedDate,'time':selectedTime,'location-type':loctype,'address':address,'vehicle-year':year,'vehicle':vehicle,'package':pkg,'notes':notes,'sms-consent':smsConsent,'utm-source':attribution.utm_source||'','utm-medium':attribution.utm_medium||'','utm-campaign':attribution.utm_campaign||'','utm-content':attribution.utm_content||'','utm-term':attribution.utm_term||'','landing-page':attribution.landing_page||window.location.href,'referrer':attribution.referrer||document.referrer||''});
 fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
 .then(function(){sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes,smsConsent);showSuccess();})
 .catch(function(){sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes,smsConsent);showSuccess();});
@@ -703,7 +760,8 @@ function showSuccess(){
 document.querySelectorAll('.form-step').forEach(function(s){s.classList.remove('active');});
 document.getElementById('step-success').classList.add('active');
 if(typeof fbq === 'function' && !window.mnScheduleTracked){
-  fbq('track', 'Schedule');
+  trackMnEvent('Lead',{content_name:'MotorNation Booking'});
+  trackMnEvent('Schedule',{content_name:'MotorNation Booking',content_category:'Mobile Oil Change'});
   window.mnScheduleTracked=true;
 }
 if(window.innerWidth < 768) {
