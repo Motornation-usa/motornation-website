@@ -12,3 +12,8 @@
   from = "/dashboard"
   to = "/dashboard.html"
   status = 200
+
+[[redirects]]
+  from = "/bdm"
+  to = "/bdm.html"
+  status = 200

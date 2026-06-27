@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MotorNation — Business Development Manager</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#0f0f0f;color:#f0f0f0;min-height:100vh}
+
+    /* ── LOGIN ── */
+    #login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px}
+    .logo{font-size:26px;font-weight:700}.logo span{color:#e84c0e}
+    .sub{font-size:13px;color:#555}
+    .pin-row{display:flex;gap:8px}
+    #pin{width:150px;text-align:center;letter-spacing:4px;font-size:18px;background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:10px 14px;color:#fff;outline:none}
+    #pin:focus{border-color:#e84c0e}
+    .btn-main{background:#e84c0e;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:15px;font-weight:600;cursor:pointer}
+    .btn-main:hover{background:#cf430d}
+    .err{font-size:12px;color:#ff6b6b;display:none}
+
+    /* ── APP SHELL ── */
+    #app{display:none}
+    header{background:#1a1a1a;border-bottom:1px solid #222;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+    .h-logo{font-size:18px;font-weight:700}.h-logo span{color:#e84c0e}
+    .h-right{display:flex;align-items:center;gap:10px}
+    .btn-sm{background:#222;border:1px solid #333;color:#aaa;padding:5px 12px;border-radius:7px;font-size:12px;cursor:pointer}
+    .btn-sm:hover{color:#fff;border-color:#555}
+    .btn-out{background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:5px 8px}
+    .btn-out:hover{color:#aaa}
+    main{padding:22px 28px;max-width:1400px;margin:0 auto}
+
+    /* ── TABS ── */
+    .tabs{display:flex;gap:4px;margin-bottom:22px;border-bottom:1px solid #222;padding-bottom:0;overflow-x:auto}
+    .tab{padding:8px 18px;font-size:13px;font-weight:500;color:#666;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+    .tab.active{color:#e84c0e;border-bottom-color:#e84c0e}
+    .tab:hover:not(.active){color:#aaa}
+    .tab-panel{display:none}.tab-panel.active{display:block}
+
+    /* ── STAT CARDS ── */
+    .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+    .stat{background:#1a1a1a;border-radius:10px;padding:16px 18px}
+    .stat-l{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+    .stat-v{font-size:26px;font-weight:700;line-height:1}
+    .stat-s{font-size:11px;color:#555;margin-top:5px}
+    .stat.hi .stat-v{color:#e84c0e}
+
+    /* ── CARDS / SECTIONS ── */
+    .card{background:#1a1a1a;border-radius:10px;padding:18px 20px;margin-bottom:16px}
+    .card-hd{font-size:13px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+    .sec-title{font-size:15px;font-weight:600;margin-bottom:12px}
+
+    /* ── PIPELINE STAGES ── */
+    .stages{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+    .stage-pill{border-radius:8px;padding:10px 14px;cursor:pointer;min-width:80px;flex:1;border:1px solid #222;transition:border-color .15s}
+    .stage-pill:hover{border-color:#e84c0e}
+    .stage-num{font-size:22px;font-weight:800;line-height:1}
+    .stage-lbl{font-size:11px;color:#555;margin-top:3px}
+
+    /* ── LEAD ROWS ── */
+    .lead-row{background:#111;border:1px solid #222;border-radius:9px;margin-bottom:8px;overflow:hidden;transition:border-color .15s}
+    .lead-row:hover{border-color:#333}
+    .lead-row.open{border-color:#e84c0e}
+    .lead-top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;gap:12px}
+    .lead-score{background:#e84c0e;color:#fff;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
+    .lead-name{font-weight:700;font-size:14px}
+    .lead-meta{font-size:12px;color:#555;margin-top:2px}
+    .lead-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .stage-badge{border-radius:4px;padding:2px 9px;font-size:11px;font-weight:600;color:#fff}
+    .lead-detail{border-top:1px solid #222;padding:16px;background:#0a0a0a;display:none}
+    .lead-detail.show{display:block}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+    .detail-label{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+    .detail-val{font-size:13px;line-height:1.5}
+    .detail-val.green{color:#4ade80}
+    .detail-val.blue{color:#60a5fa}
+    .log-entry{font-size:12px;color:#555;padding:4px 0 4px 10px;border-left:2px solid #222;margin-bottom:4px}
+
+    /* ── BUTTONS ── */
+    .btn{border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+    .btn:hover{opacity:.85}
+    .btn-orange{background:#e84c0e;color:#fff}
+    .btn-gray{background:#222;color:#aaa;border:1px solid #333}
+    .btn-gray:hover{color:#fff;border-color:#555}
+    .btn-purple{background:#6366f1;color:#fff}
+    .btn-green{background:#059669;color:#fff}
+    .btn-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+
+    /* ── FILTERS ── */
+    .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+    .filter-input{background:#1a1a1a;border:1px solid #333;color:#f0f0f0;border-radius:7px;padding:7px 12px;font-size:13px;outline:none}
+    .filter-input:focus{border-color:#e84c0e}
+    select.filter-input option{background:#1a1a1a}
+
+    /* ── OUTREACH ── */
+    .email-box{background:#111;border:1px solid #222;border-radius:9px;padding:16px;font-family:"Courier New",monospace;font-size:13px;line-height:1.75;white-space:pre-wrap;color:#d4d4d4;min-height:320px}
+    .day-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .day-btn{background:#111;border:1px solid #222;color:#aaa;border-radius:8px;padding:10px 6px;cursor:pointer;text-align:center;transition:all .15s}
+    .day-btn:hover:not(:disabled){border-color:#e84c0e;color:#fff}
+    .day-btn.active{border-color:#e84c0e;background:#1a0a06}
+    .day-btn:disabled{opacity:.4;cursor:not-allowed}
+    .day-num{font-size:14px;font-weight:700;color:#e84c0e}
+    .day-lbl{font-size:11px;color:#555;margin-top:3px}
+
+    /* ── AI CHAT ── */
+    .chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 220px);min-height:500px}
+    .chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 2px;margin-bottom:14px}
+    .msg{max-width:82%;border-radius:10px;padding:10px 14px;font-size:13px;line-height:1.65;white-space:pre-wrap}
+    .msg.user{align-self:flex-end;background:#e84c0e;color:#fff}
+    .msg.ai{align-self:flex-start;background:#1a1a1a;color:#d4d4d4}
+    .chat-input-row{display:flex;gap:8px}
+    .chat-input{flex:1;background:#1a1a1a;border:1px solid #333;color:#f0f0f0;border-radius:8px;padding:10px 14px;font-size:13px;outline:none;resize:none}
+    .chat-input:focus{border-color:#e84c0e}
+    .quick-q{display:block;width:100%;text-align:left;background:#111;border:1px solid #222;color:#555;border-radius:6px;padding:8px 10px;cursor:pointer;font-size:11px;margin-bottom:6px;line-height:1.45;transition:color .15s,border-color .15s}
+    .quick-q:hover{color:#aaa;border-color:#444}
+
+    /* ── REPORT ── */
+    .report-body h1{font-size:20px;font-weight:800;margin:0 0 14px;color:#f0f0f0}
+    .report-body h2{font-size:15px;font-weight:700;color:#e84c0e;margin:20px 0 8px}
+    .report-body .bold{font-weight:700;color:#fbbf24;margin:8px 0}
+    .report-body .bullet{padding-left:16px;color:#666;margin:4px 0;line-height:1.6}
+    .report-body p{font-size:14px;line-height:1.7;color:#aaa;margin:4px 0}
+    .report-body .spacer{height:8px}
+
+    /* ── TESTIMONIALS ── */
+    .testi{background:#111;border:1px solid #222;border-radius:8px;padding:12px 14px;margin-bottom:8px}
+    .testi-stars{color:#fbbf24;font-size:12px;margin-bottom:4px}
+    .testi-text{font-size:12px;color:#555;line-height:1.5}
+
+    /* ── MISC ── */
+    .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:#333;text-align:center}
+    .empty-icon{font-size:48px;margin-bottom:14px}
+    .empty-title{font-size:15px;font-weight:600;color:#444;margin-bottom:6px}
+    .empty-sub{font-size:13px}
+    .loading-spin{display:inline-block;width:20px;height:20px;border:2px solid #e84c0e;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .fade{animation:fadeIn .2s ease}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      .stats{grid-template-columns:repeat(3,1fr)}
+      .detail-grid{grid-template-columns:1fr}
+      main{padding:14px 16px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login">
+  <div class="logo">Motor<span>Nation</span></div>
+  <div class="sub">Business Development Manager</div>
+  <div class="pin-row">
+    <input id="pin" type="password" placeholder="PIN" maxlength="12"/>
+    <button class="btn-main" onclick="doLogin()">Enter</button>
+  </div>
+  <div class="err" id="err">Wrong PIN — try again</div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <header>
+    <div class="h-logo">Motor<span>Nation</span> <span style="font-size:13px;color:#444;font-weight:400;margin-left:6px">BDM</span></div>
+    <div class="h-right">
+      <span style="font-size:12px;color:#444" id="h-date"></span>
+      <a href="/dashboard" class="btn-sm"><i class="ti ti-layout-dashboard"></i> Ops Dashboard</a>
+      <button class="btn-out" onclick="logout()">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('dashboard',this)"><i class="ti ti-chart-bar"></i> Dashboard</div>
+      <div class="tab" onclick="switchTab('crm',this)"><i class="ti ti-users"></i> CRM</div>
+      <div class="tab" onclick="switchTab('outreach',this)"><i class="ti ti-mail"></i> Outreach</div>
+      <div class="tab" onclick="switchTab('ai',this)"><i class="ti ti-robot"></i> AI Advisor</div>
+      <div class="tab" onclick="switchTab('report',this)"><i class="ti ti-report"></i> Weekly Report</div>
+    </div>
+
+    <!-- ── DASHBOARD TAB ── -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div class="stats" id="stat-cards"></div>
+      <div class="card">
+        <div class="card-hd">Pipeline Stages <span style="font-size:11px;color:#444">click to filter CRM</span></div>
+        <div class="stages" id="stage-pills"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd">🔥 Top Priority Prospects</div>
+        <div id="top-prospects"></div>
+      </div>
+    </div>
+
+    <!-- ── CRM TAB ── -->
+    <div class="tab-panel" id="tab-crm">
+      <div class="filters">
+        <input class="filter-input" id="srch" placeholder="Search…" oninput="renderCRM()" style="width:180px">
+        <select class="filter-input" id="f-industry" onchange="renderCRM()">
+          <option value="">All Industries</option>
+        </select>
+        <select class="filter-input" id="f-stage" onchange="renderCRM()">
+          <option value="">All Stages</option>
+        </select>
+        <select class="filter-input" id="f-sort" onchange="renderCRM()">
+          <option value="score">Sort: Priority</option>
+          <option value="name">Sort: Name</option>
+        </select>
+        <span id="crm-count" style="font-size:12px;color:#444;margin-left:4px"></span>
+      </div>
+      <div id="crm-list"></div>
+    </div>
+
+    <!-- ── OUTREACH TAB ── -->
+    <div class="tab-panel" id="tab-outreach">
+      <div style="display:grid;grid-template-columns:360px 1fr;gap:20px">
+        <div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="card-hd">Select Lead</div>
+            <select class="filter-input" id="email-lead" onchange="onEmailLeadChange()" style="width:100%;margin-bottom:12px">
+              <option value="">— Choose a lead —</option>
+            </select>
+            <div id="email-lead-preview" style="display:none;background:#111;border-radius:8px;padding:12px">
+              <div id="elp-name" style="font-weight:700;font-size:14px"></div>
+              <div id="elp-meta" style="font-size:12px;color:#555;margin-top:2px"></div>
+              <div id="elp-why" style="font-size:12px;color:#4ade80;margin-top:6px;line-height:1.5"></div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="card-hd">Follow-Up Sequence</div>
+            <div class="day-btns" id="day-btns"></div>
+          </div>
+          <div class="card">
+            <div class="card-hd">Testimonials</div>
+            <div id="testi-list"></div>
+          </div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;min-height:500px">
+          <div class="card-hd">Generated Email</div>
+          <div id="email-output" style="flex:1;display:flex;flex-direction:column">
+            <div class="empty-state">
+              <div class="empty-icon">✉️</div>
+              <div class="empty-title">Select a lead + email stage</div>
+              <div class="empty-sub" style="color:#333">Claude writes a personalized email referencing the specific company, fleet size, and value prop.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AI ADVISOR TAB ── -->
+    <div class="tab-panel" id="tab-ai">
+      <div style="display:grid;grid-template-columns:1fr 260px;gap:20px">
+        <div class="card" style="display:flex;flex-direction:column;height:calc(100vh - 200px);min-height:500px">
+          <div class="card-hd">AI Business Advisor</div>
+          <div class="chat-msgs" id="chat-msgs">
+            <div class="empty-state" id="chat-empty">
+              <div class="empty-icon">🤖</div>
+              <div class="empty-title">MotorNation BDM AI Ready</div>
+              <div class="empty-sub" style="color:#333">Ask about fleet strategy, cold call scripts, objection handling, pricing, or specific prospects.</div>
+            </div>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-input" id="chat-in" placeholder="Ask your BDM anything…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI()}">
+            <button class="btn btn-orange" onclick="sendAI()" id="send-btn">Send</button>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-hd">Quick Questions</div>
+            <div id="quick-qs"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REPORT TAB ── -->
+    <div class="tab-panel" id="tab-report">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <div>
+          <div style="font-size:18px;font-weight:700">Weekly Sales Report</div>
+          <div style="font-size:12px;color:#555;margin-top:3px">AI-generated from live pipeline data</div>
+        </div>
+        <button class="btn btn-orange" onclick="genReport()" id="report-btn"><i class="ti ti-refresh"></i> Generate Report</button>
+      </div>
+      <div class="stats" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px" id="report-stats"></div>
+      <div class="card" id="report-body">
+        <div class="empty-state">
+          <div class="empty-icon">📊</div>
+          <div class="empty-title">Generate Your Weekly Report</div>
+          <div class="empty-sub" style="color:#333">Click the button above for an AI-powered analysis with priority action items.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+const PIN = "MN2026";
+
+const INDUSTRIES = ["Property Management","Apartment Communities","HVAC Companies","Plumbing Companies","Electrical Contractors","Landscaping Companies","Pest Control Companies","Real Estate Brokerages","Medical Offices","Dental Offices","Law Firms","Construction Companies","Small Business Parks","Fleet Operators"];
+
+const STAGES = ["Researching","Contacted","Follow-up 1","Follow-up 2","Meeting Scheduled","Quote Sent","Negotiating","Customer","Recurring Customer","Fleet Account","Inactive","Lost"];
+
+const STAGE_CLR = {"Researching":"#6366f1","Contacted":"#3b82f6","Follow-up 1":"#8b5cf6","Follow-up 2":"#a855f7","Meeting Scheduled":"#f59e0b","Quote Sent":"#f97316","Negotiating":"#ef4444","Customer":"#10b981","Recurring Customer":"#059669","Fleet Account":"#047857","Inactive":"#6b7280","Lost":"#4b5563"};
+
+const FOLLOW_UP = [{d:1,l:"Intro"},{d:3,l:"Check-in"},{d:7,l:"Value"},{d:14,l:"Testimonial"},{d:21,l:"Q&A"},{d:30,l:"Final"}];
+
+const TESTIMONIALS = [
+  {name:"Jamie Villarreal", text:"MotorNation came right to my apartment complex. Hosam was professional and fast. I didn't miss a minute of work."},
+  {name:"Jeanne Moran", text:"I was skeptical about mobile oil changes but MotorNation completely changed my mind. On time, affordable, and no waiting room!"},
+  {name:"Brett Wright", text:"Finally a service that comes to me. My truck was done before my lunch break ended. Highly recommend for anyone in Aurora."},
+];
+
+const QUICK_QS = [
+  "What's my best play for landing a fleet account this week?",
+  "How do I handle: 'We already have a mechanic we use'?",
+  "Best subject line for cold outreach to property managers?",
+  "How should I price a fleet deal for 10+ vehicles?",
+  "What's my 30-second elevator pitch for MotorNation?",
+  "Which industries should I hit first in Aurora?",
+  "How do I get past the gatekeeper at a construction company?",
+  "What's the best time to cold call trade contractors?",
+];
+
+let leads = [
+  {id:1,company:"Bell Plumbing & Heating",dm:"Fleet Manager",title:"Operations Manager",email:"",phone:"(303) 757-5000",address:"Denver, CO",website:"bellplumbing.com",fleet:"15-30",industry:"Plumbing Companies",stage:"Researching",score:10,notes:"Established Denver plumber with large service van fleet. Technicians on road daily.",why:"Mobile oil changes eliminate shop downtime — technicians stay productive in the field.",log:[]},
+  {id:2,company:"Gold Medal Service",dm:"Fleet Coordinator",title:"Operations Director",email:"",phone:"",address:"Aurora, CO",website:"goldmedalservice.com",fleet:"20-40",industry:"HVAC Companies",stage:"Researching",score:10,notes:"HVAC/plumbing/electrical. Large fleet of branded service vehicles across metro.",why:"Fleet account potential — we service at their yard or staging area. Massive time savings.",log:[]},
+  {id:3,company:"GE Johnson Construction",dm:"Fleet Manager",title:"Fleet & Equipment Manager",email:"",phone:"",address:"Denver Metro",website:"gejohnson.com",fleet:"30-60",industry:"Construction Companies",stage:"Researching",score:10,notes:"Large commercial GC with heavy fleet of trucks and equipment vehicles across metro job sites.",why:"Fleet account — we service vehicles on-site at job sites. No shop trip ever.",log:[]},
+  {id:4,company:"Greystar Property Management",dm:"Regional Manager",title:"Regional Property Manager",email:"",phone:"",address:"Denver, CO",website:"greystar.com",fleet:"8-15",industry:"Property Management",stage:"Researching",score:9,notes:"Large national PMC with strong Denver presence. Multiple communities across Aurora and Denver.",why:"Maintenance staff fleet covered — repeat service every 3-4 months per property.",log:[]},
+  {id:5,company:"AIMCO Apartment Homes",dm:"Facilities Director",title:"Director of Facilities",email:"",phone:"",address:"Aurora, CO",website:"aimco.com",fleet:"10-20",industry:"Apartment Communities",stage:"Researching",score:9,notes:"Major apartment operator in Aurora area. Maintenance crews use trucks daily.",why:"Fleet maintenance for on-site maintenance teams. We come to the property — zero downtime.",log:[]},
+  {id:6,company:"Xcel Energy Fleet",dm:"Fleet Supervisor",title:"Fleet Supervisor",email:"",phone:"",address:"Denver, CO",website:"xcelenergy.com",fleet:"50+",industry:"Fleet Operators",stage:"Researching",score:9,notes:"Utility company with massive local fleet. Service vans and trucks throughout metro.",why:"Utility fleets need frequent maintenance. On-site service eliminates scheduling headaches.",log:[]},
+  {id:7,company:"RE/MAX Alliance",dm:"Office Manager",title:"Office Manager",email:"",phone:"(303) 420-5020",address:"Westminster, CO",website:"remax.com",fleet:"30-60 agents",industry:"Real Estate Brokerages",stage:"Researching",score:8,notes:"Large brokerage with 50+ agents. Agents value vetted service referrals from trusted sources.",why:"Preferred vendor discount program — one pitch covers 50+ agents' personal vehicles.",log:[]},
+  {id:8,company:"Pestmaster Services Denver",dm:"Branch Manager",title:"Branch Manager",email:"",phone:"",address:"Denver Metro",website:"pestmaster.com",fleet:"8-15",industry:"Pest Control Companies",stage:"Researching",score:8,notes:"Franchise pest control. Branded service vans running daily routes across metro.",why:"Regular fleet maintenance at their depot during off-hours or early morning.",log:[]},
+  {id:9,company:"Pinkard Construction",dm:"Project Manager",title:"Operations Manager",email:"",phone:"",address:"Denver, CO",website:"pinkardconstruction.com",fleet:"15-25",industry:"Construction Companies",stage:"Researching",score:8,notes:"Local commercial GC with solid reputation. Multiple active projects in Aurora/Denver.",why:"Job site oil changes — we come to wherever their trucks are staged. Zero shop trips.",log:[]},
+  {id:10,company:"DaVita Healthcare Partners",dm:"Facility Manager",title:"Facilities Manager",email:"",phone:"",address:"Denver, CO",website:"davita.com",fleet:"5-10",industry:"Medical Offices",stage:"Researching",score:7,notes:"National healthcare company with local admin and transport vehicles.",why:"On-site service during business hours. Employees never leave the building.",log:[]},
+  {id:11,company:"Holland & Hart LLP",dm:"Office Administrator",title:"Office Administrator",email:"",phone:"(303) 295-8000",address:"Denver, CO",website:"hollandhart.com",fleet:"5-15",industry:"Law Firms",stage:"Researching",score:7,notes:"Major regional law firm. Partner vehicles and firm fleet vehicles in downtown Denver.",why:"White-glove mobile service matches their professional expectations perfectly.",log:[]},
+  {id:12,company:"SunState Landscaping",dm:"Owner",title:"Owner/Operator",email:"",phone:"",address:"Aurora, CO",website:"",fleet:"5-12",industry:"Landscaping Companies",stage:"Researching",score:7,notes:"Local landscaping company serving Aurora residential. Trucks run hard spring through fall.",why:"Seasonal fleet — peak season means oil changes are critical and time is scarce.",log:[]},
+  {id:13,company:"Colorado Pest Control Inc",dm:"Owner",title:"Owner",email:"",phone:"",address:"Aurora, CO",website:"",fleet:"4-8",industry:"Pest Control Companies",stage:"Researching",score:7,notes:"Local operator close to MotorNation base. Easy first fleet relationship to build.",why:"Small fleet, owner-operated — easy to build personal relationship. Great referral potential.",log:[]},
+  {id:14,company:"Aspen Dental Aurora",dm:"Office Manager",title:"Practice Manager",email:"",phone:"",address:"Aurora, CO",website:"aspendental.com",fleet:"2-4",industry:"Dental Offices",stage:"Researching",score:6,notes:"Franchise dental office close to MotorNation service area. Staff personal vehicles.",why:"Convenient same-day service while staff works. Premium white-glove experience.",log:[]},
+];
+
+let aiHistory = [];
+let emailLeadId = null;
+let emailDay = null;
+
+// ── AUTH ──────────────────────────────────────────────────────────────────
+document.getElementById("pin").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
+function doLogin(){
+  if(document.getElementById("pin").value===PIN){
+    sessionStorage.setItem("mn_bdm","1");
+    document.getElementById("login").style.display="none";
+    document.getElementById("app").style.display="block";
+    init();
+  } else {
+    document.getElementById("err").style.display="block";
+  }
+}
+function logout(){ sessionStorage.removeItem("mn_bdm"); location.reload(); }
+if(sessionStorage.getItem("mn_bdm")==="1"){
+  document.getElementById("login").style.display="none";
+  document.getElementById("app").style.display="block";
+  init();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+function init(){
+  document.getElementById("h-date").textContent = new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+  populateFilters();
+  renderDashboard();
+  renderCRM();
+  renderOutreachSelects();
+  renderDayBtns();
+  renderTestimonials();
+  renderQuickQs();
+  renderReportStats();
+}
+
+function switchTab(id, el){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+  el.classList.add("active");
+  document.getElementById("tab-"+id).classList.add("active");
+}
+
+// ── STATS HELPERS ─────────────────────────────────────────────────────────
+function getStats(){
+  return {
+    total: leads.length,
+    contacted: leads.filter(l=>l.stage!=="Researching").length,
+    pipeline: leads.filter(l=>["Meeting Scheduled","Quote Sent","Negotiating"].includes(l.stage)).length,
+    customers: leads.filter(l=>["Customer","Recurring Customer","Fleet Account"].includes(l.stage)).length,
+    fleet: leads.filter(l=>l.stage==="Fleet Account").length,
+    top: leads.filter(l=>l.score>=9).length,
+  };
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────
+function renderDashboard(){
+  const s = getStats();
+  const statDefs = [
+    {l:"Total Leads",v:s.total,c:"#f0f0f0"},{l:"Contacted",v:s.contacted,c:"#3b82f6"},
+    {l:"In Pipeline",v:s.pipeline,c:"#f59e0b"},{l:"Customers",v:s.customers,c:"#10b981"},
+    {l:"Fleet Accounts",v:s.fleet,c:"#047857"},{l:"Priority 9-10",v:s.top,c:"#e84c0e"},
+  ];
+  document.getElementById("stat-cards").innerHTML = statDefs.map(s=>`
+    <div class="stat"><div class="stat-l">${s.l}</div><div class="stat-v" style="color:${s.c}">${s.v}</div></div>
+  `).join("");
+
+  document.getElementById("stage-pills").innerHTML = STAGES.map(stage=>{
+    const count = leads.filter(l=>l.stage===stage).length;
+    return `<div class="stage-pill" onclick="filterToStage('${stage}')" style="border-left:3px solid ${STAGE_CLR[stage]}">
+      <div class="stage-num" style="color:${STAGE_CLR[stage]}">${count}</div>
+      <div class="stage-lbl">${stage}</div>
+    </div>`;
+  }).join("");
+
+  const top = leads.filter(l=>l.score>=9).sort((a,b)=>b.score-a.score);
+  document.getElementById("top-prospects").innerHTML = top.map(l=>`
+    <div class="lead-row" onclick="goToLead(${l.id})" style="cursor:pointer">
+      <div class="lead-top">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="lead-score">${l.score}</div>
+          <div><div class="lead-name">${l.company}</div><div class="lead-meta">${l.industry} · ${l.fleet} vehicles · ${l.address}</div></div>
+        </div>
+        <div class="lead-right">
+          <span class="stage-badge" style="background:${STAGE_CLR[l.stage]}">${l.stage}</span>
+          <i class="ti ti-chevron-right" style="color:#444"></i>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function filterToStage(stage){
+  document.getElementById("f-stage").value = stage;
+  switchTab("crm", document.querySelectorAll(".tab")[1]);
+  renderCRM();
+}
+
+function goToLead(id){
+  switchTab("crm", document.querySelectorAll(".tab")[1]);
+  setTimeout(()=>{ toggleLead(id, true); document.getElementById("lead-"+id)?.scrollIntoView({behavior:"smooth",block:"center"}); }, 50);
+}
+
+// ── CRM ───────────────────────────────────────────────────────────────────
+function populateFilters(){
+  const iSel = document.getElementById("f-industry");
+  INDUSTRIES.forEach(i=>{ const o=document.createElement("option"); o.value=i; o.textContent=i; iSel.appendChild(o); });
+  const sSel = document.getElementById("f-stage");
+  STAGES.forEach(s=>{ const o=document.createElement("option"); o.value=s; o.textContent=s; sSel.appendChild(o); });
+  const eLeadSel = document.getElementById("email-lead");
+  leads.sort((a,b)=>b.score-a.score).forEach(l=>{ const o=document.createElement("option"); o.value=l.id; o.textContent=`${l.company} · Score ${l.score}`; eLeadSel.appendChild(o); });
+}
+
+function getFiltered(){
+  const q = document.getElementById("srch").value.toLowerCase();
+  const ind = document.getElementById("f-industry").value;
+  const stg = document.getElementById("f-stage").value;
+  const srt = document.getElementById("f-sort").value;
+  return leads
+    .filter(l=>!q || l.company.toLowerCase().includes(q) || l.dm.toLowerCase().includes(q))
+    .filter(l=>!ind || l.industry===ind)
+    .filter(l=>!stg || l.stage===stg)
+    .sort((a,b)=>srt==="score" ? b.score-a.score : a.company.localeCompare(b.company));
+}
+
+let openLeads = new Set();
+
+function renderCRM(){
+  const filtered = getFiltered();
+  document.getElementById("crm-count").textContent = `${filtered.length} lead${filtered.length!==1?"s":""}`;
+  document.getElementById("crm-list").innerHTML = filtered.map(l=>buildLeadRow(l)).join("");
+}
+
+function buildLeadRow(l){
+  const isOpen = openLeads.has(l.id);
+  return `<div class="lead-row ${isOpen?"open":""}" id="lead-${l.id}">
+    <div class="lead-top" onclick="toggleLead(${l.id})">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="lead-score">${l.score}</div>
+        <div>
+          <div class="lead-name">${l.company}</div>
+          <div class="lead-meta">${l.dm} · ${l.title} · ${l.fleet} vehicles</div>
+        </div>
+      </div>
+      <div class="lead-right">
+        <span class="stage-badge" style="background:${STAGE_CLR[l.stage]}">${l.stage}</span>
+        <i class="ti ti-chevron-${isOpen?"up":"down"}" style="color:#444"></i>
+      </div>
+    </div>
+    ${isOpen ? buildLeadDetail(l) : ""}
+  </div>`;
+}
+
+function buildLeadDetail(l){
+  return `<div class="lead-detail show fade">
+    <div class="detail-grid">
+      <div>
+        <div class="detail-label">Contact Info</div>
+        ${l.phone?`<div class="detail-val"><i class="ti ti-phone" style="color:#555"></i> ${l.phone}</div>`:""}
+        ${l.email?`<div class="detail-val"><i class="ti ti-mail" style="color:#555"></i> ${l.email}</div>`:""}
+        <div class="detail-val" style="color:#555"><i class="ti ti-map-pin"></i> ${l.address}</div>
+        ${l.website?`<div class="detail-val blue">${l.website}</div>`:""}
+      </div>
+      <div>
+        <div class="detail-label">Why MotorNation</div>
+        <div class="detail-val green">${l.why}</div>
+      </div>
+      <div>
+        <div class="detail-label">Notes</div>
+        <div class="detail-val" style="color:#666">${l.notes}</div>
+      </div>
+      <div>
+        <div class="detail-label">Update Stage</div>
+        <select class="filter-input" style="width:100%" onchange="updateStage(${l.id},this.value)">
+          ${STAGES.map(s=>`<option value="${s}" ${l.stage===s?"selected":""}>${s}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    ${l.log.length>0?`<div class="detail-label" style="margin-bottom:6px">Contact Log</div>${l.log.map(e=>`<div class="log-entry">📅 ${e.date} — ${e.note}</div>`).join("")}`:""}
+    <div class="btn-row">
+      <button class="btn btn-orange" onclick="goToOutreach(${l.id})"><i class="ti ti-mail"></i> Generate Email</button>
+      <input class="filter-input" id="log-note-${l.id}" placeholder="Log a note…" style="width:200px;font-size:12px" onkeydown="if(event.key==='Enter'){logContact(${l.id});}" >
+      <button class="btn btn-gray" onclick="logContact(${l.id})"><i class="ti ti-pencil"></i> Log</button>
+      <button class="btn btn-purple" onclick="goToAI(${l.id})"><i class="ti ti-robot"></i> AI Strategy</button>
+    </div>
+  </div>`;
+}
+
+function toggleLead(id, forceOpen){
+  if(forceOpen) openLeads.add(id);
+  else if(openLeads.has(id)) openLeads.delete(id);
+  else openLeads.add(id);
+  renderCRM();
+}
+
+function updateStage(id, stage){
+  leads = leads.map(l=>l.id===id?{...l,stage}:l);
+  renderCRM();
+  renderDashboard();
+}
+
+function logContact(id){
+  const inp = document.getElementById("log-note-"+id);
+  const note = inp?.value.trim();
+  if(!note) return;
+  const entry = {date: new Date().toLocaleDateString("en-US"), note};
+  leads = leads.map(l=>l.id===id?{...l,log:[...l.log,entry]}:l);
+  renderCRM();
+}
+
+function goToOutreach(id){
+  emailLeadId = id;
+  document.getElementById("email-lead").value = id;
+  onEmailLeadChange();
+  switchTab("outreach", document.querySelectorAll(".tab")[2]);
+}
+
+function goToAI(id){
+  const l = leads.find(x=>x.id===id);
+  if(!l) return;
+  document.getElementById("chat-in").value = `Best strategy to land ${l.company} — a ${l.industry} with ${l.fleet} vehicles in ${l.address}?`;
+  switchTab("ai", document.querySelectorAll(".tab")[3]);
+}
+
+// ── OUTREACH ──────────────────────────────────────────────────────────────
+function renderOutreachSelects(){
+  // already populated in populateFilters
+}
+
+function onEmailLeadChange(){
+  const id = parseInt(document.getElementById("email-lead").value);
+  const l = leads.find(x=>x.id===id);
+  emailLeadId = l ? l.id : null;
+  const prev = document.getElementById("email-lead-preview");
+  if(l){
+    prev.style.display="block";
+    document.getElementById("elp-name").textContent = l.company;
+    document.getElementById("elp-meta").textContent = `${l.dm} · ${l.industry} · ${l.fleet} vehicles`;
+    document.getElementById("elp-why").textContent = l.why;
+  } else {
+    prev.style.display="none";
+  }
+  document.getElementById("email-output").innerHTML = `<div class="empty-state"><div class="empty-icon">✉️</div><div class="empty-title">Select an email stage below</div></div>`;
+  emailDay = null;
+  renderDayBtns();
+}
+
+function renderDayBtns(){
+  document.getElementById("day-btns").innerHTML = FOLLOW_UP.map(f=>`
+    <div class="day-btn ${emailDay===f.d?"active":""}" onclick="clickDayBtn(${f.d})" id="daybtn-${f.d}">
+      <div class="day-num">Day ${f.d}</div>
+      <div class="day-lbl">${f.l}</div>
+    </div>
+  `).join("");
+}
+
+async function clickDayBtn(day){
+  if(!emailLeadId){ alert("Please select a lead first."); return; }
+  emailDay = day;
+  renderDayBtns();
+  await generateEmail();
+}
+
+async function generateEmail(){
+  const l = leads.find(x=>x.id===emailLeadId);
+  if(!l || !emailDay) return;
+  const t = TESTIMONIALS[Math.floor(Math.random()*TESTIMONIALS.length)];
+  const dayCtx = emailDay===1?"This is the initial cold outreach email — warm, personal, brief. Under 180 words.":
+    emailDay===3?"This is a Day 3 short follow-up asking if they had a chance to review your previous email. Under 100 words.":
+    emailDay===7?"This is a Day 7 follow-up focused on how MotorNation saves companies time and money by servicing vehicles on-site during the workday.":
+    emailDay===14?`This is a Day 14 follow-up. Weave in this real customer review: "${t.name} said: ${t.text}"`:
+    emailDay===21?"This is a Day 21 follow-up. Offer to answer any questions and suggest a quick 10-minute call.":
+    "This is a Day 30 final follow-up. Warm, no pressure. Mention you'll check back in a few months if now isn't the right time.";
+
+  document.getElementById("email-output").innerHTML = `<div style="display:flex;align-items:center;padding:20px;color:#e84c0e"><span class="loading-spin"></span> Writing personalized email…</div>`;
+
+  const sys = `You are the Sales Manager for MotorNation LLC, a premium mobile oil change company serving Aurora and Denver Metro, Colorado. Owner: Ahmed Khattab. Phone: (720) 317-8949. Email: a.khattab@motornationusa.com. Website: motornationusa.com. Packages: Basic Synthetic $89, Premium Synthetic $109, Elite + Filter Kit $139. Core pitch: we come to YOU — no downtime, no waiting rooms, vehicles serviced at your location. Write professional, warm, non-spammy B2B outreach. Reference specific details about their business. Keep under 180 words. One clear CTA. Return ONLY the email — Subject line first, blank line, then body.`;
+  const prompt = `Write a personalized ${emailDay===1?"cold outreach":"follow-up"} email. Company: ${l.company}. Contact: ${l.dm}, ${l.title}. Industry: ${l.industry}. Fleet size: ${l.fleet} vehicles. Location: ${l.address}. Why MotorNation: ${l.why}. Notes: ${l.notes}. ${dayCtx}`;
+
+  try {
+    const res = await fetch("/.netlify/functions/claude-proxy",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({system:sys,messages:[{role:"user",content:prompt}]})});
+    const data = await res.json();
+    const text = data.content?.find(b=>b.type==="text")?.text || "Error generating email.";
+    document.getElementById("email-output").innerHTML = `
+      <div class="email-box fade" id="email-text">${text}</div>
+      <div class="btn-row" style="margin-top:14px">
+        <button class="btn btn-orange" onclick="copyEmail()"><i class="ti ti-copy"></i> Copy Email</button>
+        <button class="btn btn-green" onclick="markSent()"><i class="ti ti-check"></i> Mark as Sent</button>
+      </div>`;
+  } catch(e){
+    document.getElementById("email-output").innerHTML = `<div style="color:#ff6b6b;padding:20px">Network error — check connection and try again.</div>`;
+  }
+}
+
+function copyEmail(){
+  const t = document.getElementById("email-text")?.textContent;
+  if(t) navigator.clipboard?.writeText(t).catch(()=>{});
+}
+
+function markSent(){
+  if(!emailLeadId || !emailDay) return;
+  const note = `Day ${emailDay} email sent`;
+  const newStage = emailDay===1?"Contacted":emailDay<=7?"Follow-up 1":"Follow-up 2";
+  leads = leads.map(l=>l.id===emailLeadId?{...l,stage:newStage,log:[...l.log,{date:new Date().toLocaleDateString("en-US"),note}]}:l);
+  renderDashboard();
+}
+
+function renderTestimonials(){
+  document.getElementById("testi-list").innerHTML = TESTIMONIALS.map(t=>`
+    <div class="testi">
+      <div class="testi-stars">★★★★★ ${t.name}</div>
+      <div class="testi-text">${t.text}</div>
+    </div>`).join("");
+}
+
+// ── AI ADVISOR ────────────────────────────────────────────────────────────
+function renderQuickQs(){
+  document.getElementById("quick-qs").innerHTML = QUICK_QS.map(q=>`
+    <button class="quick-q" onclick="setQ('${q.replace(/'/g,"\\'")}')">
+      ${q}
+    </button>`).join("");
+}
+
+function setQ(q){ document.getElementById("chat-in").value = q; document.getElementById("chat-in").focus(); }
+
+async function sendAI(){
+  const inp = document.getElementById("chat-in");
+  const msg = inp.value.trim();
+  if(!msg) return;
+  inp.value = "";
+  document.getElementById("chat-empty")?.remove();
+
+  const s = getStats();
+  aiHistory.push({role:"user",content:msg});
+  const msgs = document.getElementById("chat-msgs");
+  msgs.innerHTML += `<div class="msg user fade">${escHtml(msg)}</div>`;
+  msgs.innerHTML += `<div class="msg ai fade" id="ai-typing"><span class="loading-spin"></span> Thinking…</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  const sys = `You are the AI Business Development Manager for MotorNation LLC — a premium mobile oil change company in Aurora/Denver Colorado. Owner: Ahmed Khattab. His brother Hosam is the technician. Packages: $89/$109/$139. Target: fleet accounts, property managers, trade contractors. Current CRM: ${s.total} leads, ${s.customers} customers, ${s.fleet} fleet accounts, ${s.pipeline} in active pipeline. Be direct, practical, and actionable. Ahmed is a fast-moving entrepreneur — give specific next steps, not theory. Keep responses concise.`;
+
+  try {
+    const res = await fetch("/.netlify/functions/claude-proxy",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({system:sys,messages:aiHistory})});
+    const data = await res.json();
+    const text = data.content?.find(b=>b.type==="text")?.text || "Error.";
+    aiHistory.push({role:"assistant",content:text});
+    document.getElementById("ai-typing").outerHTML = `<div class="msg ai fade">${escHtml(text)}</div>`;
+  } catch(e){
+    document.getElementById("ai-typing").outerHTML = `<div class="msg ai" style="color:#ff6b6b">Network error — try again.</div>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── REPORT ────────────────────────────────────────────────────────────────
+function renderReportStats(){
+  const s = getStats();
+  const defs = [
+    {l:"Total Leads",v:s.total},{l:"Active Pipeline",v:s.contacted},
+    {l:"Customers",v:s.customers},{l:"Fleet Accounts",v:s.fleet}
+  ];
+  document.getElementById("report-stats").innerHTML = defs.map(d=>`
+    <div class="stat"><div class="stat-l">${d.l}</div><div class="stat-v" style="color:#e84c0e">${d.v}</div></div>
+  `).join("");
+}
+
+async function genReport(){
+  const btn = document.getElementById("report-btn");
+  btn.disabled = true; btn.textContent = "Generating…";
+  document.getElementById("report-body").innerHTML = `<div style="display:flex;align-items:center;padding:20px;color:#e84c0e"><span class="loading-spin"></span> Analyzing pipeline and writing report…</div>`;
+
+  const s = getStats();
+  const sys = `You are the Sales Director for MotorNation LLC. Generate a concise, professional, motivating weekly sales report. Use ## for section headers. Be specific and actionable. End with one strong motivational line for Ahmed.`;
+  const prompt = `Generate a weekly BDM report. Data — Total leads: ${s.total}, Researching: ${leads.filter(l=>l.stage==="Researching").length}, Contacted: ${leads.filter(l=>l.stage==="Contacted").length}, Follow-up: ${leads.filter(l=>["Follow-up 1","Follow-up 2"].includes(l.stage)).length}, Meeting Scheduled: ${leads.filter(l=>l.stage==="Meeting Scheduled").length}, Quote Sent: ${leads.filter(l=>l.stage==="Quote Sent").length}, Customers: ${s.customers}, Fleet Accounts: ${s.fleet}. Top industries: HVAC, Construction, Property Management. Service area: Aurora/Denver CO. Include: executive summary, pipeline health, top wins this week, top 3 priority actions, revenue potential in pipeline.`;
+
+  try {
+    const res = await fetch("/.netlify/functions/claude-proxy",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({system:sys,messages:[{role:"user",content:prompt}]})});
+    const data = await res.json();
+    const text = data.content?.find(b=>b.type==="text")?.text || "";
+    document.getElementById("report-body").innerHTML = `<div class="report-body">${renderMd(text)}</div>`;
+  } catch(e){
+    document.getElementById("report-body").innerHTML = `<div style="color:#ff6b6b;padding:20px">Network error — try again.</div>`;
+  }
+  btn.disabled = false; btn.innerHTML = `<i class="ti ti-refresh"></i> Generate Report`;
+  renderReportStats();
+}
+
+function renderMd(text){
+  return text.split("\n").map(line=>{
+    if(line.startsWith("## ")) return `<h2>${line.slice(3)}</h2>`;
+    if(line.startsWith("# ")) return `<h1>${line.slice(2)}</h1>`;
+    if(line.startsWith("**")&&line.endsWith("**")&&line.length>4) return `<div class="bold">${line.slice(2,-2)}</div>`;
+    if(line.startsWith("- ")||line.startsWith("* ")) return `<div class="bullet">• ${line.slice(2)}</div>`;
+    if(line.trim()==="") return `<div class="spacer"></div>`;
+    return `<p>${line}</p>`;
+  }).join("");
+}
+
+function escHtml(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>"); }
+</script>
+</body>
+</html>
