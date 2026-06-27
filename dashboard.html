@@ -72,6 +72,14 @@
     .st-btn{font-size:11px;padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#888;white-space:nowrap;font-weight:600}
     .st-done{background:#0f2e0f;border-color:#1a4a1a;color:#5cb85c}
     .st-noshow{background:#2e0f0f;border-color:#4a1a1a;color:#ff6b6b}
+    .job-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}
+    .supply-btn{font-size:11px;padding:5px 10px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#aaa;white-space:nowrap;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+    .supply-btn:hover{color:#fff;border-color:#555}.supply-btn.ready{background:#102816;border-color:#1f5a2e;color:#5cb85c}
+    .modal-backdrop{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:1000;padding:18px}
+    .modal{width:min(640px,100%);max-height:88vh;overflow:auto;background:#181818;border:1px solid #303030;border-radius:10px;padding:18px;box-shadow:0 18px 60px #0008}
+    .modal-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:14px}.modal-title{font-size:16px;font-weight:700}.modal-sub{font-size:12px;color:#777;margin-top:3px}.modal-close{background:none;border:none;color:#777;font-size:22px;line-height:1;cursor:pointer}.modal-close:hover{color:#fff}
+    .supply-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.field label{display:block;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}.field input{width:100%;background:#101010;border:1px solid #333;color:#f0f0f0;border-radius:7px;padding:9px 10px;font-size:13px;outline:none}.field input:focus{border-color:#e84c0e}
+    .supply-result{background:#111;border:1px solid #252525;border-radius:8px;padding:12px;margin-top:12px}.supply-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.supply-card{background:#1c1c1c;border:1px solid #292929;border-radius:8px;padding:10px}.supply-card .lbl{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}.supply-card .val{font-size:14px;font-weight:700;color:#f0f0f0;line-height:1.25}.supply-warn{font-size:12px;color:#f5a623;margin-top:10px;line-height:1.45}.store-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.store-link,.save-supply{background:#222;border:1px solid #333;color:#aaa;padding:8px 11px;border-radius:7px;font-size:12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.store-link:hover{color:#fff;border-color:#555}.save-supply{background:#e84c0e;border:none;color:#fff;font-weight:700}
     .empty{background:#1a1a1a;border-radius:10px;text-align:center;padding:36px;color:#444;font-size:13px}
     .empty i{font-size:28px;display:block;margin-bottom:8px;color:#333}
 
@@ -127,7 +135,7 @@
     .cmp-val{font-weight:600;color:#f0f0f0}
     .loading{text-align:center;padding:50px;color:#444;font-size:13px}
     @keyframes spin{to{transform:rotate(360deg)}}
-    @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.bot-grid{grid-template-columns:1fr}.appt{grid-template-columns:60px 1fr auto}main{padding:14px}}
+    @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.bot-grid{grid-template-columns:1fr}.appt{grid-template-columns:60px 1fr}.supply-grid,.supply-cards{grid-template-columns:1fr}.job-actions{justify-content:flex-start}main{padding:14px}}
   </style>
 </head>
 <body>
@@ -208,11 +216,12 @@
               <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Address</th>
               <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Vehicle</th>
               <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Package</th>
+              <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Supplies</th>
               <th style="text-align:left;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:10px 16px;border-bottom:1px solid #222;background:#161616">Review</th>
             </tr>
           </thead>
           <tbody id="cust-tbody">
-            <tr><td colspan="8" style="padding:40px;text-align:center;color:#444;font-size:13px">Loading...</td></tr>
+            <tr><td colspan="9" style="padding:40px;text-align:center;color:#444;font-size:13px">Loading...</td></tr>
           </tbody>
         </table>
       </div>
@@ -230,6 +239,26 @@
       <div class="card" id="sq-list"><div class="loading"><i class="ti ti-loader-2" style="font-size:24px;animation:spin 1s linear infinite;display:block;margin:0 auto 10px"></i>Loading Square data...</div></div>
     </div>
   </main>
+</div>
+
+<div class="modal-backdrop" id="supply-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Supply lookup</div>
+        <div class="modal-sub" id="supply-modal-sub">Oil, quantity, filter, and store searches</div>
+      </div>
+      <button class="modal-close" onclick="closeSupplyLookup()">&times;</button>
+    </div>
+    <div class="supply-grid">
+      <div class="field"><label>Vehicle year</label><input id="supply-year"></div>
+      <div class="field"><label>Make and model</label><input id="supply-vehicle"></div>
+      <div class="field"><label>VIN</label><input id="supply-vin" placeholder="Best for exact specs"></div>
+      <div class="field"><label>Engine</label><input id="supply-engine" placeholder="Example: 2.5L 4 cyl"></div>
+    </div>
+    <button class="save-supply" onclick="runSupplyLookup()"><i class="ti ti-search"></i> Lookup supplies</button>
+    <div id="supply-result" class="supply-result"></div>
+  </div>
 </div>
 
 <script>
@@ -333,14 +362,49 @@ function showToast(msg){
   setTimeout(()=>{t.style.opacity="0";},3500);
 }
 function deltaHtml(cur,prev){if(!prev)return `<span class="stat-delta delta-flat">—</span>`;const d=cur-prev;const pct=Math.round((d/prev)*100);const cls=d>0?"delta-up":d<0?"delta-down":"delta-flat";const sign=d>0?"+":"";return `<span class="stat-delta ${cls}">${sign}${pct}%</span>`;}
+function esc(v){return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function supplyPayload(s){const d=s.data||{};return {id:s.id,year:d["vehicle-year"]||"",vehicle:d.vehicle||"",vin:d.vin||"",engine:d.engine||"",address:(d.address||d["street-address"]||"").trim(),name:((d["first-name"]||d.name||"")+" "+(d["last-name"]||"")).trim()};}
+function supplyBtn(s){const p=supplyPayload(s);return `<button class="supply-btn" onclick="openSupplyLookup('${encodeURIComponent(JSON.stringify(p))}')"><i class="ti ti-oil"></i> Supplies</button>`;}
+function openSupplyLookup(encoded){
+  const p=JSON.parse(decodeURIComponent(encoded));
+  window._supplyLookup=p;
+  document.getElementById("supply-modal").style.display="flex";
+  document.getElementById("supply-modal-sub").textContent=p.name?`${p.name} · ${p.address||"No address"}`:(p.address||"Oil, quantity, filter, and store searches");
+  document.getElementById("supply-year").value=p.year||"";
+  document.getElementById("supply-vehicle").value=p.vehicle||"";
+  document.getElementById("supply-vin").value=p.vin||"";
+  document.getElementById("supply-engine").value=p.engine||"";
+  document.getElementById("supply-result").innerHTML='<div style="font-size:12px;color:#777;line-height:1.45">Enter a VIN when you have it. VIN lookup can identify the engine more accurately; oil capacity and filter numbers require the connected oil specs API.</div>';
+}
+function closeSupplyLookup(){document.getElementById("supply-modal").style.display="none";}
+function storeLinksHtml(searches){if(!searches)return "";return `<div class="store-row"><a class="store-link" href="${searches.autozone}" target="_blank"><i class="ti ti-search"></i> AutoZone</a><a class="store-link" href="${searches.oreilly}" target="_blank"><i class="ti ti-search"></i> O'Reilly</a><a class="store-link" href="${searches.walmart}" target="_blank"><i class="ti ti-search"></i> Walmart</a><a class="store-link" href="${searches.nearest}" target="_blank"><i class="ti ti-map-pin"></i> Nearby stores</a></div>`;}
+async function runSupplyLookup(){
+  const p=window._supplyLookup||{};
+  const params=new URLSearchParams({year:document.getElementById("supply-year").value,vehicle:document.getElementById("supply-vehicle").value,vin:document.getElementById("supply-vin").value,engine:document.getElementById("supply-engine").value,address:p.address||""});
+  const box=document.getElementById("supply-result");
+  box.innerHTML='<div class="loading" style="padding:18px">Looking up vehicle...</div>';
+  try{
+    const r=await fetch("/.netlify/functions/lookup-supplies?"+params.toString());
+    const data=await r.json();
+    if(!r.ok||!data.ok)throw new Error(data.error||"Lookup failed");
+    const v=data.vehicle||{};const specs=data.specs||{};
+    const vehicleLabel=[v.year,v.make,v.model,v.trim,v.engine].filter(Boolean).join(" ")||"Vehicle details unavailable";
+    box.innerHTML=`<div style="font-size:13px;font-weight:700;color:#f0f0f0">${esc(vehicleLabel)}</div>
+      <div class="supply-cards"><div class="supply-card"><div class="lbl">Oil type</div><div class="val">${esc(specs.oilType||"Connect API")}</div></div><div class="supply-card"><div class="lbl">Quantity</div><div class="val">${esc(specs.quantity||"Connect API")}</div></div><div class="supply-card"><div class="lbl">Oil filter</div><div class="val">${esc([specs.filterBrand,specs.filterNumber].filter(Boolean).join(" ")||"Connect API")}</div></div></div>
+      ${!data.providerConfigured?'<div class="supply-warn">VIN decoding is working. To auto-fill oil capacity and filter numbers, add an oil/parts provider endpoint as <strong>OIL_SPECS_API_URL</strong> and its key as <strong>OIL_SPECS_API_KEY</strong> in Netlify.</div>':data.providerError?`<div class="supply-warn">Provider error: ${esc(data.providerError)}</div>`:""}
+      ${storeLinksHtml(data.searches)}`;
+  }catch(e){box.innerHTML=`<div class="supply-warn">${esc(e.message||"Could not run lookup")}</div>`;}
+}
 
 // ── DATA ──────────────────────────────────────────────────
 let allSubs=[], squarePayments=[];
+let dataLoadFailed=false;
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 
 async function loadAll(){
   document.getElementById("h-date").textContent=fmtDate();
   await Promise.all([loadNetlify(), loadSquare(), loadStatuses()]);
+  if(dataLoadFailed)return;
   renderToday();
   renderCalendar();
   renderCompare();
@@ -358,18 +422,20 @@ async function loadNetlify(){
     if(!r.ok) throw new Error("HTTP "+r.status);
     const d=await r.json();
     allSubs=Array.isArray(d)?d:[];
+    dataLoadFailed=false;
   }catch(e){
     console.error("Submissions load error:",e);
-    // Show error in UI instead of silent fail
-    document.getElementById("content").innerHTML=`<div style="text-align:center;padding:60px;color:#ff6b6b;font-size:14px">
-      <i class="ti ti-alert-circle" style="font-size:32px;display:block;margin-bottom:12px"></i>
-      Could not load bookings.<br><br>
-      <span style="color:#555;font-size:12px">Make sure <strong style="color:#aaa">get-submissions.js</strong> is in <strong style="color:#aaa">netlify/functions/</strong> and deployed.<br>
-      Check Netlify dashboard → Functions tab to confirm.</span><br><br>
-      <button onclick="loadAll()" style="background:#e84c0e;color:#fff;border:none;padding:8px 20px;border-radius:7px;cursor:pointer;font-size:13px">Retry</button>
-    </div>`;
+    dataLoadFailed=true;
     allSubs=[];
+    showDataError("Could not load bookings. If you opened this as a local file, use the live dashboard URL so Netlify functions can run.");
   }
+}
+
+function showDataError(message){
+  const html=`<div class="empty" style="color:#ff6b6b"><i class="ti ti-alert-circle"></i>${message}<br><br><button onclick="loadAll()" style="background:#e84c0e;color:#fff;border:none;padding:8px 20px;border-radius:7px;cursor:pointer;font-size:13px">Retry</button></div>`;
+  ["appt-list","stops-card","rev-card","sq-list"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+  const tbody=document.getElementById("cust-tbody");
+  if(tbody)tbody.innerHTML=`<tr><td colspan="9" style="padding:40px;text-align:center;color:#ff6b6b;font-size:13px">${message}</td></tr>`;
 }
 
 async function loadSquare(){
@@ -422,7 +488,7 @@ function renderToday(){
     ?'<div class="empty"><i class="ti ti-calendar-off"></i>No appointments today</div>'
     :todaySubs.map(s=>{const d=s.data||{};const name=((d["first-name"]||d.name||"")+" "+(d["last-name"]||"")).trim()||"—";const pkg=d.package||"";const addr=(d.address||d["street-address"]||"").trim();const ph=d.phone||"";const st=getS(s.id);
     const vehicle=((d["vehicle-year"]||"")+" "+(d.vehicle||"")).trim();
-    return `<div class="appt"><div class="appt-time">${d.time||"—"}</div><div><div class="appt-name">${name}</div><div class="appt-detail">${ph}${addr?" &middot; "+addr:""}</div>${vehicle?`<div style="font-size:11px;color:#e84c0e;margin-top:3px;font-weight:600">&#128663; ${vehicle}</div>`:""}</div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div><button class="st-btn${getS(s.id)==="done"?" st-done":getS(s.id)==="noshow"?" st-noshow":""}" data-sid="${s.id}" onclick="cycleStatus('${s.id}',this,'${d.email||''}','${name}')">${getS(s.id)==="done"?"Done ✓":getS(s.id)==="noshow"?"No-show":"Upcoming"}</button></div>`;}).join("");
+    return `<div class="appt"><div class="appt-time">${d.time||"—"}</div><div><div class="appt-name">${name}</div><div class="appt-detail">${ph}${addr?" &middot; "+addr:""}</div>${vehicle?`<div style="font-size:11px;color:#e84c0e;margin-top:3px;font-weight:600">&#128663; ${vehicle}</div>`:""}</div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div><div class="job-actions">${supplyBtn(s)}<button class="st-btn${getS(s.id)==="done"?" st-done":getS(s.id)==="noshow"?" st-noshow":""}" data-sid="${s.id}" onclick="cycleStatus('${s.id}',this,'${d.email||''}','${name}')">${getS(s.id)==="done"?"Done ✓":getS(s.id)==="noshow"?"No-show":"Upcoming"}</button></div></div>`;}).join("");
 
   document.getElementById("stops-card").innerHTML=`<div class="sec-title" style="margin-bottom:10px">Today's stops</div>`+(addrs.length===0?'<div style="font-size:13px;color:#555;padding:8px 0">No addresses today</div>':addrs.map((a,i)=>`<div class="addr-row"><div class="addr-num">${i+1}</div><div><div class="addr-name">${a.time} · ${a.name}</div><div class="addr-sub">${a.addr}${a.phone?" · "+a.phone:""}</div></div></div>`).join("")+(addrs.length>0?`<button class="maps-btn" onclick="openMaps()"><i class="ti ti-map-pin"></i> Open route in Google Maps</button>`:""));
 
@@ -592,7 +658,7 @@ function renderCustomerTable(subs){
   const tbody=document.getElementById("cust-tbody");
   if(!tbody)return;
   if(subs.length===0){
-    tbody.innerHTML='<tr><td colspan="8" style="padding:40px;text-align:center;color:#444;font-size:13px">No customers found</td></tr>';
+    tbody.innerHTML='<tr><td colspan="9" style="padding:40px;text-align:center;color:#444;font-size:13px">No customers found</td></tr>';
     return;
   }
   tbody.innerHTML=subs.map(s=>{
@@ -611,6 +677,7 @@ function renderCustomerTable(subs){
       <td style="padding:11px 16px;font-size:13px;color:#888;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.address||"—"}</td>
       <td style="padding:11px 16px;font-size:13px;color:#e84c0e;font-weight:600">${vehicle.trim()||"—"}</td>
       <td style="padding:11px 16px"><span style="font-size:11px;font-weight:700;color:${pkgColor};background:${pkgColor}22;padding:3px 8px;border-radius:10px">${pkg.replace(/\s*\$\d+/,"")}</span></td>
+      <td style="padding:11px 16px">${supplyBtn(s)}</td>
       <td style="padding:11px 16px">
         ${reviewSent
           ?'<span style="font-size:11px;color:#5cb85c">Sent ✓</span>'

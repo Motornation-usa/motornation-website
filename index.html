@@ -311,6 +311,8 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <input type="text" name="address">
 <input type="text" name="vehicle-year">
 <input type="text" name="vehicle">
+<input type="text" name="vin">
+<input type="text" name="engine">
 <input type="text" name="package">
 <input type="text" name="notes">
 <input type="text" name="sms-consent">
@@ -482,6 +484,7 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <div class="form-row"><div class="form-group"><label class="form-label">First name</label><input type="text" class="form-input" id="f-fname" placeholder="John"></div><div class="form-group"><label class="form-label">Last name</label><input type="text" class="form-input" id="f-lname" placeholder="Smith"></div></div>
 <div class="form-row"><div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="f-phone" placeholder="(720) 555-1234"></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="f-email" placeholder="you@email.com"></div></div>
 <div class="form-row"><div class="form-group"><label class="form-label">Vehicle year</label><input type="text" class="form-input" id="f-year" placeholder="2020"></div><div class="form-group"><label class="form-label">Make &amp; model</label><input type="text" class="form-input" id="f-vehicle" placeholder="Honda Civic"></div></div>
+<div class="form-row"><div class="form-group"><label class="form-label">VIN (optional)</label><input type="text" class="form-input" id="f-vin" placeholder="17-character VIN"></div><div class="form-group"><label class="form-label">Engine (optional)</label><input type="text" class="form-input" id="f-engine" placeholder="2.5L 4 cylinder"></div></div>
 <div class="form-group"><label class="form-label">Notes (optional)</label><input type="text" class="form-input" id="f-notes" placeholder="Gate code, parking instructions, etc."></div>
 <div class="sms-consent">
 <input type="checkbox" id="f-sms-consent">
@@ -746,11 +749,13 @@ var loctype=document.getElementById('f-loctype').value;
 var address=document.getElementById('f-address').value;
 var year=document.getElementById('f-year').value;
 var vehicle=document.getElementById('f-vehicle').value;
+var vin=document.getElementById('f-vin').value;
+var engine=document.getElementById('f-engine').value;
 var notes=document.getElementById('f-notes').value;
 var smsConsent=document.getElementById('f-sms-consent').checked?'Yes':'No';
 var pkg=selectedPkg.name+' '+selectedPkg.price;
 var attribution=getAttribution();
-var body=new URLSearchParams({'form-name':'motornation-booking','first-name':fname,'last-name':lname,'phone':phone,'email':email,'date':selectedDate,'time':selectedTime,'location-type':loctype,'address':address,'vehicle-year':year,'vehicle':vehicle,'package':pkg,'notes':notes,'sms-consent':smsConsent,'utm-source':attribution.utm_source||'','utm-medium':attribution.utm_medium||'','utm-campaign':attribution.utm_campaign||'','utm-content':attribution.utm_content||'','utm-term':attribution.utm_term||'','landing-page':attribution.landing_page||window.location.href,'referrer':attribution.referrer||document.referrer||''});
+var body=new URLSearchParams({'form-name':'motornation-booking','first-name':fname,'last-name':lname,'phone':phone,'email':email,'date':selectedDate,'time':selectedTime,'location-type':loctype,'address':address,'vehicle-year':year,'vehicle':vehicle,'vin':vin,'engine':engine,'package':pkg,'notes':notes,'sms-consent':smsConsent,'utm-source':attribution.utm_source||'','utm-medium':attribution.utm_medium||'','utm-campaign':attribution.utm_campaign||'','utm-content':attribution.utm_content||'','utm-term':attribution.utm_term||'','landing-page':attribution.landing_page||window.location.href,'referrer':attribution.referrer||document.referrer||''});
 fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
 .then(function(){sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes,smsConsent);showSuccess();})
 .catch(function(){sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes,smsConsent);showSuccess();});
