@@ -129,12 +129,60 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(17,17,17,0.9
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-logo-mark{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#FFC744,#F3382A);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#fff}
 .nav-logo-text{font-size:17px;font-weight:700;color:#fff}.nav-logo-text span{color:#FFC744}
-.nav-links{display:flex;align-items:center;gap:2rem}
-.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s}
-.nav-links a:hover{color:#fff}
+.nav-links-desktop{display:flex;align-items:center;gap:2rem}
+.nav-links-desktop a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s}
+.nav-links-desktop a:hover{color:#fff}
+.nav-mobile-menu{
+  display:none;
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:#111;
+  flex-direction:column;
+  align-items:stretch;
+  z-index:500;
+  padding-top:80px;
+  overflow-y:auto;
+}
+.nav-mobile-menu.open{display:flex}
+.nav-mobile-menu a{
+  color:rgba(255,255,255,0.85);
+  font-size:19px;
+  font-weight:600;
+  padding:20px 32px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  text-decoration:none;
+  display:block;
+  transition:color 0.2s,background 0.2s;
+}
+.nav-mobile-menu a:hover{color:#FFC744;background:rgba(255,199,68,0.05)}
+.nav-mobile-cta{
+  background:linear-gradient(90deg,#FFC744,#F3382A) !important;
+  color:#fff !important;
+  border-radius:8px !important;
+  margin:24px !important;
+  font-size:17px !important;
+  font-weight:800 !important;
+  text-align:center !important;
+  border-bottom:none !important;
+  padding:18px 24px !important;
+}
+.nav-mobile-close{
+  position:fixed;
+  top:16px;right:16px;
+  background:none;border:none;
+  color:rgba(255,255,255,0.75);
+  font-size:32px;
+  cursor:pointer;
+  line-height:1;
+  padding:4px 8px;
+  z-index:501;
+}
 .nav-cta{background:linear-gradient(90deg,#FFC744,#F3382A);color:#fff;border:none;padding:9px 22px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;transition:opacity 0.2s}
 .nav-cta:hover{opacity:0.88}
-.nav-hamburger{display:none;background:none;border:none;cursor:pointer;color:#fff;font-size:22px}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;color:#fff;font-size:22px;width:40px;height:40px;align-items:center;justify-content:center;border-radius:6px;transition:background 0.2s;flex-shrink:0;z-index:201;position:relative}
+.nav-hamburger:hover{background:rgba(255,255,255,0.1)}
+.nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;backdrop-filter:blur(2px)}
+.nav-overlay.open{display:block}
 .hero{min-height:100vh;padding:120px 2.5rem 80px;background:radial-gradient(ellipse at top left,#FFC744 0%,#FF6B1A 22%,#F3382A 48%,#B02019 72%,#111 100%);display:flex;align-items:center}
 .hero-inner{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
 .hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:1rem}
@@ -227,10 +275,11 @@ section{padding:90px 2.5rem}
 .sms-consent a{color:#F3382A;font-weight:700;text-decoration:none}
 .sms-consent a:hover{text-decoration:underline}
 .pkg-options{display:flex;flex-direction:column;gap:8px}
-.pkg-option{border:1.5px solid #e0e0e0;border-radius:8px;padding:12px 14px;cursor:pointer;transition:border-color 0.2s,background 0.2s;display:flex;justify-content:space-between;align-items:center}
+.pkg-option{border:1.5px solid #e0e0e0;border-radius:8px;padding:12px 14px;cursor:pointer;transition:all 0.2s;display:flex;justify-content:space-between;align-items:center;background:#fff}
 .pkg-option:hover{border-color:#ccc;background:#fafafa}
-.pkg-option.selected{border-color:#FFC744;background:rgba(255,199,68,0.06)}
-.pkg-option-name{font-size:14px;font-weight:700}
+.pkg-option.selected{border:2px solid #F3382A !important;background:rgba(243,56,42,0.06) !important;box-shadow:0 0 0 3px rgba(243,56,42,0.12)}
+.pkg-option.selected .pkg-option-name{color:#B02019}
+.pkg-option-name{font-size:14px;font-weight:700;color:#111;transition:color 0.2s}
 .pkg-option-desc{font-size:11px;color:#888;margin-top:2px}
 .pkg-option-price{font-size:16px;font-weight:900;color:#F3382A}
 .form-btn{width:100%;padding:13px;border-radius:8px;background:linear-gradient(90deg,#F3382A,#B02019);color:#fff;font-weight:800;font-size:15px;border:none;cursor:pointer;margin-top:0.5rem;transition:opacity 0.2s;font-family:inherit}
@@ -275,26 +324,68 @@ section{padding:90px 2.5rem}
 .cta-banner{background:linear-gradient(90deg,#FFC744 0%,#F3382A 50%,#B02019 100%);padding:60px 2.5rem;text-align:center}
 .cta-banner h2{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#fff;letter-spacing:-0.5px;margin-bottom:0.75rem}
 .cta-banner p{font-size:16px;color:rgba(255,255,255,0.8);margin-bottom:1.75rem}
-footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
+footer{background:#1a1a1a;padding:3.5rem 2.5rem 1.5rem}
 .footer-inner{max-width:1100px;margin:0 auto}
-.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2.5rem}
-.footer-logo-mark{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FFC744,#F3382A);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;margin-bottom:1rem}
-.footer-desc{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.7;max-width:200px}
-.footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);margin-bottom:1rem}
-.footer-col a,.footer-col p{display:block;font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:8px;line-height:1.5}
-.footer-col a:hover{color:#fff}
+.footer-top{display:grid;grid-template-columns:1.8fr 1fr 1fr 1.2fr;gap:3rem;margin-bottom:3rem;align-items:start}
+.footer-brand{display:flex;flex-direction:column;gap:0}
+.footer-logo-mark{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FFC744,#F3382A);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;margin-bottom:1rem;flex-shrink:0}
+.footer-brand-name{font-size:15px;font-weight:800;color:#fff;margin-bottom:6px}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.7;max-width:220px;margin-bottom:0}
+.footer-col{display:flex;flex-direction:column;gap:0}
+.footer-col h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.3);margin-bottom:1.1rem;padding-bottom:0.5rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+.footer-col a{display:block;font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:10px;line-height:1.4;transition:color 0.2s}
+.footer-col a:hover{color:#FFC744}
+.footer-col p{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:10px;line-height:1.4}
 .footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-.footer-bottom p{font-size:12px;color:rgba(255,255,255,0.3)}
-.social-links{display:flex;gap:12px}
-.social-link{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:13px;color:rgba(255,255,255,0.5);transition:border-color 0.2s,color 0.2s}
+.footer-bottom-left{font-size:12px;color:rgba(255,255,255,0.25);line-height:1.5}
+.footer-bottom-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.footer-legal-links{display:flex;gap:16px}
+.footer-legal-links a{font-size:12px;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s}
+.footer-legal-links a:hover{color:rgba(255,255,255,0.7)}
+.social-links{display:flex;gap:10px}
+.social-link{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:13px;color:rgba(255,255,255,0.45);transition:all 0.2s}
 .social-link:hover{border-color:#FFC744;color:#FFC744}
+@media(max-width:900px){
+.footer-top{grid-template-columns:1fr 1fr;gap:2rem}
+.footer-brand{grid-column:1/-1}
+.footer-bottom{flex-direction:column;align-items:flex-start;gap:0.75rem}
+.footer-bottom-right{flex-direction:column;align-items:flex-start;gap:0.75rem}
+}
 .live-badge{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#FFC744,#F3382A);color:#fff;font-size:11px;font-weight:800;padding:8px 14px;border-radius:20px;z-index:999;letter-spacing:0.05em;box-shadow:0 4px 12px rgba(243,56,42,0.4)}
+.special-services-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.special-card{background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:1.75rem;display:flex;gap:1.25rem;transition:transform 0.2s,box-shadow 0.2s}
+.special-card:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,0.08)}
+.special-card-dark{background:linear-gradient(135deg,#111,#1a1a1a);border-color:#2a2a2a;color:#fff}
+.special-card-icon{font-size:2rem;flex-shrink:0;margin-top:2px}
+.special-card-content{flex:1;min-width:0}
+.special-card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem}
+.special-card-name{font-size:1.15rem;font-weight:900;margin-bottom:4px}
+.special-card-desc{font-size:13px;color:#888;line-height:1.5}
+.special-card-pricing{text-align:right;flex-shrink:0}
+.special-price-main{font-size:1.5rem;font-weight:900;color:#F3382A;line-height:1}
+.special-price-main span{font-size:12px;color:#888;font-weight:400}
+.special-price-standalone{font-size:11px;color:#aaa;margin-top:3px}
+.special-includes{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem}
+.special-includes li{font-size:13px;color:#444;display:flex;align-items:flex-start;gap:8px}
+.special-includes li::before{content:'✓';color:#1D9E75;font-weight:700;flex-shrink:0}
+.special-standalone-btn{flex:1;min-width:140px;display:block;text-align:center;background:transparent;border:1.5px solid #F3382A;color:#F3382A;padding:11px 12px;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;transition:all 0.2s}
+.special-standalone-btn:hover{background:#F3382A;color:#fff}
+.addon-row{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background 0.15s;gap:12px}
+.addon-row:hover{background:#fafafa}
+.addon-info{flex:1;display:flex;flex-direction:column;gap:2px}
+.addon-name{font-size:13px;font-weight:700;color:#111}
+.addon-desc{font-size:11px;color:#888}
+.addon-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.addon-price{font-size:13px;font-weight:800;color:#F3382A}
+.addon-check{width:16px;height:16px;cursor:pointer;accent-color:#F3382A}
+@media(max-width:900px){.special-services-grid{grid-template-columns:1fr}.special-card{flex-direction:column}.special-card-header{flex-direction:column;gap:0.5rem}.special-card-pricing{text-align:left}}
 @media(max-width:900px){
 .hero-inner,.area-grid,.booking-wrap{grid-template-columns:1fr}
 .hero-card{display:none}
 .services-grid,.reviews-grid{grid-template-columns:1fr}
 .steps-grid,.footer-top,.included-grid{grid-template-columns:1fr 1fr}
-.nav-links{display:none}.nav-hamburger{display:block}
+.nav-links-desktop{display:none}
+.nav-hamburger{display:flex}
 .slot-grid-wrap{grid-template-columns:repeat(2,1fr)}
 }
 </style>
@@ -326,15 +417,26 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 </form>
 <nav>
 <a class="nav-logo" href="#home"><div class="nav-logo-mark">MN</div><span class="nav-logo-text">Motor<span>Nation</span></span></a>
-<div class="nav-links" id="nav-links">
+<div class="nav-links-desktop" id="nav-links-desktop">
 <a href="#services">Services</a>
 <a href="#how-it-works">How it works</a>
 <a href="#area">Service area</a>
 <a href="#faq">FAQ</a>
 <a href="#book" class="nav-cta">Book now</a>
 </div>
-<button class="nav-hamburger" onclick="var n=document.getElementById('nav-links');n.style.display=n.style.display==='flex'?'none':'flex'">☰</button>
+<button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu">☰</button>
 </nav>
+
+<!-- Mobile nav menu — outside nav so it can cover full screen freely -->
+<div class="nav-mobile-menu" id="nav-links">
+  <button onclick="closeMobileNav()" class="nav-mobile-close" id="nav-close-btn" aria-label="Close menu">✕</button>
+  <a href="#services" onclick="closeMobileNav()">Services</a>
+  <a href="#how-it-works" onclick="closeMobileNav()">How it works</a>
+  <a href="#area" onclick="closeMobileNav()">Service area</a>
+  <a href="#faq" onclick="closeMobileNav()">FAQ</a>
+  <a href="#book" onclick="closeMobileNav()" class="nav-mobile-cta">Book now</a>
+</div>
+<div class="nav-overlay" id="nav-overlay" onclick="closeMobileNav()"></div>
 <section class="hero" id="home">
 <div class="hero-inner">
 <div>
@@ -371,25 +473,128 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <div class="section-inner">
 <p class="section-eyebrow">Packages &amp; pricing</p>
 <h2 class="section-title">Simple, transparent pricing</h2>
-<p class="section-sub">Every package includes full-synthetic oil, new filter, fluid top-offs, OBD-II scan, and 10-point inspection. No surprises.</p>
+<p class="section-sub">Every oil change package includes full-synthetic oil, new filter, fluid top-offs, OBD-II scan, and 10-point inspection. No surprises.</p>
+
+<!-- Oil Change Packages -->
 <div class="services-grid">
 <div class="service-card">
-<div class="service-card-top"><div class="service-badge">Essential</div><div class="service-name">Basic Synthetic</div><div class="service-price">$89 <span>/ service</span></div></div>
-<div class="service-card-body"><ul class="service-includes"><li>Up to 5 qts full-synthetic oil</li><li>New OEM-spec oil filter</li><li>Fluid top-off (washer fluid)</li><li>Tire pressure check &amp; adjust</li><li>10-point safety inspection</li><li>OBD-II diagnostic scan</li></ul>
+<div class="service-card-top"><div class="service-badge">Essential</div><div class="service-name">Basic Synthetic</div><div class="service-price">$89 <span>/ service + tax</span></div></div>
+<div class="service-card-body"><ul class="service-includes"><li>Up to 5 qts full-synthetic oil</li><li>New OEM-spec oil filter</li><li>Fluid top-off (washer fluid)</li><li>Tire pressure check &amp; adjust</li><li>10-point safety inspection</li><li>OBD-II diagnostic scan + written report</li></ul>
 <a href="#book" class="service-book-btn" onclick="selectPackage('Basic Synthetic','$89')">Book this package</a></div>
 </div>
 <div class="service-card featured">
-<div class="service-card-top"><div class="service-badge">Most popular</div><div class="service-name">Premium Synthetic</div><div class="service-price">$109 <span>/ service</span></div></div>
-<div class="service-card-body"><ul class="service-includes"><li>Up to 7 qts full-synthetic oil</li><li>Premium oil filter</li><li>Full fluid top-off (coolant, brake, washer)</li><li>Tire pressure + TPMS reset</li><li>Belts &amp; hoses visual inspection</li><li>10-point safety inspection</li><li>OBD-II diagnostic scan &amp; report</li></ul>
+<div class="service-card-top"><div class="service-badge">Most popular</div><div class="service-name">Premium Synthetic</div><div class="service-price">$109 <span>/ service + tax</span></div></div>
+<div class="service-card-body"><ul class="service-includes"><li>Up to 7 qts full-synthetic oil</li><li>Premium oil filter</li><li>Full fluid top-off (coolant, brake, washer)</li><li>Tire pressure + TPMS reset</li><li>Belts &amp; hoses visual inspection</li><li>10-point safety inspection</li><li>OBD-II diagnostic scan + written report</li></ul>
 <a href="#book" class="service-book-btn" onclick="selectPackage('Premium Synthetic','$109')">Book this package</a></div>
 </div>
-<div class="service-card">
-<div class="service-card-top"><div class="service-badge">Best value</div><div class="service-name">Elite + Filter Kit</div><div class="service-price">$139 <span>/ service</span></div></div>
-<div class="service-card-body"><ul class="service-includes"><li>Up to 7 qts full-synthetic oil</li><li>Premium oil + air filter replacement</li><li>Full fluid top-off</li><li>Wiper blade replacement (included)</li><li>Tire pressure + TPMS reset</li><li>Belts, hoses &amp; battery visual check</li><li>10-point inspection + written report</li><li>OBD-II scan with code explanation</li></ul>
-<a href="#book" class="service-book-btn" onclick="selectPackage('Elite + Filter Kit','$139')">Book this package</a></div>
+<div class="service-card" style="border:2px solid #FFC744;position:relative;overflow:visible;">
+<div class="service-card-top" style="background:linear-gradient(135deg,#7B2D00,#B02019);border-radius:12px 12px 0 0;">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
+<div class="service-badge">Best value</div>
+<div style="background:linear-gradient(90deg,#FFC744,#F3382A);color:#fff;font-size:9px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:0.08em;white-space:nowrap;margin-top:2px;">🔄 TIRE ROTATION INCLUDED</div>
+</div>
+<div class="service-name">Elite + Filter Kit</div>
+<div class="service-price">$139 <span>/ service + tax</span></div>
+</div>
+<div class="service-card-body"><ul class="service-includes">
+<li>Up to 7 qts full-synthetic oil</li>
+<li>Premium oil + air filter replacement</li>
+<li>Full fluid top-off</li>
+<li>Tire pressure + TPMS reset</li>
+<li>Belts, hoses &amp; battery visual check</li>
+<li>10-point inspection + written report</li>
+<li>OBD-II diagnostic scan + written report</li>
+<li style="color:#F3382A;font-weight:700">🔄 Tire rotation — included</li>
+</ul>
+<a href="#book" class="service-book-btn" onclick="selectPackage('Elite + Filter Kit + Tire Rotation','$139')">Book this package</a></div>
 </div>
 </div>
-<div style="margin-top:3.5rem"><p class="section-eyebrow">Every appointment includes</p>
+
+<!-- Special Services -->
+<div style="margin-top:4rem">
+<p class="section-eyebrow">Special services</p>
+<h3 style="font-size:1.6rem;font-weight:900;letter-spacing:-0.5px;margin-bottom:0.5rem">Add-on &amp; standalone services</h3>
+<p style="font-size:15px;color:#888;margin-bottom:2rem">Book alongside your oil change or as a standalone visit. We come to you either way.</p>
+
+<div class="special-services-grid">
+
+<!-- Tire Rotation -->
+<div class="special-card">
+<div class="special-card-icon">🔄</div>
+<div class="special-card-content">
+<div class="special-card-header">
+<div>
+<div class="special-card-name">Tire Rotation</div>
+<div class="special-card-desc">All 4 tires rotated to spec at your location. Extends tire life and improves handling.</div>
+</div>
+<div class="special-card-pricing">
+<div class="special-price-main">$35 <span>add-on</span></div>
+<div class="special-price-standalone">$49 standalone</div>
+</div>
+</div>
+<ul class="special-includes">
+<li>All 4 tires rotated to manufacturer-recommended pattern</li>
+<li>Tire pressure checked and adjusted on all 4 tires</li>
+<li>TPMS sensor reset after rotation</li>
+<li>Visual brake inspection while tires are off</li>
+<li>Add to any oil change for just $35 more</li>
+</ul>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<a href="#book" class="service-book-btn" style="flex:1;min-width:140px" onclick="selectPackage('Tire Rotation Add-On','$35')">Add to oil change — $35</a>
+<a href="#book" class="special-standalone-btn" onclick="selectPackage('Tire Rotation Standalone','$49')">Standalone — $49</a>
+</div>
+</div>
+</div>
+
+<!-- Mobile Diagnostic — light card, easy to read -->
+<div class="special-card" style="border:2px solid #FFC744;background:#fff;">
+<div class="special-card-icon">🔬</div>
+<div class="special-card-content">
+<div class="special-card-header">
+<div>
+<div class="special-card-name" style="color:#111;">Mobile Vehicle Diagnostic</div>
+<div class="special-card-desc" style="color:#888;">Check engine light on? Something feels off? We come to you, plug in, and find the answer.</div>
+</div>
+<div class="special-card-pricing">
+<div class="special-price-main" style="color:#F3382A;">Custom <span style="color:#aaa;font-size:12px;">quote</span></div>
+<div class="special-price-standalone" style="color:#888;">Always quoted before we start</div>
+</div>
+</div>
+
+<!-- What triggers this service -->
+<div style="background:#fff8e6;border:1px solid rgba(255,199,68,0.5);border-radius:8px;padding:14px 16px;margin-bottom:14px;">
+<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#B07000;margin-bottom:10px;">Common reasons customers call us</div>
+<div style="display:flex;flex-direction:column;gap:6px;">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Check engine light on</div>
+<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>ABS or traction light</div>
+<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Vehicle won't start</div>
+<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Rough idle or stalling</div>
+<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Loss of power</div>
+<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Battery or charging issues</div>
+<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Strange noises or smells</div>
+<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Pre-purchase inspection</div>
+</div>
+</div>
+</div>
+
+<!-- What's included -->
+<ul class="special-includes" style="color:#444;">
+<li><strong>Full OBD-II system scan</strong> — reads all fault codes across engine, transmission, ABS, airbags, and emissions systems</li>
+<li><strong>Live data analysis</strong> — we monitor your engine sensors in real time, not just stored codes</li>
+<li><strong>Visual inspection</strong> of the reported problem area — belts, hoses, battery, connections</li>
+<li><strong>Plain-English explanation</strong> of exactly what's wrong and what it means for your vehicle</li>
+<li><strong>Written report</strong> with all findings, fault codes, and recommended next steps</li>
+<li><strong>No-pressure repair recommendation</strong> — we tell you the truth, not the upsell</li>
+</ul>
+<a href="tel:7203182028" class="service-book-btn" style="background:linear-gradient(90deg,#FFC744,#F3382A);display:block;text-align:center;text-decoration:none;color:#fff;">Call or text to book — (720) 318-2028</a>
+</div>
+</div>
+
+</div>
+</div>
+
+<div style="margin-top:3.5rem"><p class="section-eyebrow">Every oil change includes</p>
 <div class="included-grid">
 <div class="included-item"><div class="included-icon">🛢️</div><div class="included-text"><strong>Full-synthetic oil &amp; filter</strong><p>Premium oil matched to your vehicle spec, with a new OEM-quality filter every time.</p></div></div>
 <div class="included-item"><div class="included-icon">💧</div><div class="included-text"><strong>Fluid top-offs</strong><p>Washer, coolant, brake fluid, and more topped off as accessible during the service.</p></div></div>
@@ -419,19 +624,62 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <h2 class="section-title">We serve Denver Metro &amp; beyond</h2>
 <div class="area-grid">
 <div>
-<p style="font-size:15px;color:#888;margin-bottom:1.25rem;line-height:1.7">MotorNation currently serves Aurora, Denver, and surrounding communities across the Metro area. Not sure if we cover your area? Text us.</p>
+<p style="font-size:15px;color:#888;margin-bottom:1.25rem;line-height:1.7">MotorNation serves Denver, Aurora, and surrounding communities across the Metro area within a 30-mile radius. Not sure if we cover your area? Text us.</p>
 <ul class="area-list"><li>📍 Aurora</li><li>📍 Denver</li><li>📍 Centennial</li><li>📍 Englewood</li><li>📍 Lakewood</li><li>📍 Littleton</li><li>📍 Thornton</li><li>📍 Westminster</li><li>📍 Arvada</li><li>📍 Commerce City</li></ul>
 <p style="font-size:13px;color:#888;margin-top:1rem">Don't see your city? <a href="#book" style="color:#F3382A;font-weight:600">Contact us</a> — we may still be able to help.</p>
 </div>
-<div class="area-map"><div class="area-radius"></div><div class="area-radius-2"></div><div class="area-dot"></div><div class="area-map-label"><h3>Denver Metro</h3><p>~25 mile service radius</p></div></div>
+<div style="background:linear-gradient(135deg,#111 0%,#1a1a1a 100%);border-radius:14px;border:1px solid #2a2a2a;padding:2rem;display:flex;flex-direction:column;gap:1rem;">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#FFC744;margin-bottom:4px;">Service Coverage</div>
+      <div style="font-size:1.4rem;font-weight:900;color:#fff;">Denver Metro Area</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#FFC744,#F3382A);border-radius:10px;padding:10px 14px;text-align:center;">
+      <div style="font-size:1.5rem;font-weight:900;color:#fff;line-height:1;">30</div>
+      <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.06em;">mile radius</div>
+    </div>
+  </div>
+
+  <!-- Visual radius indicator -->
+  <div style="background:rgba(255,199,68,0.06);border:1px solid rgba(255,199,68,0.2);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+    <div style="position:relative;width:48px;height:48px;flex-shrink:0;">
+      <div style="position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(255,199,68,0.4);"></div>
+      <div style="position:absolute;inset:8px;border-radius:50%;border:1.5px solid rgba(243,56,42,0.5);"></div>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:#FFC744;box-shadow:0 0 8px rgba(255,199,68,0.8);"></div>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;">Denver, CO — Home base</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.45);">We dispatch from Denver and cover the full metro</div>
+    </div>
+  </div>
+
+  <!-- City chips -->
+  <div style="display:flex;flex-wrap:wrap;gap:6px;">
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Aurora</span>
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Denver</span>
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Centennial</span>
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Englewood</span>
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Lakewood</span>
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Littleton</span>
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Thornton</span>
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Westminster</span>
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Arvada</span>
+    <span style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);">Commerce City</span>
+    <span style="background:rgba(243,56,42,0.15);border:1px solid rgba(243,56,42,0.3);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:#F3382A;">+ more areas</span>
+  </div>
+
+  <!-- CTA -->
+  <a href="#book" style="display:block;text-align:center;background:linear-gradient(90deg,#FFC744,#F3382A);color:#fff;font-weight:800;font-size:14px;padding:13px;border-radius:8px;text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity=0.88" onmouseout="this.style.opacity=1">Book your service →</a>
+</div>
 </div>
 </div>
 </section>
 <section class="booking-bg" id="book">
 <div class="section-inner">
 <p class="section-eyebrow">Appointments</p>
-<h2 class="section-title">Book your mobile oil change</h2>
-<p class="section-sub">Pick your package, choose a time, drop your address. We handle the rest.</p>
+<h2 class="section-title">Book your mobile service</h2>
+<p class="section-sub">Oil changes, tire rotations, and more — we come to you. Pick your service, choose a time, drop your address.</p>
 <div class="booking-wrap">
 <div class="booking-info">
 <h3>What to expect</h3>
@@ -446,8 +694,8 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <div style="margin-top:2rem;padding:1.25rem;background:linear-gradient(135deg,#111,#1a1a1a);border-radius:14px;border:1px solid rgba(255,199,68,0.2)">
 <p style="font-size:12px;color:rgba(255,255,255,0.4);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Questions?</p>
 <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.6">Text or call us:<br>
-<a href="tel:7203178949" style="color:#FFC744;font-size:17px;font-weight:800;text-decoration:none">(720) 317-8949</a><br>
-<a href="tel:7203182028" style="color:rgba(255,199,68,0.7);font-size:14px;text-decoration:none">(720) 318-2028</a></p>
+<a href="tel:7203182028" style="color:#FFC744;font-size:17px;font-weight:800;text-decoration:none">(720) 318-2028</a><br>
+<a href="tel:7203178949" style="color:rgba(255,199,68,0.7);font-size:14px;text-decoration:none">(720) 317-8949</a></p>
 <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:6px">Or find us on Instagram: <a href="https://instagram.com/motornationusa" target="_blank" style="color:#FFC744">@motornationusa</a></p>
 </div>
 </div>
@@ -460,13 +708,40 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <div class="progress-pip" id="pip-4"></div>
 </div>
 <div class="form-step active" id="step-1">
-<p class="step-title">Step 1 — Choose your package</p>
+<p class="step-title">Step 1 — Choose your service</p>
 <div class="pkg-options">
 <div class="pkg-option" onclick="pickPkg(this,'Basic Synthetic','$89')"><div><div class="pkg-option-name">Basic Synthetic</div><div class="pkg-option-desc">Up to 5 qts · Filter · Inspection · OBD scan</div></div><div class="pkg-option-price">$89</div></div>
 <div class="pkg-option" onclick="pickPkg(this,'Premium Synthetic','$109')"><div><div class="pkg-option-name">Premium Synthetic ⭐ Most popular</div><div class="pkg-option-desc">Up to 7 qts · Full fluids · TPMS reset</div></div><div class="pkg-option-price">$109</div></div>
-<div class="pkg-option" onclick="pickPkg(this,'Elite + Filter Kit','$139')"><div><div class="pkg-option-name">Elite + Filter Kit</div><div class="pkg-option-desc">All premium + air filter + wiper blades</div></div><div class="pkg-option-price">$139</div></div>
+<div class="pkg-option" onclick="pickPkg(this,'Elite + Filter Kit + Tire Rotation','$139')"><div><div class="pkg-option-name">Elite + Filter Kit 🔄 Includes tire rotation</div><div class="pkg-option-desc">All premium + air filter + tire rotation</div></div><div class="pkg-option-price">$139</div></div>
+<div class="pkg-option" onclick="pickPkg(this,'Tire Rotation Standalone','$49')"><div><div class="pkg-option-name">Tire Rotation — Standalone</div><div class="pkg-option-desc">Rotation only · All 4 tires · TPMS reset · We come to you</div></div><div class="pkg-option-price">$49</div></div>
 </div>
-<button class="form-btn" id="step1-btn" disabled onclick="goStep(2)">Select a package to continue →</button>
+
+<!-- Add-ons -->
+<div style="margin-top:1rem;border:1.5px solid #e0e0e0;border-radius:8px;overflow:hidden;">
+<button type="button" onclick="toggleAddons(this)" style="width:100%;padding:13px 16px;background:#fafafa;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;font-size:14px;">
+<div style="display:flex;align-items:center;gap:8px;">
+<span style="font-weight:700;color:#111;">+ Optional add-ons</span>
+<span style="font-size:12px;color:#888;">extras to add to your visit</span>
+</div>
+<span id="addon-chevron" style="color:#F3382A;font-size:16px;transition:transform 0.25s;display:inline-block;">▾</span>
+</button>
+<div id="addon-list" style="display:none;border-top:1px solid #e8e8e8;">
+<label class="addon-row"><div class="addon-info"><span class="addon-name">Wiper blade replacement</span><span class="addon-desc">Front &amp; rear blades replaced</span></div><div class="addon-right"><span class="addon-price">+$25</span><input type="checkbox" class="addon-check" data-name="Wiper Blades" data-price="25" onchange="updateAddons()"></div></label>
+<label class="addon-row"><div class="addon-info"><span class="addon-name">Tire rotation add-on</span><span class="addon-desc">Add to any oil change package</span></div><div class="addon-right"><span class="addon-price">+$35</span><input type="checkbox" class="addon-check" data-name="Tire Rotation" data-price="35" onchange="updateAddons()"></div></label>
+<label class="addon-row"><div class="addon-info"><span class="addon-name">Cabin air filter replacement</span><span class="addon-desc">Fresh filter for cleaner interior air</span></div><div class="addon-right"><span class="addon-price">+$25</span><input type="checkbox" class="addon-check" data-name="Cabin Air Filter" data-price="25" onchange="updateAddons()"></div></label>
+<label class="addon-row"><div class="addon-info"><span class="addon-name">Battery test &amp; terminal clean</span><span class="addon-desc">Load test, clean terminals, health report</span></div><div class="addon-right"><span class="addon-price">+$20</span><input type="checkbox" class="addon-check" data-name="Battery Test & Clean" data-price="20" onchange="updateAddons()"></div></label>
+<label class="addon-row" style="border-bottom:none;"><div class="addon-info"><span class="addon-name">Fuel system treatment</span><span class="addon-desc">Injector cleaner added to fuel system</span></div><div class="addon-right"><span class="addon-price">+$20</span><input type="checkbox" class="addon-check" data-name="Fuel System Treatment" data-price="20" onchange="updateAddons()"></div></label>
+</div>
+</div>
+
+<!-- Add-on summary -->
+<div id="addon-summary" style="display:none;margin-top:8px;padding:10px 14px;background:rgba(243,56,42,0.05);border:1px solid rgba(243,56,42,0.2);border-radius:8px;font-size:13px;color:#555;"></div>
+
+<div style="margin-top:12px;padding:12px 14px;background:#f5f5f5;border-radius:8px;font-size:13px;color:#888;display:flex;align-items:center;gap:10px">
+<span style="font-size:16px">🔬</span>
+<span>Need a <strong style="color:#111">Mobile Diagnostic</strong>? Pricing varies by vehicle &amp; issue. <a href="tel:7203178949" style="color:#F3382A;font-weight:700">Call (720) 317-8949</a> to book.</span>
+</div>
+<button class="form-btn" id="step1-btn" disabled onclick="goStep(2)">Select a service to continue →</button>
 </div>
 <div class="form-step" id="step-2">
 <p class="step-title">Step 2 — Pick your date &amp; time</p>
@@ -496,13 +771,7 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <div class="form-step" id="step-4">
 <p class="step-title">Step 4 — Confirm your booking</p>
 <div class="confirm-summary" id="confirm-summary"></div>
-<div class="form-group" style="margin-bottom:1rem">
-<label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:#555;line-height:1.5">
-<input type="checkbox" id="sms-consent" style="margin-top:2px;flex-shrink:0;accent-color:#F3382A" onchange="document.getElementById('submit-btn').disabled=!this.checked">
-<span>I agree to receive SMS appointment reminders and service updates from MotorNation. Message and data rates may apply. Reply STOP to opt out. See our <a href="/terms" style="color:#F3382A;text-decoration:underline">terms</a> and <a href="/privacy" style="color:#F3382A;text-decoration:underline">privacy policy</a>.</span>
-</label>
-</div>
-<button class="form-btn" id="submit-btn" onclick="submitBooking()" disabled>Confirm &amp; book appointment</button>
+<button class="form-btn" id="submit-btn" onclick="submitBooking()">Confirm &amp; book appointment</button>
 <button class="form-btn-back" onclick="goStep(3)">← Edit details</button>
 </div>
 <div class="form-step" id="step-success">
@@ -546,12 +815,64 @@ footer{background:#1a1a1a;padding:3rem 2.5rem 1.5rem}
 <footer>
 <div class="footer-inner">
 <div class="footer-top">
-<div><div class="footer-logo-mark">MN</div><p style="font-size:15px;font-weight:800;color:#fff;margin-bottom:8px">MotorNation USA</p><p class="footer-desc">"Keeping your life in motion" — mobile oil changes and maintenance in the Denver Metro area.</p></div>
-<div class="footer-col"><h4>Services</h4><a href="#services">Basic Synthetic — $89</a><a href="#services">Premium Synthetic — $109</a><a href="#services">Elite + Filter Kit — $139</a></div>
-<div class="footer-col"><h4>Company</h4><a href="#how-it-works">How it works</a><a href="#area">Service area</a><a href="#faq">FAQ</a></div>
-<div class="footer-col"><h4>Contact</h4><p>Denver / Aurora, CO</p><a href="tel:7203178949">(720) 317-8949</a><a href="tel:7203182028">(720) 318-2028</a><a href="https://instagram.com/motornationusa" target="_blank">@motornationusa</a><a href="#book">Book an appointment</a></div>
+
+  <!-- Brand column -->
+  <div class="footer-brand">
+    <div class="footer-logo-mark">MN</div>
+    <div class="footer-brand-name">MotorNation USA</div>
+    <p class="footer-desc">"Keeping your life in motion" — mobile oil changes and light maintenance across the Denver Metro area.</p>
+  </div>
+
+  <!-- Services column -->
+  <div class="footer-col">
+    <h4>Services</h4>
+    <a href="#services">Basic Synthetic — $89</a>
+    <a href="#services">Premium Synthetic — $109</a>
+    <a href="#services">Elite + Filter Kit — $139</a>
+    <a href="#services">Tire Rotation</a>
+    <a href="#services">Mobile Diagnostic</a>
+  </div>
+
+  <!-- Company column -->
+  <div class="footer-col">
+    <h4>Company</h4>
+    <a href="#how-it-works">How it works</a>
+    <a href="#area">Service area</a>
+    <a href="#faq">FAQ</a>
+    <a href="/privacy-policy.html">Privacy Policy</a>
+    <a href="/terms-and-conditions.html">Terms &amp; Conditions</a>
+  </div>
+
+  <!-- Contact column -->
+  <div class="footer-col">
+    <h4>Contact</h4>
+    <p>Denver &amp; Aurora, CO</p>
+    <a href="tel:7203182028">(720) 318-2028</a>
+    <a href="tel:7203178949">(720) 317-8949</a>
+    <a href="mailto:a.khattab@motornationusa.com">a.khattab@motornationusa.com</a>
+    <a href="https://instagram.com/motornationusa" target="_blank">@motornationusa</a>
+    <a href="#book" style="margin-top:6px;color:#FFC744;font-weight:700;">Book an appointment →</a>
+  </div>
+
 </div>
-<div class="footer-bottom"><p>© 2026 MotorNation LLC / MotorNation USA. All rights reserved. Aurora, CO.</p><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><a href="/privacy-policy.html" style="font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none">Privacy Policy</a><a href="/terms-and-conditions.html" style="font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none">Terms &amp; Conditions</a><div class="social-links"><a class="social-link" href="https://instagram.com/motornationusa" target="_blank">IG</a><a class="social-link" href="https://www.facebook.com/MotorNationMobileOilChange" target="_blank">FB</a></div></div></div>
+
+<!-- Footer bottom bar -->
+<div class="footer-bottom">
+  <div class="footer-bottom-left">
+    © 2026 MotorNation LLC / MotorNation USA. All rights reserved. Denver &amp; Aurora, CO.
+  </div>
+  <div class="footer-bottom-right">
+    <div class="footer-legal-links">
+      <a href="/privacy-policy.html">Privacy Policy</a>
+      <a href="/terms-and-conditions.html">Terms &amp; Conditions</a>
+    </div>
+    <div class="social-links">
+      <a class="social-link" href="https://instagram.com/motornationusa" target="_blank">IG</a>
+      <a class="social-link" href="https://www.facebook.com/MotorNationMobileOilChange" target="_blank">FB</a>
+    </div>
+  </div>
+</div>
+
 </div>
 </footer>
 <script>
@@ -698,7 +1019,20 @@ b.disabled=false;
 b.textContent='Continue →';
 }
 
-function selectPackage(name,price){selectedPkg={name:name,price:price};}
+function selectPackage(name,price){
+selectedPkg={name:name,price:price};
+// Pre-select in booking form
+document.querySelectorAll('.pkg-option').forEach(function(o){
+  var oName=o.getAttribute('onclick')||'';
+  if(oName.indexOf("'"+name+"'")>-1){
+    o.classList.add('selected');
+  } else {
+    o.classList.remove('selected');
+  }
+});
+var b=document.getElementById('step1-btn');
+if(b){b.disabled=false;b.textContent='Continue →';}
+}
 
 function goStep(n){
 document.querySelectorAll('.form-step').forEach(function(s){s.classList.remove('active');});
@@ -720,14 +1054,19 @@ var addr=document.getElementById('f-address').value||'—';
 var fname=document.getElementById('f-fname').value||'—';
 var veh=(document.getElementById('f-year').value||'')+' '+(document.getElementById('f-vehicle').value||'');
 var smsConsent=document.getElementById('f-sms-consent').checked?'Yes':'No';
+var addonsText=selectedAddons.length>0?selectedAddons.map(function(a){return a.name+' (+$'+a.price+')'}).join(', '):'None';
+var addonTotal=selectedAddons.reduce(function(s,a){return s+a.price;},0);
+var basePrice=parseInt((selectedPkg.price||'$89').replace(/[^0-9]/g,''));
+var totalPrice='$'+(basePrice+addonTotal);
 document.getElementById('confirm-summary').innerHTML=
 '<div class="confirm-row"><span>Package</span><span>'+selectedPkg.name+'</span></div>'+
+(selectedAddons.length>0?'<div class="confirm-row"><span>Add-ons</span><span>'+addonsText+'</span></div>':'')+
 '<div class="confirm-row"><span>Date &amp; time</span><span>'+(selectedDate||'—')+' at '+(selectedTime||'—')+'</span></div>'+
 '<div class="confirm-row"><span>Address</span><span>'+addr+'</span></div>'+
 '<div class="confirm-row"><span>Name</span><span>'+fname+'</span></div>'+
 '<div class="confirm-row"><span>Vehicle</span><span>'+veh+'</span></div>'+
 '<div class="confirm-row"><span>SMS consent</span><span>'+smsConsent+'</span></div>'+
-'<div class="confirm-row"><span>Total</span><span>'+selectedPkg.price+'</span></div>';
+'<div class="confirm-row"><span>Total</span><span>'+totalPrice+' <span style="font-size:11px;font-weight:400;color:#888;">+ tax</span></span></div>';
 }
 
 function continueToReview(){
@@ -739,21 +1078,32 @@ goStep(4);
 }
 
 function submitBooking(){
+// Validate required fields
+var fname=document.getElementById('f-fname').value.trim();
+var lname=document.getElementById('f-lname').value.trim();
+var phone=document.getElementById('f-phone').value.trim();
+var email=document.getElementById('f-email').value.trim();
+var address=document.getElementById('f-address').value.trim();
+var year=document.getElementById('f-year').value.trim();
+var vehicle=document.getElementById('f-vehicle').value.trim();
+if(!fname){alert('Please enter your first name.');document.getElementById('f-fname').focus();return;}
+if(!lname){alert('Please enter your last name.');document.getElementById('f-lname').focus();return;}
+if(!phone){alert('Please enter your phone number.');document.getElementById('f-phone').focus();return;}
+if(!email||email.indexOf('@')<1){alert('Please enter a valid email address.');document.getElementById('f-email').focus();return;}
+if(!address){alert('Please enter your service address.');document.getElementById('f-address').focus();return;}
+if(!year){alert('Please enter your vehicle year.');document.getElementById('f-year').focus();return;}
+if(!vehicle){alert('Please enter your vehicle make and model.');document.getElementById('f-vehicle').focus();return;}
+if(!selectedDate||!selectedTime){alert('No time slot selected. Please go back and pick a date and time.');return;}
+if(!selectedPkg||!selectedPkg.name){alert('No package selected. Please go back and choose a service.');return;}
 var btn=document.getElementById('submit-btn');
 btn.textContent='Booking...';btn.disabled=true;
-var fname=document.getElementById('f-fname').value;
-var lname=document.getElementById('f-lname').value;
-var phone=document.getElementById('f-phone').value;
-var email=document.getElementById('f-email').value;
 var loctype=document.getElementById('f-loctype').value;
-var address=document.getElementById('f-address').value;
-var year=document.getElementById('f-year').value;
-var vehicle=document.getElementById('f-vehicle').value;
 var vin=document.getElementById('f-vin').value;
 var engine=document.getElementById('f-engine').value;
 var notes=document.getElementById('f-notes').value;
 var smsConsent=document.getElementById('f-sms-consent').checked?'Yes':'No';
-var pkg=selectedPkg.name+' '+selectedPkg.price;
+var addonsStr=selectedAddons.length>0?selectedAddons.map(function(a){return a.name+' (+$'+a.price+')'}).join(', '):'None';
+var pkg=selectedPkg.name+' '+selectedPkg.price+(selectedAddons.length>0?' | Add-ons: '+addonsStr:'');
 var attribution=getAttribution();
 var body=new URLSearchParams({'form-name':'motornation-booking','first-name':fname,'last-name':lname,'phone':phone,'email':email,'date':selectedDate,'time':selectedTime,'location-type':loctype,'address':address,'vehicle-year':year,'vehicle':vehicle,'vin':vin,'engine':engine,'package':pkg,'notes':notes,'sms-consent':smsConsent,'utm-source':attribution.utm_source||'','utm-medium':attribution.utm_medium||'','utm-campaign':attribution.utm_campaign||'','utm-content':attribution.utm_content||'','utm-term':attribution.utm_term||'','landing-page':attribution.landing_page||window.location.href,'referrer':attribution.referrer||document.referrer||''});
 fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
@@ -764,17 +1114,94 @@ fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlenco
 function showSuccess(){
 document.querySelectorAll('.form-step').forEach(function(s){s.classList.remove('active');});
 document.getElementById('step-success').classList.add('active');
-if(typeof fbq === 'function' && !window.mnScheduleTracked){
-  trackMnEvent('Lead',{content_name:'MotorNation Booking'});
-  trackMnEvent('Schedule',{content_name:'MotorNation Booking',content_category:'Mobile Oil Change'});
+
+var pkgValue=selectedPkg&&selectedPkg.price?parseFloat(selectedPkg.price.replace(/[^0-9.]/g,'')):89;
+var addonValue=selectedAddons.reduce(function(s,a){return s+a.price;},0);
+var totalValue=pkgValue+addonValue;
+var eventId='mn_'+Date.now()+'_'+Math.random().toString(36).substr(2,6);
+
+// Client-side pixel events
+if(typeof fbq==='function'&&!window.mnScheduleTracked){
+  fbq('track','Lead',{
+    content_name:'MotorNation Booking',
+    value:totalValue,
+    currency:'USD',
+    eventID:eventId+'_lead'
+  });
+  fbq('track','Schedule',{
+    content_name:'MotorNation Booking',
+    content_category:'Mobile Oil Change',
+    value:totalValue,
+    currency:'USD',
+    eventID:eventId+'_schedule'
+  });
+  fbq('track','Purchase',{
+    value:totalValue,
+    currency:'USD',
+    content_name:selectedPkg?selectedPkg.name:'Oil Change',
+    content_type:'product',
+    eventID:eventId+'_purchase'
+  });
   window.mnScheduleTracked=true;
 }
+
+// Server-side Conversions API — closes the 83-event gap
+var email=document.getElementById('f-email').value||'';
+var phone=document.getElementById('f-phone').value||'';
+var fbc=getCookie('_fbc')||'';
+var fbp=getCookie('_fbp')||'';
+
+// Send Lead event server-side
+fetch('/.netlify/functions/meta-conversions',{
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({
+    event_name:'Lead',
+    event_id:eventId+'_lead',
+    email:email,
+    phone:phone,
+    value:totalValue,
+    currency:'USD',
+    content_name:selectedPkg?selectedPkg.name:'Mobile Oil Change Booking',
+    fbc:fbc,
+    fbp:fbp,
+    source_url:window.location.href
+  })
+}).then(function(r){
+  r.json().then(function(d){console.log('MN CAPI Lead:',d);});
+}).catch(function(e){console.warn('MN CAPI Lead failed:',e.message);});
+
+// Send Purchase event server-side
+fetch('/.netlify/functions/meta-conversions',{
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({
+    event_name:'Purchase',
+    event_id:eventId+'_purchase',
+    email:email,
+    phone:phone,
+    value:totalValue,
+    currency:'USD',
+    content_name:selectedPkg?selectedPkg.name:'Mobile Oil Change Booking',
+    fbc:fbc,
+    fbp:fbp,
+    source_url:window.location.href
+  })
+}).then(function(r){
+  r.json().then(function(d){console.log('MN CAPI Purchase:',d);});
+}).catch(function(e){console.warn('MN CAPI Purchase failed:',e.message);});
+
 if(window.innerWidth < 768) {
   const formEl = document.querySelector('.booking-form');
   if(formEl) formEl.scrollIntoView({behavior:'smooth', block:'start'});
 } else {
   document.getElementById('book').scrollIntoView({behavior:'smooth', block:'start'});
 }
+}
+
+function getCookie(name){
+var match=document.cookie.match(new RegExp('(^| )'+name+'=([^;]+)'));
+return match?match[2]:'';
 }
 
 function sendEmails(fname,lname,phone,email,address,year,vehicle,pkg,notes,smsConsent){
@@ -788,11 +1215,68 @@ emailjs.send(EJS_SVC,EJS_OWN,{to_email:'a.khattab@motornationusa.com',customer_n
 .catch(function(e){console.error('MN: Owner email FAILED',JSON.stringify(e));});
 }
 
+function toggleAddons(){
+var list=document.getElementById('addon-list');
+var chev=document.getElementById('addon-chevron');
+var open=list.style.display==='block';
+list.style.display=open?'none':'block';
+chev.style.transform=open?'rotate(0deg)':'rotate(180deg)';
+}
+
+var selectedAddons=[];
+
+function updateAddons(){
+selectedAddons=[];
+var total=0;
+document.querySelectorAll('.addon-check:checked').forEach(function(cb){
+selectedAddons.push({name:cb.dataset.name,price:parseInt(cb.dataset.price)});
+total+=parseInt(cb.dataset.price);
+});
+var summary=document.getElementById('addon-summary');
+if(selectedAddons.length===0){
+summary.style.display='none';
+}else{
+summary.style.display='block';
+var html='<strong style="color:#111;">Add-ons selected:</strong> ';
+html+=selectedAddons.map(function(a){return a.name+' (+$'+a.price+')'}).join(', ');
+html+=' <span style="font-weight:700;color:#F3382A;">— +$'+total+' total</span>';
+summary.innerHTML=html;
+}
+}
+
 function toggleFaq(el){
 var item=el.closest('.faq-item');
 var open=item.classList.contains('open');
 document.querySelectorAll('.faq-item').forEach(function(i){i.classList.remove('open');});
 if(!open)item.classList.add('open');
+}
+
+function toggleMobileNav(){
+var menu=document.getElementById('nav-links');
+var btn=document.getElementById('nav-hamburger');
+var closeBtn=document.getElementById('nav-close-btn');
+var isOpen=menu.classList.contains('open');
+if(isOpen){
+  menu.classList.remove('open');
+  btn.textContent='☰';
+  if(closeBtn)closeBtn.style.display='none';
+  document.body.style.overflow='';
+}else{
+  menu.classList.add('open');
+  btn.textContent='';
+  if(closeBtn)closeBtn.style.display='block';
+  document.body.style.overflow='hidden';
+}
+}
+
+function closeMobileNav(){
+var menu=document.getElementById('nav-links');
+var btn=document.getElementById('nav-hamburger');
+var closeBtn=document.getElementById('nav-close-btn');
+menu.classList.remove('open');
+btn.textContent='☰';
+if(closeBtn)closeBtn.style.display='none';
+document.body.style.overflow='';
 }
 </script>
 </body>
