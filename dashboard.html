@@ -72,6 +72,14 @@
     .st-btn{font-size:11px;padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#888;white-space:nowrap;font-weight:600}
     .st-done{background:#0f2e0f;border-color:#1a4a1a;color:#5cb85c}
     .st-noshow{background:#2e0f0f;border-color:#4a1a1a;color:#ff6b6b}
+    /* Status dropdown — replaces the old click-to-cycle button so every
+       stage (Upcoming / Done / No-show / Made in Error) is a visible,
+       explicit choice instead of hidden behind repeated taps. */
+    .st-select{font-size:11px;padding:4px 22px 4px 10px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#888;white-space:nowrap;font-weight:600;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+    .st-select.st-done{background-color:#0f2e0f;border-color:#1a4a1a;color:#5cb85c}
+    .st-select.st-noshow{background-color:#2e0f0f;border-color:#4a1a1a;color:#ff6b6b}
+    .st-select.st-error{background-color:#3a1a00;border-color:#5a3010;color:#f5a623}
+    .st-select option{background:#1a1a1a;color:#f0f0f0}
     .job-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}
     .supply-btn{font-size:11px;padding:5px 10px;border-radius:20px;cursor:pointer;border:1px solid #333;background:#222;color:#aaa;white-space:nowrap;font-weight:700;display:inline-flex;align-items:center;gap:5px}
     .supply-btn:hover{color:#fff;border-color:#555}.supply-btn.ready{background:#102816;border-color:#1f5a2e;color:#5cb85c}
@@ -135,7 +143,23 @@
     .cmp-val{font-weight:600;color:#f0f0f0}
     .loading{text-align:center;padding:50px;color:#444;font-size:13px}
     @keyframes spin{to{transform:rotate(360deg)}}
-    @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.bot-grid{grid-template-columns:1fr}.appt{grid-template-columns:60px 1fr}.supply-grid,.supply-cards{grid-template-columns:1fr}.job-actions{justify-content:flex-start}main{padding:14px}}
+    @media(max-width:900px){
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .bot-grid{grid-template-columns:1fr}
+      /* .appt used to be forced into a 2-column grid (60px 1fr) even though
+         it has 4 real children — time, name/detail, package pill, and the
+         status control. With only 2 columns defined, the pill and status
+         control both landed in the second column and overlapped the
+         flowing name/detail text. Switching to a single-column stack with
+         explicit ordering keeps everything readable top-to-bottom instead. */
+      .appt{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+      .appt-time{order:1}
+      .appt-main{order:2;width:100%}
+      .pkg{order:3}
+      .job-actions{order:4;justify-content:flex-start;width:100%}
+      .supply-grid,.supply-cards{grid-template-columns:1fr}
+      main{padding:14px}
+    }
   </style>
 </head>
 <body>
@@ -200,7 +224,13 @@
           <div class="sec-title">All Customers</div>
           <div class="sec-ct" id="cust-ct" style="margin-top:4px"></div>
         </div>
-        <div style="display:flex;gap:8px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select id="cust-pkg-filter" onchange="filterCustomers()" style="background:#1a1a1a;border:1px solid #333;color:#f0f0f0;padding:7px 10px;border-radius:7px;font-size:13px;outline:none;cursor:pointer">
+            <option value="">All packages</option>
+            <option value="Basic">Basic</option>
+            <option value="Premium">Premium</option>
+            <option value="Elite">Elite</option>
+          </select>
           <input id="cust-search" placeholder="Search name, phone, email..." style="background:#1a1a1a;border:1px solid #333;color:#f0f0f0;padding:7px 12px;border-radius:7px;font-size:13px;outline:none;width:240px" oninput="filterCustomers()" />
           <button class="btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
         </div>
@@ -305,27 +335,91 @@ async function loadStatuses(){
 
 function getS(id){ return _statuses[id] || "upcoming"; }
 
-async function cycleStatus(id, el, customerEmail, customerName){
-  const cur = getS(id);
-  const next = cur==="upcoming"?"done":cur==="done"?"noshow":"upcoming";
-  // Update server first
+// Labels and CSS classes for every status, in one place so the dropdown,
+// the badge rendering, and any future status all read from the same source.
+const STATUS_META = {
+  upcoming: { label: "Upcoming", cls: "" },
+  done:     { label: "Done ✓",   cls: " st-done" },
+  noshow:   { label: "No-show",  cls: " st-noshow" },
+  error:    { label: "Made in Error", cls: " st-error" },
+};
+
+// Called from the <select> dropdown's onchange. Same server sync as before,
+// just driven by a dropdown selection instead of a cycling click.
+async function setStatus(id, newStatus, selectEl, customerEmail, customerName, submissionId){
+  const prev = getS(id);
+
+  if(newStatus === "error"){
+    const ok = confirm(
+      "Mark this booking as Made in Error?\n\n"+
+      "This will remove it from Today, the Calendar, and the Customers "+
+      "list. The customer's name, phone, email, and vehicle will be saved "+
+      "separately so nothing is lost — but the appointment itself cannot "+
+      "be recovered from here afterward."
+    );
+    if(!ok){
+      selectEl.value = prev; // revert the dropdown if they cancel
+      return;
+    }
+    await markAsError(submissionId, selectEl);
+    return; // markAsError handles its own success/failure UI
+  }
+
+  // Update server first (same pattern as before — server is source of truth)
   try{
     await fetch("/.netlify/functions/update-status", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status: next })
+      body: JSON.stringify({ id, status: newStatus })
     });
   } catch(e){ console.warn("Status save error:", e); }
-  // Update local cache + all matching buttons on page
-  _statuses[id] = next;
-  document.querySelectorAll(`[data-sid="${id}"]`).forEach(btn => {
-    btn.className = "st-btn"+(next==="done"?" st-done":next==="noshow"?" st-noshow":"");
-    btn.textContent = next==="done"?"Done ✓":next==="noshow"?"No-show":"Upcoming";
+
+  _statuses[id] = newStatus;
+  document.querySelectorAll(`[data-sid="${id}"]`).forEach(sel => {
+    sel.className = "st-select"+STATUS_META[newStatus].cls;
+    sel.value = newStatus;
   });
-  if(next==="done" && customerEmail && customerEmail!=="—") sendReviewEmail(customerEmail, customerName);
-  if(next==="noshow" && customerEmail && customerEmail!=="—") sendNoShowEmail(customerEmail, customerName);
+
+  if(newStatus==="done" && customerEmail && customerEmail!=="—") sendReviewEmail(customerEmail, customerName, id);
+  if(newStatus==="noshow" && customerEmail && customerEmail!=="—") sendNoShowEmail(customerEmail, customerName);
 }
-function sendReviewEmail(email, name){
+
+async function markAsError(submissionId, selectEl){
+  if(selectEl){ selectEl.disabled = true; }
+  try{
+    const r = await fetch("/.netlify/functions/mark-error", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: submissionId })
+    });
+    const data = await r.json();
+    if(!r.ok || !data.ok) throw new Error(data.error || "Could not mark as error");
+    showToast("Marked as error — customer info saved, booking removed");
+    loadAll(); // full refresh so it disappears from every tab immediately
+  } catch(e){
+    console.error("Mark error failed:", e);
+    showToast("Could not mark as error — "+(e.message||"try again"));
+    if(selectEl){ selectEl.disabled = false; }
+  }
+}
+// NOTE: review-sent tracking used to live in localStorage, which only
+// exists on the one device that clicked it — that's why Hosam marking a
+// review as sent never showed up on Ahmed's phone. It's now written to
+// the same server-backed store that appointment status already uses
+// (/.netlify/functions/update-status with a "review_sent_" prefixed id),
+// so every device sees the same state on next refresh.
+async function markReviewSentOnServer(submissionId){
+  try{
+    await fetch("/.netlify/functions/update-status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: "review_sent_"+submissionId, status: "sent" })
+    });
+    _statuses["review_sent_"+submissionId] = "sent";
+  } catch(e){ console.warn("Review-sent sync error:", e); }
+}
+
+function sendReviewEmail(email, name, submissionId){
   if(!email||email==="—")return;
   emailjs.init(EMAILJS_PUBLIC_KEY);
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_REVIEW_TEMPLATE, {
@@ -335,6 +429,7 @@ function sendReviewEmail(email, name){
     business_phone: "(720) 317-8949 | (720) 318-2028",
   }).then(()=>{
     showToast("Review email sent to "+email+" ✓");
+    if(submissionId) markReviewSentOnServer(submissionId);
   }).catch(e=>{
     console.error("EmailJS error:",e);
     showToast("Could not send review email — check template ID");
@@ -488,7 +583,8 @@ function renderToday(){
     ?'<div class="empty"><i class="ti ti-calendar-off"></i>No appointments today</div>'
     :todaySubs.map(s=>{const d=s.data||{};const name=((d["first-name"]||d.name||"")+" "+(d["last-name"]||"")).trim()||"—";const pkg=d.package||"";const addr=(d.address||d["street-address"]||"").trim();const ph=d.phone||"";const st=getS(s.id);
     const vehicle=((d["vehicle-year"]||"")+" "+(d.vehicle||"")).trim();
-    return `<div class="appt"><div class="appt-time">${d.time||"—"}</div><div><div class="appt-name">${name}</div><div class="appt-detail">${ph}${addr?" &middot; "+addr:""}</div>${vehicle?`<div style="font-size:11px;color:#e84c0e;margin-top:3px;font-weight:600">&#128663; ${vehicle}</div>`:""}</div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div><div class="job-actions">${supplyBtn(s)}<button class="st-btn${getS(s.id)==="done"?" st-done":getS(s.id)==="noshow"?" st-noshow":""}" data-sid="${s.id}" onclick="cycleStatus('${s.id}',this,'${d.email||''}','${name}')">${getS(s.id)==="done"?"Done ✓":getS(s.id)==="noshow"?"No-show":"Upcoming"}</button></div></div>`;}).join("");
+    const stNow=getS(s.id);
+    return `<div class="appt" data-pkg="${pkgLabel(pkg)}"><div class="appt-time">${d.time||"—"}</div><div class="appt-main"><div class="appt-name">${name}</div><div class="appt-detail">${ph}${addr?" &middot; "+addr:""}</div>${vehicle?`<div style="font-size:11px;color:#e84c0e;margin-top:3px;font-weight:600">&#128663; ${vehicle}</div>`:""}</div><div class="pkg ${pkgCls(pkg)}">${pkgLabel(pkg)} · $${price(pkg)}</div><div class="job-actions">${supplyBtn(s)}<select class="st-select${STATUS_META[stNow].cls}" data-sid="${s.id}" onchange="setStatus('${s.id}',this.value,this,'${d.email||''}','${name.replace(/'/g,"\\'")}','${s.id}')"><option value="upcoming"${stNow==="upcoming"?" selected":""}>Upcoming</option><option value="done"${stNow==="done"?" selected":""}>Done ✓</option><option value="noshow"${stNow==="noshow"?" selected":""}>No-show</option><option value="error">Made in Error</option></select></div></div>`;}).join("");
 
   document.getElementById("stops-card").innerHTML=`<div class="sec-title" style="margin-bottom:10px">Today's stops</div>`+(addrs.length===0?'<div style="font-size:13px;color:#555;padding:8px 0">No addresses today</div>':addrs.map((a,i)=>`<div class="addr-row"><div class="addr-num">${i+1}</div><div><div class="addr-name">${a.time} · ${a.name}</div><div class="addr-sub">${a.addr}${a.phone?" · "+a.phone:""}</div></div></div>`).join("")+(addrs.length>0?`<button class="maps-btn" onclick="openMaps()"><i class="ti ti-map-pin"></i> Open route in Google Maps</button>`:""));
 
@@ -647,11 +743,16 @@ function renderCustomers(){
 
 function filterCustomers(){
   const q=document.getElementById("cust-search").value.toLowerCase();
+  const pkgFilter=document.getElementById("cust-pkg-filter").value; // "", "Basic", "Premium", "Elite"
   const results=filteredSubs.filter(s=>{
     const d=s.data||{};
-    return [d["first-name"],d["last-name"],d.phone,d.email,d.address].join(" ").toLowerCase().includes(q);
+    const matchesSearch=[d["first-name"],d["last-name"],d.phone,d.email,d.address].join(" ").toLowerCase().includes(q);
+    const matchesPkg=!pkgFilter||pkgLabel(d.package)===pkgFilter;
+    return matchesSearch&&matchesPkg;
   });
   renderCustomerTable(results);
+  const ct=document.getElementById("cust-ct");
+  if(ct) ct.textContent=results.length+" customer"+(results.length!==1?"s":"")+(pkgFilter?" · "+pkgFilter:"");
 }
 
 function renderCustomerTable(subs){
@@ -667,8 +768,9 @@ function renderCustomerTable(subs){
     const vehicle=(d["vehicle-year"]?" "+d["vehicle-year"]:"")+(d.vehicle?" "+d.vehicle:"");
     const pkg=d.package||"—";
     const pkgColor=/elite/i.test(pkg)?"#5cb85c":/premium/i.test(pkg)?"#f5a623":"#7eb8f7";
-    const sentKey="review_sent_"+s.id;
-    const reviewSent=localStorage.getItem(sentKey);
+    // Reads from the same server-backed _statuses cache as appointment
+    // status — no more localStorage, so this now matches across devices.
+    const reviewSent=getS("review_sent_"+s.id)==="sent";
     return `<tr style="border-bottom:1px solid #1a1a1a" onmouseover="this.style.background='#1a1a1a'" onmouseout="this.style.background=''">
       <td style="padding:11px 16px;font-size:13px;color:#888;white-space:nowrap">${d.date||"—"}</td>
       <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#f0f0f0">${name}</td>
@@ -676,9 +778,9 @@ function renderCustomerTable(subs){
       <td style="padding:11px 16px;font-size:13px;color:#aaa;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.email||"—"}</td>
       <td style="padding:11px 16px;font-size:13px;color:#888;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.address||"—"}</td>
       <td style="padding:11px 16px;font-size:13px;color:#e84c0e;font-weight:600">${vehicle.trim()||"—"}</td>
-      <td style="padding:11px 16px"><span style="font-size:11px;font-weight:700;color:${pkgColor};background:${pkgColor}22;padding:3px 8px;border-radius:10px">${pkg.replace(/\s*\$\d+/,"")}</span></td>
+      <td style="padding:11px 16px" data-pkg="${pkgLabel(pkg)}"><span style="font-size:11px;font-weight:700;color:${pkgColor};background:${pkgColor}22;padding:3px 8px;border-radius:10px">${pkg.replace(/\s*\$\d+/,"")}</span></td>
       <td style="padding:11px 16px">${supplyBtn(s)}</td>
-      <td style="padding:11px 16px">
+      <td style="padding:11px 16px" data-review-cell="${s.id}">
         ${reviewSent
           ?'<span style="font-size:11px;color:#5cb85c">Sent ✓</span>'
           :`<button onclick="sendReviewFromList('${s.id}','${d.email||""}','${name.replace(/'/g,"\'")}',this)" style="font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;border:1px solid #333;background:#222;color:#aaa;font-weight:600">Send Review</button>`}
@@ -697,8 +799,8 @@ function sendReviewFromList(id, email, name, btn){
     customer_name: name||"there",
     review_link: "https://g.page/r/Ccl3dz_PFNqXEAI/review",
     business_phone: "(720) 317-8949 | (720) 318-2028",
-  }).then(()=>{
-    localStorage.setItem("review_sent_"+id,"1");
+  }).then(async ()=>{
+    await markReviewSentOnServer(id); // server-backed, syncs across every device
     btn.parentElement.innerHTML='<span style="font-size:11px;color:#5cb85c">Sent ✓</span>';
     showToast("Review email sent to "+email);
   }).catch(e=>{

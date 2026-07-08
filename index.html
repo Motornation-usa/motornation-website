@@ -352,21 +352,6 @@ footer{background:#1a1a1a;padding:3.5rem 2.5rem 1.5rem}
 .footer-bottom-right{flex-direction:column;align-items:flex-start;gap:0.75rem}
 }
 .live-badge{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#FFC744,#F3382A);color:#fff;font-size:11px;font-weight:800;padding:8px 14px;border-radius:20px;z-index:999;letter-spacing:0.05em;box-shadow:0 4px 12px rgba(243,56,42,0.4)}
-.promo-banner{background:linear-gradient(90deg,#0B1A3B 0%,#1a2a5a 50%,#0B1A3B 100%);border-bottom:2px solid #BF0A30;padding:9px 20px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;position:relative;z-index:150}
-.promo-banner-text{font-size:13px;font-weight:700;color:#fff;text-align:center;line-height:1.4}
-.promo-banner-text span{color:#FFC744}
-.promo-banner-btn{background:linear-gradient(90deg,#BF0A30,#E02B2B);color:#fff;font-size:11px;font-weight:800;padding:5px 14px;border-radius:20px;text-decoration:none;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;flex-shrink:0}
-.promo-banner-close{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:18px;line-height:1;padding:4px}
-.promo-banner-close:hover{color:rgba(255,255,255,0.8)}
-.promo-usa-strip{display:flex;height:3px}
-.promo-usa-strip div{flex:1}
-.discount-field-wrap{margin-top:10px;border:1.5px solid #e0e0e0;border-radius:8px;overflow:hidden}
-.discount-field-inner{display:flex;align-items:stretch}
-.discount-field-inner input{flex:1;border:none;outline:none;padding:11px 14px;font-size:13px;font-family:inherit;background:#fff;color:#111;text-transform:uppercase;letter-spacing:0.08em}
-.discount-field-inner input::placeholder{text-transform:none;letter-spacing:0}
-.discount-field-inner button{background:linear-gradient(90deg,#E02B2B,#F07820);color:#fff;border:none;padding:11px 16px;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap;font-family:inherit}
-.discount-applied{display:none;margin-top:6px;padding:8px 12px;background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.3);border-radius:6px;font-size:12px;color:#1D9E75;font-weight:700;align-items:center;gap:6px}
-.discount-error{display:none;margin-top:6px;padding:8px 12px;background:rgba(243,56,42,0.06);border:1px solid rgba(243,56,42,0.2);border-radius:6px;font-size:12px;color:#F3382A;font-weight:600}
 .special-services-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .special-card{background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:1.75rem;display:flex;gap:1.25rem;transition:transform 0.2s,box-shadow 0.2s}
 .special-card:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,0.08)}
@@ -430,23 +415,6 @@ footer{background:#1a1a1a;padding:3.5rem 2.5rem 1.5rem}
 <input type="text" name="landing-page">
 <input type="text" name="referrer">
 </form>
-<!-- July 4th Promo Banner -->
-<div class="promo-usa-strip" id="promo-usa-strip">
-  <div style="background:#002868"></div>
-  <div style="background:#BF0A30"></div>
-  <div style="background:#fff"></div>
-  <div style="background:#BF0A30"></div>
-  <div style="background:#fff"></div>
-  <div style="background:#BF0A30"></div>
-</div>
-<div class="promo-banner" id="promo-banner">
-  <span style="font-size:18px;flex-shrink:0">🇺🇸</span>
-  <div class="promo-banner-text">
-    <span>July 4th Week Special</span> — $15 off any mobile oil change · July 1–7 · Use code <span>JULY4</span> at checkout
-  </div>
-  <a href="#book" class="promo-banner-btn">Book Now</a>
-  <button class="promo-banner-close" onclick="document.getElementById('promo-banner').style.display='none';document.getElementById('promo-usa-strip').style.display='none';" aria-label="Close">✕</button>
-</div>
 <nav>
 <a class="nav-logo" href="#home"><div class="nav-logo-mark">MN</div><span class="nav-logo-text">Motor<span>Nation</span></span></a>
 <div class="nav-links-desktop" id="nav-links-desktop">
@@ -800,19 +768,6 @@ footer{background:#1a1a1a;padding:3.5rem 2.5rem 1.5rem}
 <p class="step-title">Step 4 — Confirm your booking</p>
 <div class="confirm-summary" id="confirm-summary"></div>
 
-<!-- Discount code -->
-<div style="margin-top:12px;">
-  <div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Have a promo code?</div>
-  <div class="discount-field-wrap">
-    <div class="discount-field-inner">
-      <input type="text" id="discount-code-input" placeholder="Enter code (e.g. JULY4)" maxlength="20">
-      <button type="button" onclick="applyDiscount()">Apply</button>
-    </div>
-  </div>
-  <div class="discount-applied" id="discount-applied">✓ Code applied — $15 off your service!</div>
-  <div class="discount-error" id="discount-error">Invalid code. Try JULY4 for our July 4th special.</div>
-</div>
-
 <button class="form-btn" id="submit-btn" onclick="submitBooking()">Confirm &amp; book appointment</button>
 <button class="form-btn-back" onclick="goStep(3)">← Edit details</button>
 </div>
@@ -1100,8 +1055,7 @@ var addonsText=selectedAddons.length>0?selectedAddons.map(function(a){return a.n
 var addonTotal=selectedAddons.reduce(function(s,a){return s+a.price;},0);
 var basePrice=parseInt((selectedPkg.price||'$89').replace(/[^0-9]/g,''));
 var subtotal=basePrice+addonTotal;
-var discount=appliedDiscount.amount||0;
-var finalTotal='$'+(subtotal-discount);
+var finalTotal='$'+subtotal;
 var html='<div class="confirm-row"><span>Package</span><span>'+selectedPkg.name+'</span></div>';
 if(selectedAddons.length>0)html+='<div class="confirm-row"><span>Add-ons</span><span>'+addonsText+'</span></div>';
 html+='<div class="confirm-row"><span>Date &amp; time</span><span>'+(selectedDate||'—')+' at '+(selectedTime||'—')+'</span></div>';
@@ -1109,7 +1063,6 @@ html+='<div class="confirm-row"><span>Address</span><span>'+addr+'</span></div>'
 html+='<div class="confirm-row"><span>Name</span><span>'+fname+'</span></div>';
 html+='<div class="confirm-row"><span>Vehicle</span><span>'+veh+'</span></div>';
 html+='<div class="confirm-row"><span>SMS updates</span><span>'+smsConsent+'</span></div>';
-if(discount>0)html+='<div class="confirm-row" style="color:#1D9E75;"><span>Promo ('+appliedDiscount.code+')</span><span>−$'+discount+'</span></div>';
 html+='<div class="confirm-row" style="font-weight:700;font-size:15px;border-top:1px solid #eee;padding-top:10px;margin-top:4px;"><span>Total</span><span>'+finalTotal+' <span style="font-size:11px;font-weight:400;color:#888;">+ tax</span></span></div>';
 document.getElementById('confirm-summary').innerHTML=html;
 }
@@ -1150,8 +1103,8 @@ var smsConsent=document.getElementById('f-sms-consent').checked?'Yes':'No';
 var addonsStr=selectedAddons.length>0?selectedAddons.map(function(a){return a.name+' (+$'+a.price+')'}).join(', '):'None';
 var addonTotal2=selectedAddons.reduce(function(s,a){return s+a.price;},0);
 var basePrice2=parseInt((selectedPkg.price||'$89').replace(/[^0-9]/g,''));
-var finalTotal2=basePrice2+addonTotal2-(appliedDiscount.amount||0);
-var pkg=selectedPkg.name+' '+selectedPkg.price+(selectedAddons.length>0?' | Add-ons: '+addonsStr:'')+(appliedDiscount.code?' | Promo: '+appliedDiscount.code+' (-$'+appliedDiscount.amount+') | Total: $'+finalTotal2:'');
+var finalTotal2=basePrice2+addonTotal2;
+var pkg=selectedPkg.name+' '+selectedPkg.price+(selectedAddons.length>0?' | Add-ons: '+addonsStr+' | Total: $'+finalTotal2:'');
 var attribution=getAttribution();
 var body=new URLSearchParams({'form-name':'motornation-booking','first-name':fname,'last-name':lname,'phone':phone,'email':email,'date':selectedDate,'time':selectedTime,'location-type':loctype,'address':address,'vehicle-year':year,'vehicle':vehicle,'vin':vin,'engine':engine,'package':pkg,'notes':notes,'sms-consent':smsConsent,'utm-source':attribution.utm_source||'','utm-medium':attribution.utm_medium||'','utm-campaign':attribution.utm_campaign||'','utm-content':attribution.utm_content||'','utm-term':attribution.utm_term||'','landing-page':attribution.landing_page||window.location.href,'referrer':attribution.referrer||document.referrer||''});
 fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
@@ -1261,30 +1214,6 @@ emailjs.send(EJS_SVC,EJS_CUST,{to_email:email,to_name:fname,date:selectedDate,ti
 emailjs.send(EJS_SVC,EJS_OWN,{to_email:'a.khattab@motornationusa.com',customer_name:fname+' '+lname,customer_email:email,customer_phone:phone,date:selectedDate,time:selectedTime,address:address,package:pkg,vehicle:veh,notes:notes,sms_consent:smsConsent},EJS_KEY)
 .then(function(){console.log('MN: Owner email sent OK');})
 .catch(function(e){console.error('MN: Owner email FAILED',JSON.stringify(e));});
-}
-
-var appliedDiscount={code:'',amount:0};
-
-var PROMO_CODES={
-  'JULY4':{amount:15,label:'July 4th Special'},
-  'FIRST15':{amount:15,label:'First-Time Customer'},
-};
-
-function applyDiscount(){
-  var code=document.getElementById('discount-code-input').value.trim().toUpperCase();
-  var applied=document.getElementById('discount-applied');
-  var error=document.getElementById('discount-error');
-  applied.style.display='none';
-  error.style.display='none';
-  if(PROMO_CODES[code]){
-    appliedDiscount={code:code,amount:PROMO_CODES[code].amount,label:PROMO_CODES[code].label};
-    applied.style.display='flex';
-    applied.textContent='✓ Code '+code+' applied — $'+PROMO_CODES[code].amount+' off your service!';
-    buildSummary();
-  } else {
-    appliedDiscount={code:'',amount:0};
-    error.style.display='block';
-  }
 }
 
 function toggleAddons(){
