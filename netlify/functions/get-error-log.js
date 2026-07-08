@@ -4,12 +4,30 @@
 // "safety net" view — if a booking was ever marked "Made in Error",
 // their name/phone/email/vehicle is still here even though the
 // appointment itself was removed from Today/Calendar/Customers.
+//
+// Requires NETLIFY_TOKEN and NETLIFY_SITE_ID — same as mark-error.js.
 
 const { getStore } = require("@netlify/blobs");
 
 exports.handler = async () => {
+  const NETLIFY_TOKEN = process.env.NETLIFY_TOKEN;
+  const NETLIFY_SITE_ID = process.env.NETLIFY_SITE_ID;
+
+  if (!NETLIFY_TOKEN || !NETLIFY_SITE_ID) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: "NETLIFY_TOKEN and/or NETLIFY_SITE_ID not configured in environment variables.",
+      }),
+    };
+  }
+
   try {
-    const errorStore = getStore("error-log");
+    const errorStore = getStore({
+      name: "error-log",
+      siteID: NETLIFY_SITE_ID,
+      token: NETLIFY_TOKEN,
+    });
     const { blobs } = await errorStore.list();
 
     const records = await Promise.all(

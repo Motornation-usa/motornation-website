@@ -291,6 +291,13 @@ section{padding:90px 2.5rem}
 .confirm-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #e8e8e8}
 .confirm-row:last-child{border-bottom:none;font-weight:700}
 .confirm-row span:first-child{color:#888}
+.discount-field-wrap{margin-top:10px;border:1.5px solid #e0e0e0;border-radius:8px;overflow:hidden}
+.discount-field-inner{display:flex;align-items:stretch}
+.discount-field-inner input{flex:1;border:none;outline:none;padding:11px 14px;font-size:13px;font-family:inherit;background:#fff;color:#111;text-transform:uppercase;letter-spacing:0.08em}
+.discount-field-inner input::placeholder{text-transform:none;letter-spacing:0}
+.discount-field-inner button{background:linear-gradient(90deg,#E02B2B,#F07820);color:#fff;border:none;padding:11px 16px;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap;font-family:inherit}
+.discount-applied{display:none;margin-top:6px;padding:8px 12px;background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.3);border-radius:6px;font-size:12px;color:#1D9E75;font-weight:700;align-items:center;gap:6px}
+.discount-error{display:none;margin-top:6px;padding:8px 12px;background:rgba(243,56,42,0.06);border:1px solid rgba(243,56,42,0.2);border-radius:6px;font-size:12px;color:#F3382A;font-weight:600}
 .success-box{text-align:center;padding:1.5rem 0}
 .success-icon{font-size:3rem;margin-bottom:1rem}
 .success-box h3{font-size:1.3rem;font-weight:900;margin-bottom:0.5rem}
@@ -379,6 +386,19 @@ footer{background:#1a1a1a;padding:3.5rem 2.5rem 1.5rem}
 .addon-price{font-size:13px;font-weight:800;color:#F3382A}
 .addon-check{width:16px;height:16px;cursor:pointer;accent-color:#F3382A}
 @media(max-width:900px){.special-services-grid{grid-template-columns:1fr}.special-card{flex-direction:column}.special-card-header{flex-direction:column;gap:0.5rem}.special-card-pricing{text-align:left}}
+
+/* Diagnostic card — same family as .special-card, but the pricing reads
+   "Get a quote" instead of a dollar figure, so it needs its own visual
+   weight to avoid looking unfinished next to the flat-rate packages. */
+.special-card-diagnostic{border:1.5px solid #FFC744;background:linear-gradient(180deg,#fffdf7 0%,#fff 12%)}
+.special-price-quote{font-size:1.15rem;font-weight:900;color:#111;background:linear-gradient(90deg,#FFC744,#F3382A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.diagnostic-triggers{background:#fff8e6;border:1px solid rgba(255,199,68,0.5);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.diagnostic-triggers-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#B07000;margin-bottom:10px}
+.diagnostic-triggers-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px 10px}
+.diagnostic-trigger{font-size:12px;color:#555;display:flex;align-items:center;gap:8px;line-height:1.3}
+.diagnostic-trigger-dot{width:6px;height:6px;border-radius:50%;background:#F3382A;flex-shrink:0}
+.service-book-btn-diagnostic{background:linear-gradient(90deg,#FFC744,#F3382A);display:block;text-align:center;text-decoration:none;color:#fff}
+@media(max-width:480px){.diagnostic-triggers-grid{grid-template-columns:1fr}}
 @media(max-width:900px){
 .hero-inner,.area-grid,.booking-wrap{grid-template-columns:1fr}
 .hero-card{display:none}
@@ -546,9 +566,9 @@ footer{background:#1a1a1a;padding:3.5rem 2.5rem 1.5rem}
 </div>
 </div>
 
-<!-- Mobile Diagnostic — light card, easy to read -->
-<div class="special-card" style="border:2px solid #FFC744;background:#fff;">
-<div class="special-card-icon">🔬</div>
+<!-- Mobile Diagnostic — distinct from the flat-rate packages since this one starts with a quote, not a price -->
+<div class="special-card special-card-diagnostic">
+<div class="special-card-icon">🩺</div>
 <div class="special-card-content">
 <div class="special-card-header">
 <div>
@@ -556,38 +576,36 @@ footer{background:#1a1a1a;padding:3.5rem 2.5rem 1.5rem}
 <div class="special-card-desc" style="color:#888;">Check engine light on? Something feels off? We come to you, plug in, and find the answer.</div>
 </div>
 <div class="special-card-pricing">
-<div class="special-price-main" style="color:#F3382A;">Custom <span style="color:#aaa;font-size:12px;">quote</span></div>
-<div class="special-price-standalone" style="color:#888;">Always quoted before we start</div>
+<div class="special-price-main special-price-quote">Get a quote</div>
+<div class="special-price-standalone" style="color:#888;">Always priced before we start — never a surprise</div>
 </div>
 </div>
 
 <!-- What triggers this service -->
-<div style="background:#fff8e6;border:1px solid rgba(255,199,68,0.5);border-radius:8px;padding:14px 16px;margin-bottom:14px;">
-<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#B07000;margin-bottom:10px;">Common reasons customers call us</div>
-<div style="display:flex;flex-direction:column;gap:6px;">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Check engine light on</div>
-<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>ABS or traction light</div>
-<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Vehicle won't start</div>
-<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Rough idle or stalling</div>
-<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Loss of power</div>
-<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Battery or charging issues</div>
-<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Strange noises or smells</div>
-<div style="font-size:12px;color:#555;display:flex;align-items:center;gap:6px;"><span style="color:#F3382A;font-size:14px;flex-shrink:0;">⚠</span>Pre-purchase inspection</div>
-</div>
+<div class="diagnostic-triggers">
+<div class="diagnostic-triggers-label">Common reasons customers call us</div>
+<div class="diagnostic-triggers-grid">
+<div class="diagnostic-trigger"><span class="diagnostic-trigger-dot"></span>Check engine light on</div>
+<div class="diagnostic-trigger"><span class="diagnostic-trigger-dot"></span>ABS or traction light</div>
+<div class="diagnostic-trigger"><span class="diagnostic-trigger-dot"></span>Vehicle won't start</div>
+<div class="diagnostic-trigger"><span class="diagnostic-trigger-dot"></span>Rough idle or stalling</div>
+<div class="diagnostic-trigger"><span class="diagnostic-trigger-dot"></span>Loss of power</div>
+<div class="diagnostic-trigger"><span class="diagnostic-trigger-dot"></span>Battery or charging issues</div>
+<div class="diagnostic-trigger"><span class="diagnostic-trigger-dot"></span>Strange noises or smells</div>
+<div class="diagnostic-trigger"><span class="diagnostic-trigger-dot"></span>Pre-purchase inspection</div>
 </div>
 </div>
 
 <!-- What's included -->
 <ul class="special-includes" style="color:#444;gap:10px;">
-<li style="display:grid;grid-template-columns:auto 1fr;gap:0 12px;align-items:start;"><span style="color:#1D9E75;font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:#111;">Full OBD-II system scan</strong> — reads all fault codes across engine, transmission, ABS, airbags, and emissions</span></li>
-<li style="display:grid;grid-template-columns:auto 1fr;gap:0 12px;align-items:start;"><span style="color:#1D9E75;font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:#111;">Live data analysis</strong> — we monitor engine sensors in real time, not just stored codes</span></li>
-<li style="display:grid;grid-template-columns:auto 1fr;gap:0 12px;align-items:start;"><span style="color:#1D9E75;font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:#111;">Visual inspection</strong> — belts, hoses, battery, and connections in the reported problem area</span></li>
-<li style="display:grid;grid-template-columns:auto 1fr;gap:0 12px;align-items:start;"><span style="color:#1D9E75;font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:#111;">Plain-English explanation</strong> — exactly what's wrong and what it means for your vehicle</span></li>
-<li style="display:grid;grid-template-columns:auto 1fr;gap:0 12px;align-items:start;"><span style="color:#1D9E75;font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:#111;">Written report</strong> — all findings, fault codes, and recommended next steps</span></li>
-<li style="display:grid;grid-template-columns:auto 1fr;gap:0 12px;align-items:start;"><span style="color:#1D9E75;font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:#111;">No-pressure repair recommendation</strong> — we tell you the truth, not the upsell</span></li>
+<li><span><strong style="color:#111;">Full OBD-II system scan</strong> — reads all fault codes across engine, transmission, ABS, airbags, and emissions</span></li>
+<li><span><strong style="color:#111;">Live data analysis</strong> — we monitor engine sensors in real time, not just stored codes</span></li>
+<li><span><strong style="color:#111;">Visual inspection</strong> — belts, hoses, battery, and connections in the reported problem area</span></li>
+<li><span><strong style="color:#111;">Plain-English explanation</strong> — exactly what's wrong and what it means for your vehicle</span></li>
+<li><span><strong style="color:#111;">Written report</strong> — all findings, fault codes, and recommended next steps</span></li>
+<li><span><strong style="color:#111;">No-pressure repair recommendation</strong> — we tell you the truth, not the upsell</span></li>
 </ul>
-<a href="tel:7203182028" class="service-book-btn" style="background:linear-gradient(90deg,#FFC744,#F3382A);display:block;text-align:center;text-decoration:none;color:#fff;">Call or text to book — (720) 318-2028</a>
+<a href="tel:7203182028" class="service-book-btn service-book-btn-diagnostic">Call or text to book — (720) 318-2028</a>
 </div>
 </div>
 
@@ -767,6 +785,19 @@ footer{background:#1a1a1a;padding:3.5rem 2.5rem 1.5rem}
 <div class="form-step" id="step-4">
 <p class="step-title">Step 4 — Confirm your booking</p>
 <div class="confirm-summary" id="confirm-summary"></div>
+
+<!-- Promo code -->
+<div style="margin-top:12px;">
+  <div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Have a promo code?</div>
+  <div class="discount-field-wrap">
+    <div class="discount-field-inner">
+      <input type="text" id="discount-code-input" placeholder="Enter code" maxlength="20">
+      <button type="button" onclick="applyDiscount()">Apply</button>
+    </div>
+  </div>
+  <div class="discount-applied" id="discount-applied">✓ Code applied!</div>
+  <div class="discount-error" id="discount-error">Invalid code.</div>
+</div>
 
 <button class="form-btn" id="submit-btn" onclick="submitBooking()">Confirm &amp; book appointment</button>
 <button class="form-btn-back" onclick="goStep(3)">← Edit details</button>
@@ -1055,7 +1086,8 @@ var addonsText=selectedAddons.length>0?selectedAddons.map(function(a){return a.n
 var addonTotal=selectedAddons.reduce(function(s,a){return s+a.price;},0);
 var basePrice=parseInt((selectedPkg.price||'$89').replace(/[^0-9]/g,''));
 var subtotal=basePrice+addonTotal;
-var finalTotal='$'+subtotal;
+var discount=appliedDiscount.amount||0;
+var finalTotal='$'+(subtotal-discount);
 var html='<div class="confirm-row"><span>Package</span><span>'+selectedPkg.name+'</span></div>';
 if(selectedAddons.length>0)html+='<div class="confirm-row"><span>Add-ons</span><span>'+addonsText+'</span></div>';
 html+='<div class="confirm-row"><span>Date &amp; time</span><span>'+(selectedDate||'—')+' at '+(selectedTime||'—')+'</span></div>';
@@ -1063,6 +1095,7 @@ html+='<div class="confirm-row"><span>Address</span><span>'+addr+'</span></div>'
 html+='<div class="confirm-row"><span>Name</span><span>'+fname+'</span></div>';
 html+='<div class="confirm-row"><span>Vehicle</span><span>'+veh+'</span></div>';
 html+='<div class="confirm-row"><span>SMS updates</span><span>'+smsConsent+'</span></div>';
+if(discount>0)html+='<div class="confirm-row" style="color:#1D9E75;"><span>Promo ('+appliedDiscount.code+')</span><span>−$'+discount+'</span></div>';
 html+='<div class="confirm-row" style="font-weight:700;font-size:15px;border-top:1px solid #eee;padding-top:10px;margin-top:4px;"><span>Total</span><span>'+finalTotal+' <span style="font-size:11px;font-weight:400;color:#888;">+ tax</span></span></div>';
 document.getElementById('confirm-summary').innerHTML=html;
 }
@@ -1103,8 +1136,8 @@ var smsConsent=document.getElementById('f-sms-consent').checked?'Yes':'No';
 var addonsStr=selectedAddons.length>0?selectedAddons.map(function(a){return a.name+' (+$'+a.price+')'}).join(', '):'None';
 var addonTotal2=selectedAddons.reduce(function(s,a){return s+a.price;},0);
 var basePrice2=parseInt((selectedPkg.price||'$89').replace(/[^0-9]/g,''));
-var finalTotal2=basePrice2+addonTotal2;
-var pkg=selectedPkg.name+' '+selectedPkg.price+(selectedAddons.length>0?' | Add-ons: '+addonsStr+' | Total: $'+finalTotal2:'');
+var finalTotal2=basePrice2+addonTotal2-(appliedDiscount.amount||0);
+var pkg=selectedPkg.name+' '+selectedPkg.price+(selectedAddons.length>0?' | Add-ons: '+addonsStr:'')+(appliedDiscount.code?' | Promo: '+appliedDiscount.code+' (-$'+appliedDiscount.amount+') | Total: $'+finalTotal2:'');
 var attribution=getAttribution();
 var body=new URLSearchParams({'form-name':'motornation-booking','first-name':fname,'last-name':lname,'phone':phone,'email':email,'date':selectedDate,'time':selectedTime,'location-type':loctype,'address':address,'vehicle-year':year,'vehicle':vehicle,'vin':vin,'engine':engine,'package':pkg,'notes':notes,'sms-consent':smsConsent,'utm-source':attribution.utm_source||'','utm-medium':attribution.utm_medium||'','utm-campaign':attribution.utm_campaign||'','utm-content':attribution.utm_content||'','utm-term':attribution.utm_term||'','landing-page':attribution.landing_page||window.location.href,'referrer':attribution.referrer||document.referrer||''});
 fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
@@ -1214,6 +1247,31 @@ emailjs.send(EJS_SVC,EJS_CUST,{to_email:email,to_name:fname,date:selectedDate,ti
 emailjs.send(EJS_SVC,EJS_OWN,{to_email:'a.khattab@motornationusa.com',customer_name:fname+' '+lname,customer_email:email,customer_phone:phone,date:selectedDate,time:selectedTime,address:address,package:pkg,vehicle:veh,notes:notes,sms_consent:smsConsent},EJS_KEY)
 .then(function(){console.log('MN: Owner email sent OK');})
 .catch(function(e){console.error('MN: Owner email FAILED',JSON.stringify(e));});
+}
+
+var appliedDiscount={code:'',amount:0};
+
+// Add or remove promo codes here. Format: 'CODE':{amount: dollarsOff, label: 'Description'}
+// Codes are case-insensitive on entry — customers can type lowercase and it still matches.
+var PROMO_CODES={
+  // Example: 'SAVE15':{amount:15,label:'General $15 off'},
+};
+
+function applyDiscount(){
+  var code=document.getElementById('discount-code-input').value.trim().toUpperCase();
+  var applied=document.getElementById('discount-applied');
+  var error=document.getElementById('discount-error');
+  applied.style.display='none';
+  error.style.display='none';
+  if(PROMO_CODES[code]){
+    appliedDiscount={code:code,amount:PROMO_CODES[code].amount,label:PROMO_CODES[code].label};
+    applied.style.display='flex';
+    applied.textContent='✓ Code '+code+' applied — $'+PROMO_CODES[code].amount+' off your service!';
+    buildSummary();
+  } else {
+    appliedDiscount={code:'',amount:0};
+    error.style.display='block';
+  }
 }
 
 function toggleAddons(){

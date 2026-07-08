@@ -11,8 +11,14 @@
 //   3. Deletes the submission from Netlify Forms so it no longer shows
 //      up on the Today tab, the Calendar tab, or the Customers tab.
 //
-// Requires the same NETLIFY_TOKEN and FORM_ID already used by
-// get-submissions.js — no new environment variables needed.
+// Requires NETLIFY_TOKEN and NETLIFY_SITE_ID as environment variables.
+// NETLIFY_TOKEN is the same one get-submissions.js already uses.
+// NETLIFY_SITE_ID must be added in Netlify → Site configuration →
+// Environment variables (find the Site ID under Site configuration →
+// General → Site details). Auto-injection of site context does not
+// reliably apply to this project, so both are passed explicitly below —
+// this is the fix for the "environment has not been configured to use
+// Netlify Blobs" error.
 
 const { getStore } = require("@netlify/blobs");
 
@@ -34,10 +40,18 @@ exports.handler = async (event) => {
   }
 
   const NETLIFY_TOKEN = process.env.NETLIFY_TOKEN;
-  const SITE_ID = process.env.SITE_ID; // Netlify auto-injects this at build/runtime
+  const NETLIFY_SITE_ID = process.env.NETLIFY_SITE_ID;
 
   if (!NETLIFY_TOKEN) {
     return { statusCode: 500, body: JSON.stringify({ error: "NETLIFY_TOKEN not configured" }) };
+  }
+  if (!NETLIFY_SITE_ID) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: "NETLIFY_SITE_ID not configured. Add it in Netlify → Site configuration → Environment variables. Find the value under Site configuration → General → Site details → Site ID.",
+      }),
+    };
   }
 
   try {
@@ -61,7 +75,13 @@ exports.handler = async (event) => {
     // 2. Save the customer's contact info to a separate error-log store.
     // This is intentionally a different Blobs store than statuses, so an
     // accidental deletion never gets mixed up with real appointment history.
-    const errorStore = getStore("error-log");
+    // siteID + token passed explicitly — this is what the "environment has
+    // not been configured" error was asking for.
+    const errorStore = getStore({
+      name: "error-log",
+      siteID: NETLIFY_SITE_ID,
+      token: NETLIFY_TOKEN,
+    });
     const savedRecord = {
       original_submission_id: submissionId,
       name: `${d["first-name"] || ""} ${d["last-name"] || ""}`.trim(),
